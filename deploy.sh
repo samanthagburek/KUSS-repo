@@ -1,7 +1,7 @@
 #!/bin/bash
 # This shell script deploys a new version to a server.
 
-PROJ_DIR=KUSS-repo
+PROJ_DIR=demo-repo4
 VENV=Fall2023
 PA_DOMAIN="Fall2023.pythonanywhere.com"
 PA_USER='Fall2023'
