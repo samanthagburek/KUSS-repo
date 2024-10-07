@@ -14,7 +14,7 @@ import data.people as ppl
 
 app = Flask(__name__)
 CORS(app)
-api = Api(appan)
+api = Api(app)
 
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
@@ -30,6 +30,7 @@ PUBLISHER = "pub"
 PUBLISHER_RESP = 'Publisher'
 DATE = '2024-09-24'
 PEOPLE_EP = '/people'
+
 
 @api.route(HELLO_EP)
 class HelloWorld(Resource):
@@ -94,4 +95,3 @@ class Person(Resource):
     def delete(self, _id):
         ret = ppl.delete_person(_id)
         return {'Message': ret}
-        
