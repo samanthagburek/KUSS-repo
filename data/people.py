@@ -10,6 +10,7 @@ AFFILIATION = 'affiliation'
 EMAIL = 'email'
 
 TEST_EMAIL = 'dbw1947@nyu.edu'
+DEl_EMAIL = 'del@nyu.edu'
 
 PERSON_DICT = {
     TEST_EMAIL: {
@@ -18,6 +19,12 @@ PERSON_DICT = {
         AFFILIATION: 'Starman',
         EMAIL: TEST_EMAIL,
     },
+    DEL_EMAIL: {
+        NAME: 'Someone',
+        ROLES: [],
+        AFFILIATION: 'NYU',
+        EMAIL: DEL_EMAIL,
+    }
 }
 
 
