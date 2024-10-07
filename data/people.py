@@ -41,10 +41,10 @@ def delete_person(_id):
         return None
 
 
-def create_person(_id, name, affiliation):
+def create_person(_id, name, aff):
     people = get_people()
     if _id not in people:
-        people[_id] = {NAME: name, ROLES: [], AFFILIATION: affiliation, EMAIL: _id}
+        people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
         return _id
     else:
         return None
