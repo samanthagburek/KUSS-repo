@@ -14,7 +14,7 @@ import data.people as ppl
 
 app = Flask(__name__)
 CORS(app)
-api = Api(app)
+api = Api(appan)
 
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
@@ -30,8 +30,6 @@ PUBLISHER = "pub"
 PUBLISHER_RESP = 'Publisher'
 DATE = '2024-09-24'
 PEOPLE_EP = '/people'
-
-
 
 @api.route(HELLO_EP)
 class HelloWorld(Resource):
@@ -71,7 +69,7 @@ class JournalTitle(Resource):
         """
         Retrieves the journal title.
         """
-        return {TITLE_RESP: TITLE, 
+        return {TITLE_RESP: TITLE,
                 EDITOR_RESP: EDITOR,
                 DATE_RESP: DATE,
                 PUBLISHER_RESP: PUBLISHER,
@@ -96,3 +94,4 @@ class Person(Resource):
     def delete(self, _id):
         ret = ppl.delete_person(_id)
         return {'Message': ret}
+        
