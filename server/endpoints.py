@@ -23,7 +23,14 @@ HELLO_RESP = 'hello'
 TITLE_EP = '/title'
 TITLE_RESP = 'Title: '
 TITLE = 'The Journal of the KUSS Project'
+EDITOR_RESP = 'Editor'
+EDITOR = 'user@nyu.edu'
+DATE_RESP = 'Date'
+PUBLISHER = "pub"
+PUBLISHER_RESP = 'Publisher'
+DATE = '2024-09-24'
 PEOPLE_EP = '/people'
+
 
 
 @api.route(HELLO_EP)
@@ -64,7 +71,11 @@ class JournalTitle(Resource):
         """
         Retrieves the journal title.
         """
-        return {TITLE_RESP: TITLE}
+        return {TITLE_RESP: TITLE, 
+                EDITOR_RESP: EDITOR,
+                DATE_RESP: DATE,
+                PUBLISHER_RESP: PUBLISHER,
+                }
 
 
 @api.route(PEOPLE_EP)
