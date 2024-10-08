@@ -48,10 +48,9 @@ def delete_person(_id):
         return None
 
 
-def create_person(_id, name, aff):
+def create_person(_id: str, name: str, aff: str):
     people = get_people()
     if _id not in people:
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
-        return _id
     else:
-        return None
+        raise ValueError(f'Adding duplicate {_id=}')

@@ -40,3 +40,14 @@ def test_get_people():
         assert NAME in person
         assert AFFILIATION in person
         assert EMAIL in person
+
+
+#def test_create_people():
+#    resp = TEST_CLIENT.put(ep.PEOPLE_EP, "john@who.org", "John Smith", "WHO")
+#    resp_json = resp.get_json()
+#    for _id, person in resp_json.items():
+#        assert isinstance(_id, str)
+#        assert len(_id) > 0
+#        assert NAME in person
+#        assert AFFILIATION in person
+#        assert EMAIL in person
