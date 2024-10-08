@@ -1,4 +1,7 @@
+import pytest
+
 import data.people as ppl
+
 
 def test_get_people():
     people = ppl.get_people()
@@ -15,3 +18,17 @@ def test_del_person():
     people = ppl.get_people()
     assert len(people) < old_len
     assert ppl.DEL_EMAIL not in people
+
+ADD_EMAIL = 'joe@nyu.edu'
+
+def test_create_person():
+    people = ppl.get_people()
+    assert ADD_EMAIL not in people
+    ppl.create_person('Jerry Place', 'NYU', ADD_EMAIL)
+    people = ppl.get_people()
+    assert ADD_EMAIL in people
+
+def test_create_duplicate_person():
+    with pytest.raises(ValueError):
+        ppl.create_person('Do not care about name',
+                          'Or affiliation', ppl.TEST_EMAIL)
