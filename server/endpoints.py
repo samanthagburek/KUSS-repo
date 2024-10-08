@@ -95,7 +95,8 @@ class Person(Resource):
     def delete(self, _id):
         ret = ppl.delete_person(_id)
         return {'Message': ret}
-    
+
+
 @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
 class PersonPut(Resource):
     def put(self, _id, name, aff):
