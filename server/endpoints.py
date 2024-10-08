@@ -85,7 +85,7 @@ class People(Resource):
     """
     def get(self):
         """
-        Retrieve the journal people.
+        Retrieves the journal people.
         """
         return ppl.get_people()
 
@@ -93,6 +93,9 @@ class People(Resource):
 @api.route(f'{PEOPLE_EP}/<_id>')
 class Person(Resource):
     def delete(self, _id):
+        """
+        Endpoint to delete a person
+        """
         ret = ppl.delete_person(_id)
         return {'Message': ret}
 
@@ -100,5 +103,8 @@ class Person(Resource):
 @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
 class PersonPut(Resource):
     def put(self, _id, name, aff):
+        """
+        Endpoint to create a person
+        """
         ret = ppl.create_person(_id, name, aff)
         return {'Message': ret}
