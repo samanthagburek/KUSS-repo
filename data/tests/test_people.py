@@ -1,5 +1,8 @@
+import pytest
+
 import data.people as ppl
 import pytest
+
 
 def test_get_people():
     people = ppl.get_people()
