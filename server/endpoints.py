@@ -89,7 +89,7 @@ class People(Resource):
         """
         Retrieves the journal people.
         """
-        return ppl.read()
+        return ppl.get_people()
 
 
 @api.route(f'{PEOPLE_EP}/<_id>')
