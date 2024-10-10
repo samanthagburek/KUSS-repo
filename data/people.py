@@ -28,7 +28,7 @@ PERSON_DICT = {
 }
 
 
-def get_people():
+def read():
     """
     Our contract:
         - No arguments.
@@ -39,8 +39,8 @@ def get_people():
     return people
 
 
-def delete_person(_id):
-    people = get_people()
+def delete(_id):
+    people = read()
     if _id in people:
         del people[_id]
         return _id
@@ -48,9 +48,17 @@ def delete_person(_id):
         return None
 
 
-def create_person(_id: str, name: str, aff: str):
-    people = get_people()
+def create(_id: str, name: str, aff: str):
+    people = read()
     if _id not in people:
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
+        return email
     else:
         raise ValueError(f'Adding duplicate {_id=}')
+
+
+def main():
+    print(read())
+    
+if __name__ == '__main__':
+    main()

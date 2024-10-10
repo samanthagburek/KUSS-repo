@@ -89,7 +89,7 @@ class People(Resource):
         """
         Retrieves the journal people.
         """
-        return ppl.get_people()
+        return ppl.read()
 
 
 @api.route(f'{PEOPLE_EP}/<_id>')
@@ -100,7 +100,7 @@ class PersonDelete(Resource):
         """
         Endpoint to delete a person
         """
-        ret = ppl.delete_person(_id)
+        ret = ppl.delete(_id)
         if ret is not None:
             return {'Deleted': ret}
         else:

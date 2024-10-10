@@ -31,7 +31,7 @@ def test_title():
     assert isinstance(resp_json[ep.TITLE_RESP], str)
 
 
-def test_get_people():
+def test_read():
     resp = TEST_CLIENT.get(ep.PEOPLE_EP)
     resp_json = resp.get_json()
     for _id, person in resp_json.items():
