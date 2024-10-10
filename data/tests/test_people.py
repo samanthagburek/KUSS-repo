@@ -4,7 +4,7 @@ import data.people as ppl
 import pytest
 
 
-def test_get_people():
+def test_read():
     people = ppl.get_people()
     assert isinstance(people, dict)
     assert len(people) > 0
