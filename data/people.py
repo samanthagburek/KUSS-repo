@@ -52,13 +52,14 @@ def create(_id: str, name: str, aff: str):
     people = read()
     if _id not in people:
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
-        return email
+        return _id
     else:
         raise ValueError(f'Adding duplicate {_id=}')
 
 
 def main():
     print(read())
-    
+
+
 if __name__ == '__main__':
     main()
