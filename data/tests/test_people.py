@@ -28,7 +28,7 @@ def test_create():
     ppl.create(ADD_EMAIL, "John Smith", "WHO")
     people = ppl.read()
     assert ADD_EMAIL in people
-    ppl.delete_person(ADD_EMAIL)
+    ppl.delete(ADD_EMAIL)
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
