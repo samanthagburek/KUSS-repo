@@ -142,7 +142,7 @@ class PeopleCreate(Resource):
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
             email = request.json.get(ppl.EMAIL)
-            ret = ppl.create(name, affiliation, email)
+            ret = ppl.create(email, name, affiliation)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not add person: '
                                    f'{err=}')
