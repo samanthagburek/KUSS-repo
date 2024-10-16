@@ -74,8 +74,8 @@ def test_create_people():
    resp_json = resp.get_json()
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
 
-   assert "Return" in resp_json, "Expected 'Return' in response"
-   assert resp_json["Return"] == person_data[EMAIL], f"Expected Return to be {person_data[EMAIL]}, but got {resp_json['Return']}"
+   assert "RETURN" in resp_json, "Expected 'RETURN' in response"
+   assert resp_json["RETURN"] == person_data[EMAIL], f"Expected Return to be {person_data[EMAIL]}, but got {resp_json['Return']}"
 
 #    for _id, person in resp_json.items():
 #        assert isinstance(_id, str)
