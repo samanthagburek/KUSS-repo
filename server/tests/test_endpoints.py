@@ -64,11 +64,13 @@ def test_update_people():
 
 
 def test_create_people():
-   person_data ={ EMAIL: "john@who.org",
+   person_data ={ 
         NAME: "John Smith",
-        AFFILIATION: "WHO"
+        AFFILIATION: "WHO",
+        EMAIL: "john@who.org"
     }
-   resp = TEST_CLIENT.put(ep.PEOPLE_EP, json=person_data)
+
+   resp = TEST_CLIENT.put(f'(ep.PEOPLE_EP/create', json=person_data)
    resp_json = resp.get_json()
    for _id, person in resp_json.items():
        assert isinstance(_id, str)
