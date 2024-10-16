@@ -107,8 +107,6 @@ class PersonDelete(Resource):
             return {'Deleted': ret}
         else:
             raise wz.Not_Found(f'No such person: {_id}')
-        
-
 
 
 # @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
@@ -153,10 +151,12 @@ class PeopleCreate(Resource):
             RETURN: ret,
         }
 
+
 PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
     ppl.NAME: fields.String,
     ppl.AFFILIATION: fields.String,
 })
+
 
 @api.route(f'{PEOPLE_EP}/update/<_id>')
 class PersonUpdate(Resource):
