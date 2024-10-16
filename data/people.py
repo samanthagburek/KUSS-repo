@@ -57,6 +57,16 @@ def create(_id: str, name: str, aff: str):
         raise ValueError(f'Adding duplicate {_id=}')
 
 
+def update(_id: str, name: str, aff: str):
+    people = read()
+    if _id in people:
+        people[_id][NAME] = name
+        people[_id][AFFILIATION] = aff
+        return _id
+    else:
+        raise ValueError(f'User not found {_id=}')
+
+
 def main():
     print(read())
 
