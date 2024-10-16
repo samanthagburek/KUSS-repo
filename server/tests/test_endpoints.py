@@ -12,6 +12,7 @@ from unittest.mock import patch
 import pytest
 
 from data.people import NAME, AFFILIATION, EMAIL
+from data.text import TITLE, TEXT
 
 import server.endpoints as ep
 
@@ -40,6 +41,16 @@ def test_read():
         assert NAME in person
         assert AFFILIATION in person
         assert EMAIL in person
+
+
+def test_text_read():
+    resp = TEST_CLIENT.get(ep.TEXT_EP)
+    resp_json = resp.get_json()
+    for _id, thing in resp_json.items():
+        assert isinstance(_id, str)
+        assert len(_id) > 0
+        assert TITLE in thing
+        assert TEXT in thing
 
 
 #def test_create_people():

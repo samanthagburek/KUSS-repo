@@ -11,6 +11,7 @@ from flask_cors import CORS
 import werkzeug.exceptions as wz
 
 import data.people as ppl
+import data.text as txt
 
 app = Flask(__name__)
 CORS(app)
@@ -32,6 +33,7 @@ PUBLISHER_RESP = 'Publisher'
 RETURN = 'return'
 DATE = '2024-09-24'
 PEOPLE_EP = '/people'
+TEXT_EP = '/text'
 
 
 @api.route(HELLO_EP)
@@ -148,3 +150,16 @@ class PeopleCreate(Resource):
             MESSAGE: 'Person added!',
             RETURN: ret,
         }
+
+
+@api.route(TEXT_EP)
+class Text(Resource):
+    """
+    This class handles creating, reading, updating
+    and deleting journal text.
+    """
+    def get(self):
+        """
+        Retrieves journal text
+        """
+        return txt.read()
