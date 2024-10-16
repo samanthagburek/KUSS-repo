@@ -108,8 +108,9 @@ class PersonDelete(Resource):
         else:
             raise wz.Not_Found(f'No such person: {_id}')
 
+
 @api.route(f'{PEOPLE_EP}/update/<_id>')
-class PeopleUpdate(Resource):
+class PersonUpdate(Resource):
     """
     Update a person to the journal db.
     """

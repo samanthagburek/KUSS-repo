@@ -29,6 +29,17 @@ def test_create():
     people = ppl.read()
     assert ADD_EMAIL in people
     ppl.delete(ADD_EMAIL)
+
+TEST_EMAIL = "dbw1947@nyu.edu"
+
+def test_update():
+    people = ppl.read()
+    assert TEST_EMAIL in people
+    ppl.update(TEST_EMAIL, "Kid Rock", "WHO")
+    people = ppl.read()
+    person = people[TEST_EMAIL]
+    assert person[ppl.NAME] is "Kid Rock"
+    assert person[ppl.AFFILIATION] is "WHO"
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
