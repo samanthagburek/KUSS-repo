@@ -107,14 +107,14 @@ class PersonDelete(Resource):
             raise wz.Not_Found(f'No such person: {_id}')
 
 
-@api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
-class PersonPut(Resource):
-    def put(self, _id, name, aff):
-        """
-        Endpoint to create a person
-        """
-        ret = ppl.create_person(_id, name, aff)
-        return {'Message': ret}
+# @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
+# class PersonPut(Resource):
+#     def put(self, _id, name, aff):
+#         """
+#         Endpoint to create a person
+#         """
+#         ret = ppl.create_person(_id, name, aff)
+#         return {'Message': ret}
 
 
 PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
@@ -122,3 +122,29 @@ PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
     ppl.EMAIL: fields.String,
     ppl.AFFILIATION: fields.String,
 })
+
+
+@api.route(f'{PEOPLE_EP}/create')
+class PeopleCreate(Resource):
+    """
+    Add a person to the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(PEOPLE_CREATE_FLDS)
+    def put(self):
+        """
+        Add a person.
+        """
+        try:
+            name = request.json.get(ppl.NAME)
+            affiliation = request.json.get(ppl.AFFILIATION)
+            email = request.json.get(ppl.EMAIL)
+            ret = ppl.create(name, affiliation, email)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not add person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Person added!',
+            RETURN: ret,
+        }
