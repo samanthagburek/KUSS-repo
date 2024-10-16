@@ -107,30 +107,8 @@ class PersonDelete(Resource):
             return {'Deleted': ret}
         else:
             raise wz.Not_Found(f'No such person: {_id}')
+        
 
-
-@api.route(f'{PEOPLE_EP}/update/<_id>')
-class PersonUpdate(Resource):
-    """
-    Update a person to the journal db.
-    """
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
-    def update(self, _id):
-        """
-        Update a person.
-        """
-        try:
-            name = request.json.get(ppl.NAME)
-            affiliation = request.json.get(ppl.AFFILIATION)
-            ret = ppl.update(_id, name, affiliation)
-        except Exception as err:
-            raise wz.NotAcceptable(f'Could not update person: '
-                                   f'{err=}')
-        return {
-            MESSAGE: 'Person updated!',
-            RETURN: ret,
-        }
 
 
 # @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
@@ -172,6 +150,36 @@ class PeopleCreate(Resource):
                                    f'{err=}')
         return {
             MESSAGE: 'Person added!',
+            RETURN: ret,
+        }
+
+PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
+    ppl.NAME: fields.String,
+    ppl.AFFILIATION: fields.String,
+})
+
+@api.route(f'{PEOPLE_EP}/update/<_id>')
+class PersonUpdate(Resource):
+    """
+    Update a person to the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(PEOPLE_UPDATE_FLDS)
+    def put(self, _id):
+        """
+        Update a person.
+        """
+        pass
+        try:
+            name = request.json.get(ppl.NAME)
+            affiliation = request.json.get(ppl.AFFILIATION)
+            ret = ppl.update(_id, name, affiliation)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not update person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Person updated!',
             RETURN: ret,
         }
 
