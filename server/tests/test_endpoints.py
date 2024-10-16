@@ -70,8 +70,10 @@ def test_create_people():
         EMAIL: "john@who.org"
     }
 
-   resp = TEST_CLIENT.put(f'(ep.PEOPLE_EP/create', json=person_data)
+   resp = TEST_CLIENT.put(f'{ep.PEOPLE_EP}/create', json=person_data)
    resp_json = resp.get_json()
+   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
+
    for _id, person in resp_json.items():
        assert isinstance(_id, str)
        assert len(_id) > 0
