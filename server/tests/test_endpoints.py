@@ -90,10 +90,10 @@ def test_delete_people():
    create_resp_json = create_resp.get_json()
    created_email = create_resp_json.get("return")
  
-   assert created_email == person_data[EMAIL], f"Expected return to be {person_data[EMAIL]}, but got {resp_json['return']}"
+   assert created_email == person_data[EMAIL], f"Expected return to be {person_data[EMAIL]}, but got {create_resp_json['return']}"
 
    del_resp = TEST_CLIENT.delete(f'{ep.PEOPLE_EP}/{created_email}')
-   del_resp_json = delete_resp.get_json()
+   del_resp_json = del_resp.get_json()
 
    assert "Deleted" in del_resp_json, "Expected 'Deleted' in response"
    assert del_resp_json["Deleted"] == created_email, f"Expected deleted ID to be {created_email} but got {del_resp_json['Deleted']}"
