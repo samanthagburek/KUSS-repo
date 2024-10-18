@@ -23,6 +23,18 @@ text_dict = {
 }
 
 
+def create():
+    pass
+
+
+def delete():
+    pass
+
+
+def update():
+    pass
+
+
 def read():
     """
     Our contract:
@@ -32,6 +44,13 @@ def read():
     """
     text = text_dict
     return text
+
+
+def read_one(key: str) -> dict:
+    result = {}
+    if key in text_dict:
+        result = text_dict[key]
+    return result
 
 
 def main():
