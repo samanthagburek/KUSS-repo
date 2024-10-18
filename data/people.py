@@ -1,6 +1,7 @@
 """
 This module interfaces to our user data.
 """
+import re
 
 MIN_USER_NAME_LEN = 2
 # fields
@@ -27,6 +28,10 @@ PERSON_DICT = {
     }
 }
 
+CHAR_OR_DIGIT = '[A-Za-z0-9]'
+
+def is_valid_email(email:str) -> bool:
+    return re.match(f"{CHAR_OR_DIGIT}.*@{CHAR_OR_DIGIT}.*", email)
 
 def read():
     """
@@ -50,6 +55,8 @@ def delete(_id):
 
 def create(_id: str, name: str, aff: str):
     people = read()
+    if not is_valid_email(_id):
+        raise ValueError(f'Invalid email {_id=}')
     if _id not in people:
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
         return _id
@@ -68,6 +75,7 @@ def update(_id: str, name: str, aff: str):
 
 
 def main():
+    create("johnnyu.edu", "x", "x")
     print(read())
 
 

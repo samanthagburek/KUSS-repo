@@ -44,3 +44,15 @@ def test_update():
 def test_create_duplicate():
     with pytest.raises(ValueError):
         ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter")
+
+def test_invalid_email_no_domain():
+    with pytest.raises(ValueError):
+        ppl.create("bademail@", "Name doesn't matter", "Affiliation doesn't matter")
+
+def test_invalid_email_no_name():
+    with pytest.raises(ValueError):
+        ppl.create("@bademail", "Name doesn't matter", "Affiliation doesn't matter")
+
+def test_invalid_email_no_at():
+    with pytest.raises(ValueError):
+        ppl.create("bademail", "Name doesn't matter", "Affiliation doesn't matter")
