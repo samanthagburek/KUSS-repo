@@ -23,8 +23,13 @@ text_dict = {
 }
 
 
-def create():
-    pass
+def create(key: str, title: str, text: str):
+    if key in text_dict:
+        raise ValueError(f'Page already exists {key=}')
+    text_dict[key] = {
+        TITLE: title,
+        TEXT: text
+    }
 
 
 def delete():
