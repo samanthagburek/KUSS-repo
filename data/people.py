@@ -30,8 +30,10 @@ PERSON_DICT = {
 
 CHAR_OR_DIGIT = '[A-Za-z0-9]'
 
-def is_valid_email(email:str) -> bool:
+
+def is_valid_email(email: str) -> bool:
     return re.match(f"{CHAR_OR_DIGIT}.*@{CHAR_OR_DIGIT}.*", email)
+
 
 def read():
     """
