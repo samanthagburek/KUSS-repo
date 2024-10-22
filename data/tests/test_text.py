@@ -26,3 +26,13 @@ def test_read_one():
 
 def test_read_one_not_found():
     assert txt.read_one('Not a page key') == {}
+
+
+def test_update():
+    text = txt.read()
+    assert TESTKEY in text
+    txt.update(TESTKEY, "Test Title V2", "The update function worked!")
+    text = txt.read()
+    thetext = text[TESTKEY]
+    assert thetext[txt.TITLE] is "Test Title V2"
+    assert thetext[txt.TEXT] is "The update function worked!"

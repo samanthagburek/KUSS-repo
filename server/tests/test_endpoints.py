@@ -52,6 +52,7 @@ def test_text_read():
         assert TITLE in thing
         assert TEXT in thing
 
+
 def test_update_people():
    resp = TEST_CLIENT.get(ep.PEOPLE_EP)
    resp_json = resp.get_json()
@@ -61,6 +62,16 @@ def test_update_people():
        assert NAME in person
        assert AFFILIATION in person
        assert EMAIL in person
+
+
+def test_update_text():
+   resp = TEST_CLIENT.get(ep.TEXT_EP)
+   resp_json = resp.get_json()
+   for key, thing in resp_json.items():
+       assert isinstance(key, str)
+       assert len(key) > 0
+       assert TITLE in thing
+       assert TEXT in thing
 
 
 def test_create_people():

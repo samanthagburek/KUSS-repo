@@ -37,8 +37,13 @@ def delete():
     pass
 
 
-def update():
-    pass
+def update(key: str, title: str, text: str):
+    if key in text_dict:
+        text_dict[key][TITLE] = title
+        text_dict[key][TEXT] = text
+        return key
+    else:
+        raise ValueError(f'Text not found {key=}')
 
 
 def read():

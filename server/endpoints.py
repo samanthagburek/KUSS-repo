@@ -228,3 +228,35 @@ class TextCreate(Resource):
             MESSAGE: 'Text added!',
             RETURN: ret,
         }
+
+
+TEXT_UPDATE_FLDS = api.model('TextPeopleEntry', {
+    txt.TITLE: fields.String,
+    txt.TEXT: fields.String,
+})
+
+
+@api.route(f'{TEXT_EP}/update/<key>')
+class TextUpdate(Resource):
+    """
+    Update a text in the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(TEXT_UPDATE_FLDS)
+    def put(self, key):
+        """
+        Update a text.
+        """
+        pass
+        try:
+            title = request.json.get(txt.TITLE)
+            text = request.json.get(txt.TEXT)
+            ret = txt.update(key, title, text)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not update text: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Text updated!',
+            RETURN: ret,
+        }
