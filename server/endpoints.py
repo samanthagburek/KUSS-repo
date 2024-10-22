@@ -195,3 +195,36 @@ class Text(Resource):
         Retrieves journal text
         """
         return txt.read()
+
+
+TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
+    txt.KEY: fields.String,
+    txt.TITLE: fields.String,
+    txt.TEXT: fields.String
+})
+
+
+@api.route(f'{TEXT_EP}/create')
+class TextCreate(Resource):
+    """
+    Add a text to the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(TEXT_CREATE_FLDS)
+    def put(self):
+        """
+        Add a text.
+        """
+        try:
+            key = request.json.get(txt.KEY)
+            title = request.json.get(txt.TITLE)
+            text = request.json.get(txt.TEXT)
+            ret = txt.create(key, title, text)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not add text: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Text added!',
+            RETURN: ret,
+        }

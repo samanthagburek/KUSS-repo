@@ -30,6 +30,7 @@ def create(key: str, title: str, text: str):
         TITLE: title,
         TEXT: text
     }
+    return key
 
 
 def delete():

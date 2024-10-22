@@ -12,7 +12,7 @@ from unittest.mock import patch
 import pytest
 
 from data.people import NAME, AFFILIATION, EMAIL
-from data.text import TITLE, TEXT
+from data.text import KEY, TITLE, TEXT
 
 import server.endpoints as ep
 
@@ -76,6 +76,21 @@ def test_create_people():
 
    assert "return" in resp_json, "Expected 'return' in response"
    assert resp_json["return"] == person_data[EMAIL], f"Expected return to be {person_data[EMAIL]}, but got {resp_json['return']}"
+
+
+def test_create_text():
+   text_data ={ 
+        KEY: "CreatePage",
+        TITLE: "Create-Test Page",
+        TEXT: "This is to test text creation."
+    }
+
+   resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=text_data)
+   resp_json = resp.get_json()
+   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
+
+   assert "return" in resp_json, "Expected 'return' in response"
+   assert resp_json["return"] == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {resp_json['return']}"
 
 
 def test_delete_people():
