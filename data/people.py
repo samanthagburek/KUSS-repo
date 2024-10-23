@@ -3,6 +3,8 @@ This module interfaces to our user data.
 """
 import re
 
+import data.roles as rls
+
 MIN_USER_NAME_LEN = 2
 # fields
 NAME = 'name'
@@ -55,7 +57,7 @@ def delete(_id):
         return None
 
 
-def create(_id: str, name: str, aff: str):
+def create(_id: str, name: str, aff: str, role: str):
     people = read()
     if not is_valid_email(_id):
         raise ValueError(f'Invalid email {_id=}')
