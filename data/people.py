@@ -55,6 +55,16 @@ def delete(_id):
         return _id
     else:
         return None
+    
+def is_valid_person(name: str, affiliation: str, email: str,
+                    role: str) -> bool:
+    if email in PERSON_DICT:
+        raise ValueError(f'Adding duplicate {email=}')
+    if not is_valid_email(email):
+        raise ValueError(f'Invalid email: {email}')
+    if not rls.is_valid(role):
+        raise ValueError(f'Invalid role: {role}')
+    return True
 
 
 def create(_id: str, name: str, aff: str, role: str):
