@@ -73,12 +73,17 @@ def create(_id: str, name: str, aff: str, role: str):
         people = read()
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
         return _id
-        # people = read()
-        # if not is_valid_email(_id):
-        #     raise ValueError(f'Invalid email {_id=}')
-        # if _id not in people:
-        # else:
-        #     raise ValueError(f'Adding duplicate {_id=}')
+
+
+def get_masthead() -> dict:
+    masthead = {}
+    mh_roles = rls.get_masthead_roles()
+    for mh_role, text in mh_roles.items():
+        people_w_role = {}
+        for person in read():
+            pass
+        masthead[text] = people_w_role
+    return masthead
 
 
 def update(_id: str, name: str, aff: str, role: str):
