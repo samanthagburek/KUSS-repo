@@ -261,3 +261,15 @@ class TextUpdate(Resource):
             MESSAGE: 'Text updated!',
             RETURN: ret,
         }
+
+
+MASTHEAD = 'Masthead'
+
+
+@api.route(f'{PEOPLE_EP}/masthead')
+class Masthead(Resource):
+    """
+    Get a journal's masthead.
+    """
+    def get(self):
+        return {MASTHEAD: ppl.get_masthead()}
