@@ -55,7 +55,8 @@ def delete(_id):
         return _id
     else:
         return None
-    
+
+
 def is_valid_person(name: str, affiliation: str, email: str,
                     role: str) -> bool:
     if email in PERSON_DICT:
