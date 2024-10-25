@@ -1,6 +1,8 @@
 """
 This modules manages person roles for a journal.
 """
+from copy import deepcopy
+
 AUTHOR_CODE = 'AU'
 TEST_CODE = AUTHOR_CODE
 ED_CODE = 'ED'
@@ -17,7 +19,7 @@ MH_ROLES = [CE_CODE, ED_CODE, ME_CODE]
 
 
 def get_roles() -> dict:
-    return ROLES
+    return deepcopy(ROLES)
 
 
 def get_masthead_roles() -> dict:
@@ -31,12 +33,16 @@ def get_masthead_roles() -> dict:
     return mh_roles
 
 
+def get_role_codes() -> list:
+    return list(ROLES.keys())
+
+
 def is_valid(code: str) -> bool:
     return code in ROLES
 
 
 def main():
-    print(get_roles())
+    print(get_masthead_roles())
 
 
 if __name__ == '__main__':
