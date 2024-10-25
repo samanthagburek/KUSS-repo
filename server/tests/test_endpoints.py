@@ -11,8 +11,9 @@ from unittest.mock import patch
 
 import pytest
 
-from data.people import NAME, AFFILIATION, EMAIL
+from data.people import NAME, AFFILIATION, EMAIL, ROLES
 from data.text import KEY, TITLE, TEXT
+from data.roles import TEST_CODE
 
 import server.endpoints as ep
 
@@ -78,7 +79,8 @@ def test_create_people():
    person_data ={ 
         NAME: "John Smith",
         AFFILIATION: "WHO",
-        EMAIL: "john@who.org"
+        EMAIL: "john@who.org",
+        ROLES: TEST_CODE
     }
 
    resp = TEST_CLIENT.put(f'{ep.PEOPLE_EP}/create', json=person_data)
@@ -109,7 +111,8 @@ def test_delete_people():
    person_data ={ 
         NAME: "Jane Street",
         AFFILIATION: "YOU",
-        EMAIL: "jane@you.org"
+        EMAIL: "jane@you.org",
+        ROLES: TEST_CODE
     }
     
    create_resp = TEST_CLIENT.put(f'{ep.PEOPLE_EP}/create', json=person_data)

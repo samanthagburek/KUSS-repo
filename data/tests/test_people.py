@@ -2,7 +2,7 @@ import pytest
 
 import data.people as ppl
 import pytest
-
+from data.roles import TEST_CODE
 
 def test_read():
     people = ppl.read()
@@ -25,7 +25,7 @@ ADD_EMAIL = "john@who.org"
 def test_create():
     people = ppl.read()
     assert ADD_EMAIL not in people
-    ppl.create(ADD_EMAIL, "John Smith", "WHO")
+    ppl.create(ADD_EMAIL, "John Smith", "WHO", TEST_CODE)
     people = ppl.read()
     assert ADD_EMAIL in people
     ppl.delete(ADD_EMAIL)
@@ -36,7 +36,7 @@ TEST_EMAIL = "dbw1947@nyu.edu"
 def test_update():
     people = ppl.read()
     assert TEST_EMAIL in people
-    ppl.update(TEST_EMAIL, "Kid Rock", "WHO")
+    ppl.update(TEST_EMAIL, "Kid Rock", "WHO", TEST_CODE)
     people = ppl.read()
     person = people[TEST_EMAIL]
     assert person[ppl.NAME] is "Kid Rock"
@@ -44,16 +44,16 @@ def test_update():
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
-        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter")
+        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
 
 def test_invalid_email_no_domain():
     with pytest.raises(ValueError):
-        ppl.create("bademail@", "Name doesn't matter", "Affiliation doesn't matter")
+        ppl.create("bademail@", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
 
 def test_invalid_email_no_name():
     with pytest.raises(ValueError):
-        ppl.create("@bademail", "Name doesn't matter", "Affiliation doesn't matter")
+        ppl.create("@bademail", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
 
 def test_invalid_email_no_at():
     with pytest.raises(ValueError):
-        ppl.create("bademail", "Name doesn't matter", "Affiliation doesn't matter")
+        ppl.create("bademail", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)

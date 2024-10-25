@@ -57,33 +57,36 @@ def delete(_id):
         return None
 
 
-def is_valid_person(name: str, affiliation: str, email: str,
+def is_valid_person(_id: str, name: str, affiliation: str,
                     role: str) -> bool:
-    if email in PERSON_DICT:
-        raise ValueError(f'Adding duplicate {email=}')
-    if not is_valid_email(email):
-        raise ValueError(f'Invalid email: {email}')
+    if _id in PERSON_DICT:
+        raise ValueError(f'Adding duplicate {_id=}')
+    if not is_valid_email(_id):
+        raise ValueError(f'Invalid email: {_id}')
     if not rls.is_valid(role):
         raise ValueError(f'Invalid role: {role}')
     return True
 
 
 def create(_id: str, name: str, aff: str, role: str):
-    people = read()
-    if not is_valid_email(_id):
-        raise ValueError(f'Invalid email {_id=}')
-    if _id not in people:
+    if (is_valid_person(_id, name, aff, role)):
+        people = read()
         people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
         return _id
-    else:
-        raise ValueError(f'Adding duplicate {_id=}')
+        # people = read()
+        # if not is_valid_email(_id):
+        #     raise ValueError(f'Invalid email {_id=}')
+        # if _id not in people:
+        # else:
+        #     raise ValueError(f'Adding duplicate {_id=}')
 
 
-def update(_id: str, name: str, aff: str):
+def update(_id: str, name: str, aff: str, role: str):
     people = read()
     if _id in people:
         people[_id][NAME] = name
         people[_id][AFFILIATION] = aff
+        people[_id][ROLES] = role
         return _id
     else:
         raise ValueError(f'User not found {_id=}')
