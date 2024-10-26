@@ -57,3 +57,7 @@ def test_invalid_email_no_name():
 def test_invalid_email_no_at():
     with pytest.raises(ValueError):
         ppl.create("bademail", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
+
+def test_get_masthead():
+    mh = ppl.get_masthead()
+    assert isinstance(mh, dict)
