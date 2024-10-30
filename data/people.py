@@ -48,6 +48,10 @@ def read():
     return people
 
 
+def read_one(email: str) -> dict:
+    return PERSON_DICT.get(email)
+
+
 def delete(_id):
     people = read()
     if _id in people:
@@ -69,9 +73,14 @@ def is_valid_person(_id: str, name: str, affiliation: str,
 
 
 def create(_id: str, name: str, aff: str, role: str):
+    if _id in PERSON_DICT:
+        raise ValueError(f"Adding duplicate email {_id=}")
     if (is_valid_person(_id, name, aff, role)):
+        roles = []
+        if role:
+            roles.append(role)
         people = read()
-        people[_id] = {NAME: name, ROLES: [], AFFILIATION: aff, EMAIL: _id}
+        people[_id] = {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
         return _id
 
 
@@ -86,15 +95,13 @@ def get_masthead() -> dict:
     return masthead
 
 
-def update(_id: str, name: str, aff: str, role: str):
+def update(_id: str, name: str, aff: str, roles: list):
     people = read()
-    if _id in people:
-        people[_id][NAME] = name
-        people[_id][AFFILIATION] = aff
-        people[_id][ROLES] = role
-        return _id
-    else:
+    if _id not in people:
         raise ValueError(f'User not found {_id=}')
+    PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
+                        EMAIL: _id, ROLES: roles}
+    return _id
 
 
 def main():

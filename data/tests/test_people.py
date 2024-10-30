@@ -36,11 +36,12 @@ TEST_EMAIL = "dbw1947@nyu.edu"
 def test_update():
     people = ppl.read()
     assert TEST_EMAIL in people
-    ppl.update(TEST_EMAIL, "Kid Rock", "WHO", TEST_CODE)
+    ppl.update(TEST_EMAIL, "Kid Rock", "WHO", "singer")
     people = ppl.read()
     person = people[TEST_EMAIL]
     assert person[ppl.NAME] is "Kid Rock"
     assert person[ppl.AFFILIATION] is "WHO"
+    ppl.update(TEST_EMAIL, "David Bowie", "Starman", "singer")
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
