@@ -132,3 +132,30 @@ def test_delete_people():
    read_resp_json = read_resp.get_json()
    
    assert created_email not in read_resp_json, "Person still found after delete"
+
+
+def test_delete_text():
+   # creating a text to make sure the text we are trying to delete, exists
+   text_data ={ 
+        KEY: "AnotherPage",
+        TITLE: "Another Page",
+        TEXT: "This is another journal to test deleting text."
+    }
+    
+   create_resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=text_data)
+   create_resp_json = create_resp.get_json()
+   created_key = create_resp_json.get("return")
+ 
+   assert created_key == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {create_resp_json['return']}"
+
+   del_resp = TEST_CLIENT.delete(f'{ep.TEXT_EP}/{created_key}')
+   del_resp_json = del_resp.get_json()
+
+   assert "Deleted" in del_resp_json, "Expected 'Deleted' in response"
+   assert del_resp_json["Deleted"] == created_key, f"Expected deleted key to be {created_key} but got {del_resp_json['Deleted']}"
+
+   # verifying if deleted
+   read_resp = TEST_CLIENT.get(ep.TEXT_EP)
+   read_resp_json = read_resp.get_json()
+   
+   assert created_key not in read_resp_json, "Text still found after delete"

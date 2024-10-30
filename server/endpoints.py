@@ -263,6 +263,21 @@ class TextUpdate(Resource):
         }
 
 
+@api.route(f'{TEXT_EP}/<key>')
+class TextDelete(Resource):
+    @api.response(HTTPStatus.OK, 'Success.')
+    @api.response(HTTPStatus.NOT_FOUND, 'No such text.')
+    def delete(self, key):
+        """
+        Endpoint to delete a text
+        """
+        ret = txt.delete(key)
+        if ret is not None:
+            return {'Deleted': ret}
+        else:
+            raise wz.Not_Found(f'No such text: {key}')
+
+
 MASTHEAD = 'Masthead'
 
 
