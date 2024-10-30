@@ -36,3 +36,12 @@ def test_update():
     thetext = text[TESTKEY]
     assert thetext[txt.TITLE] is "Test Title V2"
     assert thetext[txt.TEXT] is "The update function worked!"
+
+
+def test_delete():
+    text = txt.read()
+    old_len = len(text)
+    txt.delete(txt.DEL_KEY)
+    text = txt.read()
+    assert len(text) < old_len
+    assert txt.DEL_KEY not in text

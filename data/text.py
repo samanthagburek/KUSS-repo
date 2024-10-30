@@ -33,8 +33,13 @@ def create(key: str, title: str, text: str):
     return key
 
 
-def delete():
-    pass
+def delete(key):
+    text = read()
+    if key in text:
+        del text[key]
+        return key
+    else:
+        return None
 
 
 def update(key: str, title: str, text: str):
