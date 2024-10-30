@@ -4,6 +4,14 @@ import data.people as ppl
 import pytest
 from data.roles import TEST_CODE
 
+TEMP_EMAIL = 'temp_person@temp.org'
+
+@pytest.fixture(scope='function')
+def temp_person():
+    ret = ppl.create(TEMP_EMAIL, 'Joe Smith', 'NYU', TEST_CODE)
+    yield ret
+    ppl.delete(ret)
+
 def test_read():
     people = ppl.read()
     assert isinstance(people, dict)
@@ -62,3 +70,9 @@ def test_invalid_email_no_at():
 def test_get_masthead():
     mh = ppl.get_masthead()
     assert isinstance(mh, dict)
+
+def test_read_one(temp_person):
+    assert ppl.read_one(temp_person) is not None
+
+def test_read_one_not_there():
+    assert ppl.read_one('Not an existing email!') is None
