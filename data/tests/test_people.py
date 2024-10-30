@@ -1,10 +1,15 @@
 import pytest
 
 import data.people as ppl
-import pytest
 from data.roles import TEST_CODE
 
 TEMP_EMAIL = 'temp_person@temp.org'
+NO_AT = 'bademail'
+NO_NAME = '@bademail'
+NO_DOMAIN = 'bademail@'
+NO_SUB_DOMAIN = 'bademail@com'
+DOMAIN_TOO_SHORT = 'bademail@nyu.e'
+DOMAIN_TOO_LONG = 'bademail@nyu.eedduu'
 
 @pytest.fixture(scope='function')
 def temp_person():
@@ -55,17 +60,30 @@ def test_create_duplicate():
     with pytest.raises(ValueError):
         ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
 
-def test_invalid_email_no_domain():
-    with pytest.raises(ValueError):
-        ppl.create("bademail@", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
+def test_is_valid_email_no_at():
+    assert not ppl.is_valid_email(NO_AT)
 
-def test_invalid_email_no_name():
-    with pytest.raises(ValueError):
-        ppl.create("@bademail", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
 
-def test_invalid_email_no_at():
-    with pytest.raises(ValueError):
-        ppl.create("bademail", "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
+def test_is_valid_no_name():
+    assert not ppl.is_valid_email(NO_NAME)
+
+
+def test_is_valid_no_domain():
+    assert not ppl.is_valid_email(NO_DOMAIN)
+
+def test_is_valid_no_sub_domain():
+    assert not ppl.is_valid_email(NO_SUB_DOMAIN)
+
+
+def test_is_valid_email_domain_too_short():
+    assert not ppl.is_valid_email(DOMAIN_TOO_SHORT)
+
+
+def test_is_valid_email_domain_too_long():
+    assert not ppl.is_valid_email(DOMAIN_TOO_LONG)
+
+def test_is_valid_email():
+    assert ppl.is_valid_email('un2021@nyu.edu')
 
 def test_get_masthead():
     mh = ppl.get_masthead()

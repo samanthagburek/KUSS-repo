@@ -31,13 +31,17 @@ PERSON_DICT = {
 }
 
 CHAR_OR_DIGIT = '[A-Za-z0-9]'
+VALID_CHARS = '[A-Za-z0-9_.]'
 
 
 def is_valid_email(email: str) -> bool:
-    return re.match(f"{CHAR_OR_DIGIT}.*@{CHAR_OR_DIGIT}.*", email)
+    return re.fullmatch(f"{VALID_CHARS}+@{CHAR_OR_DIGIT}+"
+                        + "\\."
+                        + f"{CHAR_OR_DIGIT}"
+                        + "{2,3}", email)
 
 
-def read():
+def read() -> dict:
     """
     Our contract:
         - No arguments.
@@ -61,14 +65,17 @@ def delete(_id):
         return None
 
 
-def is_valid_person(_id: str, name: str, affiliation: str,
-                    role: str) -> bool:
-    if _id in PERSON_DICT:
-        raise ValueError(f'Adding duplicate {_id=}')
-    if not is_valid_email(_id):
-        raise ValueError(f'Invalid email: {_id}')
-    if not rls.is_valid(role):
-        raise ValueError(f'Invalid role: {role}')
+def is_valid_person(email: str, name: str, affiliation: str,
+                    role: str = None, roles: list = None) -> bool:
+    if not is_valid_email(email):
+        raise ValueError(f'Invalid email: {email}')
+    if role:
+        if not rls.is_valid(role):
+            raise ValueError(f'Invalid role: {role}')
+    elif roles:
+        for role in roles:
+            if not rls.is_valid(role):
+                raise ValueError(f'Invalid role: {role}')
     return True
 
 

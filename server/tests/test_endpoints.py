@@ -76,10 +76,10 @@ def test_update_text():
 
 
 def test_create_people():
-   person_data ={ 
+   person_data ={
+        EMAIL: "john@who.org",
         NAME: "John Smith",
         AFFILIATION: "WHO",
-        EMAIL: "john@who.org",
         ROLES: TEST_CODE
     }
 
@@ -108,10 +108,10 @@ def test_create_text():
 
 def test_delete_people():
    # creating a person to make sure the person we are trying to delete, exists
-   person_data ={ 
+   person_data ={
+        EMAIL: "jane@you.org",
         NAME: "Jane Street",
         AFFILIATION: "YOU",
-        EMAIL: "jane@you.org",
         ROLES: TEST_CODE
     }
     
