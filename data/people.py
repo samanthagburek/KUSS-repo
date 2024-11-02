@@ -106,6 +106,8 @@ def update(_id: str, name: str, aff: str, roles: list):
     people = read()
     if _id not in people:
         raise ValueError(f'User not found {_id=}')
+    if len(name) < MIN_USER_NAME_LEN:
+        raise ValueError('Name is too short.')
     PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
                         EMAIL: _id, ROLES: roles}
     return _id
