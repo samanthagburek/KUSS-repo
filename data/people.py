@@ -111,6 +111,12 @@ def update(_id: str, name: str, aff: str, roles: list):
     return _id
 
 
+def has_role(person: dict, role: str) -> bool:
+    if role in person.get(ROLES):
+        return True
+    return False
+
+
 def main():
     create("johnnyu.edu", "x", "x")
     print(read())
