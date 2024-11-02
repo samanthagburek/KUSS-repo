@@ -117,6 +117,16 @@ def has_role(person: dict, role: str) -> bool:
     return False
 
 
+MH_FIELDS = [NAME, AFFILIATION]
+
+
+def create_mh_rec(person: dict) -> dict:
+    mh_rec = {}
+    for field in MH_FIELDS:
+        mh_rec[field] = person.get(field, '')
+    return mh_rec
+
+
 def main():
     create("johnnyu.edu", "x", "x")
     print(read())
