@@ -8,11 +8,14 @@ TEST_CODE = AUTHOR_CODE
 ED_CODE = 'ED'
 ME_CODE = 'ME'
 CE_CODE = 'CE'
+RE_CODE = 'RE'
 
 ROLES = {
     AUTHOR_CODE: 'Author',
-    'ED': 'Editor',
-    'RE': 'Referee',
+    ED_CODE: 'Editor',
+    ME_CODE: 'Managing Editor',
+    CE_CODE: 'Consulting Editor',
+    RE_CODE: 'Referee',
 }
 
 MH_ROLES = [CE_CODE, ED_CODE, ME_CODE]

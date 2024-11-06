@@ -18,13 +18,13 @@ DEL_EMAIL = 'del@nyu.edu'
 PERSON_DICT = {
     TEST_EMAIL: {
         NAME: 'David Bowie',
-        ROLES: [],
+        ROLES: [rls.ED_CODE],
         AFFILIATION: 'Starman',
         EMAIL: TEST_EMAIL,
     },
     DEL_EMAIL: {
         NAME: 'Someone',
-        ROLES: [],
+        ROLES: [rls.CE_CODE],
         AFFILIATION: 'NYU',
         EMAIL: DEL_EMAIL,
     }
