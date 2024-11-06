@@ -122,7 +122,6 @@ def update_role(_id: str, role: str):
     if _id not in people:
         raise ValueError(f'User not found {_id=}')
     if rls.is_valid(role):
-        print(people[_id])
         people[_id][ROLES].append(role)
 
 
