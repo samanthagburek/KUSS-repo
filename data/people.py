@@ -102,6 +102,10 @@ def get_masthead() -> dict:
     return masthead
 
 
+'''update takes in a list for roles, but should it take in
+one role then call update_role'''
+
+
 def update(_id: str, name: str, aff: str, roles: list):
     people = read()
     if _id not in people:
@@ -111,6 +115,15 @@ def update(_id: str, name: str, aff: str, roles: list):
     PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
                         EMAIL: _id, ROLES: roles}
     return _id
+
+
+def update_role(_id: str, role: str):
+    people = read()
+    if _id not in people:
+        raise ValueError(f'User not found {_id=}')
+    if rls.is_valid(role):
+        print(people[_id])
+        people[_id][ROLES].append(role)
 
 
 def has_role(person: dict, role: str) -> bool:

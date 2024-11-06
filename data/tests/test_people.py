@@ -1,7 +1,7 @@
 import pytest
 
 import data.people as ppl
-from data.roles import TEST_CODE
+import data.roles as rls
 
 TEMP_EMAIL = 'temp_person@temp.org'
 NO_AT = 'bademail'
@@ -13,7 +13,7 @@ DOMAIN_TOO_LONG = 'bademail@nyu.eedduu'
 
 @pytest.fixture(scope='function')
 def temp_person():
-    ret = ppl.create(TEMP_EMAIL, 'Joe Smith', 'NYU', TEST_CODE)
+    ret = ppl.create(TEMP_EMAIL, 'Joe Smith', 'NYU', rls.TEST_CODE)
     yield ret
     ppl.delete(ret)
 
@@ -43,7 +43,7 @@ ADD_EMAIL = "john@who.org"
 def test_create():
     people = ppl.read()
     assert ADD_EMAIL not in people
-    ppl.create(ADD_EMAIL, "John Smith", "WHO", TEST_CODE)
+    ppl.create(ADD_EMAIL, "John Smith", "WHO", rls.TEST_CODE)
     people = ppl.read()
     assert ADD_EMAIL in people
     ppl.delete(ADD_EMAIL)
@@ -51,19 +51,31 @@ def test_create():
 
 TEST_EMAIL = "dbw1947@nyu.edu"
 
+#check people.py for update
 def test_update():
     people = ppl.read()
     assert TEST_EMAIL in people
-    ppl.update(TEST_EMAIL, "Kid Rock", "WHO", "singer")
+    ppl.update(TEST_EMAIL, "Kid Rock", "WHO", [rls.TEST_CODE])
     people = ppl.read()
     person = people[TEST_EMAIL]
     assert person[ppl.NAME] is "Kid Rock"
     assert person[ppl.AFFILIATION] is "WHO"
-    ppl.update(TEST_EMAIL, "David Bowie", "Starman", "singer")
+    ppl.update(TEST_EMAIL, "David Bowie", "Starman", [rls.TEST_CODE])
+
+
+def test_update_role():
+    people = ppl.read()
+    assert TEST_EMAIL in people
+    ppl.update_role(TEST_EMAIL, rls.ED_CODE)
+    people = ppl.read()
+    person = people[TEST_EMAIL]
+    assert rls.TEST_CODE in person[ppl.ROLES]
+    ppl.update(TEST_EMAIL, "David Bowie", "Starman", [rls.TEST_CODE])
+    
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
-        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", TEST_CODE)
+        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", rls.TEST_CODE)
 
 def test_is_valid_email_no_at():
     assert not ppl.is_valid_email(NO_AT)
