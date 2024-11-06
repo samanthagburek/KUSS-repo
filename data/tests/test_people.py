@@ -112,4 +112,10 @@ def test_read_one(temp_person):
 def test_read_one_not_there():
     assert ppl.read_one('Not an existing email!') is None
 
-    
+def test_has_role(temp_person):
+    person_rec = ppl.read_one(temp_person)
+    assert ppl.has_role(person_rec, rls.TEST_CODE)
+
+def test_doesnt_have_role(temp_person):
+    person_rec = ppl.read_one(temp_person)
+    assert not ppl.has_role(person_rec, 'Not a good role :(')
