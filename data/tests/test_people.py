@@ -17,6 +17,11 @@ def temp_person():
     yield ret
     ppl.delete(ret)
 
+def test_get_mh_fields():
+    flds = ppl.get_mh_fields()
+    assert isinstance(flds, list)
+    assert len(flds) > 0
+
 def test_read():
     people = ppl.read()
     assert isinstance(people, dict)
@@ -94,3 +99,5 @@ def test_read_one(temp_person):
 
 def test_read_one_not_there():
     assert ppl.read_one('Not an existing email!') is None
+
+    
