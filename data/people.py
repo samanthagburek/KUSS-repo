@@ -52,8 +52,9 @@ def read() -> dict:
     return people
 
 
+# Get single person by id, or return None if id doesn't exist
 def read_one(email: str) -> dict:
-    return PERSON_DICT.get(email)
+    return PERSON_DICT.get(email, None)
 
 
 def delete(_id):
@@ -107,8 +108,8 @@ one role then call update_role'''
 
 
 def update(_id: str, name: str, aff: str, roles: list):
-    people = read()
-    if _id not in people:
+    person = read_one(_id)
+    if person is None:
         raise ValueError(f'User not found {_id=}')
     if len(name) < MIN_USER_NAME_LEN:
         raise ValueError('Name is too short.')
@@ -118,9 +119,10 @@ def update(_id: str, name: str, aff: str, roles: list):
 
 
 def update_role(_id: str, role: str):
-    people = read()
-    if _id not in people:
+    person = read_one(_id)
+    if person is None:
         raise ValueError(f'User not found {_id=}')
+    people = read()
     if rls.is_valid(role):
         people[_id][ROLES].append(role)
 

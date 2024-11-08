@@ -83,7 +83,7 @@ def test_create_people():
         ROLES: TEST_CODE
     }
 
-   resp = TEST_CLIENT.put(f'{ep.PEOPLE_EP}/create', json=person_data)
+   resp = TEST_CLIENT.put(ep.PEOPLE_EP, json=person_data)
    resp_json = resp.get_json()
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
 
@@ -114,18 +114,23 @@ def test_delete_people():
         AFFILIATION: "YOU",
         ROLES: TEST_CODE
     }
+   person_data_email ={
+        EMAIL: "jane@you.org",
+    }
     
-   create_resp = TEST_CLIENT.put(f'{ep.PEOPLE_EP}/create', json=person_data)
+   create_resp = TEST_CLIENT.put(ep.PEOPLE_EP, json=person_data)
    create_resp_json = create_resp.get_json()
    created_email = create_resp_json.get("return")
  
    assert created_email == person_data[EMAIL], f"Expected return to be {person_data[EMAIL]}, but got {create_resp_json['return']}"
 
-   del_resp = TEST_CLIENT.delete(f'{ep.PEOPLE_EP}/{created_email}')
+   del_resp = TEST_CLIENT.delete(ep.PEOPLE_EP, json=person_data_email)
+  
    del_resp_json = del_resp.get_json()
-
-   assert "Deleted" in del_resp_json, "Expected 'Deleted' in response"
-   assert del_resp_json["Deleted"] == created_email, f"Expected deleted ID to be {created_email} but got {del_resp_json['Deleted']}"
+   print(del_resp_json)
+   
+   assert "Deleted" in del_resp_json.get("Message"), f"Expected 'Deleted' in response, but got {del_resp_json['Message']}"
+   assert created_email in del_resp_json["return"] == created_email, f"Expected deleted ID to be {created_email} but got {del_resp_json['return']}"
 
    # verifying if deleted
    read_resp = TEST_CLIENT.get(ep.PEOPLE_EP)

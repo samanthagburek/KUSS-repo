@@ -81,6 +81,30 @@ class JournalTitle(Resource):
                 }
 
 
+'''
+@api.route(PEOPLE_EP)
+class People(Resource):
+    def get(self):
+        """
+        Retrieves the journal people.
+        """
+        return ppl.read()
+'''
+PEOPLE_DELETE_FLDS = api.model('DeletePeopleEntry', {
+    ppl.EMAIL: fields.String,
+})
+PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
+    ppl.NAME: fields.String,
+    ppl.AFFILIATION: fields.String,
+    ppl.EMAIL: fields.String,
+})
+PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
+    ppl.NAME: fields.String,
+    ppl.AFFILIATION: fields.String,
+})
+
+
+# @api.route(f'{PEOPLE_EP}/<_id>')
 @api.route(PEOPLE_EP)
 class People(Resource):
     """
@@ -93,41 +117,24 @@ class People(Resource):
         """
         return ppl.read()
 
-
-@api.route(f'{PEOPLE_EP}/<_id>')
-class PersonDelete(Resource):
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
-    def delete(self, _id):
+    @api.expect(PEOPLE_DELETE_FLDS)
+    def delete(self):
         """
         Endpoint to delete a person
         """
-        ret = ppl.delete(_id)
-        if ret is not None:
-            return {'Deleted': ret}
-        else:
-            raise wz.Not_Found(f'No such person: {_id}')
+        try:
+            email = request.json.get(ppl.EMAIL)
+            ret = ppl.delete(email)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not delete person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Deleted!',
+            RETURN: ret,
+        }
 
-
-# @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
-# class PersonPut(Resource):
-#     def put(self, _id, name, aff):
-#         """
-#         Endpoint to create a person
-#         """
-#         ret = ppl.create_person(_id, name, aff)
-#         return {'Message': ret}
-
-
-PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
-    ppl.NAME: fields.String,
-    ppl.AFFILIATION: fields.String,
-    ppl.EMAIL: fields.String,
-})
-
-
-@api.route(f'{PEOPLE_EP}/create')
-class PeopleCreate(Resource):
     """
     Add a person to the journal db.
     """
@@ -151,23 +158,13 @@ class PeopleCreate(Resource):
             MESSAGE: 'Person added!',
             RETURN: ret,
         }
-
-
-PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
-    ppl.NAME: fields.String,
-    ppl.AFFILIATION: fields.String,
-})
-
-
-@api.route(f'{PEOPLE_EP}/update/<_id>')
-class PersonUpdate(Resource):
     """
     Update a person to the journal db.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(PEOPLE_UPDATE_FLDS)
-    def put(self, _id):
+    def patch(self, _id):
         """
         Update a person.
         """
@@ -183,6 +180,16 @@ class PersonUpdate(Resource):
             MESSAGE: 'Person updated!',
             RETURN: ret,
         }
+
+
+# @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
+# class PersonPut(Resource):
+#     def put(self, _id, name, aff):
+#         """
+#         Endpoint to create a person
+#         """
+#         ret = ppl.create_person(_id, name, aff)
+#         return {'Message': ret}
 
 
 @api.route(TEXT_EP)
