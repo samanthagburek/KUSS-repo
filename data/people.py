@@ -48,8 +48,8 @@ def read() -> dict:
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    people = PERSON_DICT
-    return people
+    print("read() has been called")
+    return PERSON_DICT
 
 
 # Get single person by id, or return None if id doesn't exist
@@ -97,8 +97,11 @@ def get_masthead() -> dict:
     mh_roles = rls.get_masthead_roles()
     for mh_role, text in mh_roles.items():
         people_w_role = {}
-        for person in read():
-            pass
+        people = read()
+        for _id, person in people.items():
+            if has_role(person, mh_role):
+                rec = create_mh_rec(person)
+                people_w_role.append(rec)
         masthead[text] = people_w_role
     return masthead
 
