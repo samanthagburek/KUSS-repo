@@ -127,4 +127,6 @@ def test_doesnt_have_role(temp_person):
     person_rec = ppl.read_one(temp_person)
     assert not ppl.has_role(person_rec, 'Not a good role :(')
 
-# test create bad email
+def test_create_bad_email():
+    with pytest.raises(ValueError):
+        ppl.create("Bad email", "Name doesn't matter", "Affiliation doesn't matter", rls.TEST_CODE)
