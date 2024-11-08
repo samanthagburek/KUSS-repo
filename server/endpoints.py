@@ -191,6 +191,20 @@ class People(Resource):
 #         ret = ppl.create_person(_id, name, aff)
 #         return {'Message': ret}
 
+TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
+    txt.KEY: fields.String,
+    txt.TITLE: fields.String,
+    txt.TEXT: fields.String
+})
+TEXT_UPDATE_FLDS = api.model('TextPeopleEntry', {
+    txt.KEY: fields.String,
+    txt.TITLE: fields.String,
+    txt.TEXT: fields.String,
+})
+TEXT_DELETE_FLDS = api.model('DeleteTextEntry', {
+    txt.KEY: fields.String,
+})
+
 
 @api.route(TEXT_EP)
 class Text(Resource):
@@ -204,19 +218,6 @@ class Text(Resource):
         """
         return txt.read()
 
-
-TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
-    txt.KEY: fields.String,
-    txt.TITLE: fields.String,
-    txt.TEXT: fields.String
-})
-
-
-@api.route(f'{TEXT_EP}/create')
-class TextCreate(Resource):
-    """
-    Add a text to the journal db.
-    """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(TEXT_CREATE_FLDS)
@@ -237,27 +238,16 @@ class TextCreate(Resource):
             RETURN: ret,
         }
 
-
-TEXT_UPDATE_FLDS = api.model('TextPeopleEntry', {
-    txt.TITLE: fields.String,
-    txt.TEXT: fields.String,
-})
-
-
-@api.route(f'{TEXT_EP}/update/<key>')
-class TextUpdate(Resource):
-    """
-    Update a text in the journal db.
-    """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(TEXT_UPDATE_FLDS)
-    def put(self, key):
+    def patch(self):
         """
         Update a text.
         """
         pass
         try:
+            key = request.json.get(txt.KEY)
             title = request.json.get(txt.TITLE)
             text = request.json.get(txt.TEXT)
             ret = txt.update(key, title, text)
@@ -269,20 +259,23 @@ class TextUpdate(Resource):
             RETURN: ret,
         }
 
-
-@api.route(f'{TEXT_EP}/<key>')
-class TextDelete(Resource):
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such text.')
-    def delete(self, key):
+    @api.expect(TEXT_DELETE_FLDS)
+    def delete(self):
         """
         Endpoint to delete a text
         """
-        ret = txt.delete(key)
-        if ret is not None:
-            return {'Deleted': ret}
-        else:
-            raise wz.Not_Found(f'No such text: {key}')
+        try:
+            key = request.json.get(txt.KEY)
+            ret = txt.delete(key)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not delete text: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Deleted!',
+            RETURN: ret,
+        }
 
 
 MASTHEAD = 'Masthead'

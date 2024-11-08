@@ -44,16 +44,6 @@ def test_read():
         assert EMAIL in person
 
 
-def test_text_read():
-    resp = TEST_CLIENT.get(ep.TEXT_EP)
-    resp_json = resp.get_json()
-    for _id, thing in resp_json.items():
-        assert isinstance(_id, str)
-        assert len(_id) > 0
-        assert TITLE in thing
-        assert TEXT in thing
-
-
 def test_update_people():
    resp = TEST_CLIENT.get(ep.PEOPLE_EP)
    resp_json = resp.get_json()
@@ -63,16 +53,6 @@ def test_update_people():
        assert NAME in person
        assert AFFILIATION in person
        assert EMAIL in person
-
-
-def test_update_text():
-   resp = TEST_CLIENT.get(ep.TEXT_EP)
-   resp_json = resp.get_json()
-   for key, thing in resp_json.items():
-       assert isinstance(key, str)
-       assert len(key) > 0
-       assert TITLE in thing
-       assert TEXT in thing
 
 
 def test_create_people():
@@ -89,21 +69,6 @@ def test_create_people():
 
    assert "return" in resp_json, "Expected 'return' in response"
    assert resp_json["return"] == person_data[EMAIL], f"Expected return to be {person_data[EMAIL]}, but got {resp_json['return']}"
-
-
-def test_create_text():
-   text_data ={ 
-        KEY: "CreatePage",
-        TITLE: "Create-Test Page",
-        TEXT: "This is to test text creation."
-    }
-
-   resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=text_data)
-   resp_json = resp.get_json()
-   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
-
-   assert "return" in resp_json, "Expected 'return' in response"
-   assert resp_json["return"] == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {resp_json['return']}"
 
 
 def test_delete_people():
@@ -139,6 +104,40 @@ def test_delete_people():
    assert created_email not in read_resp_json, "Person still found after delete"
 
 
+def test_text_read():
+    resp = TEST_CLIENT.get(ep.TEXT_EP)
+    resp_json = resp.get_json()
+    for _id, thing in resp_json.items():
+        assert isinstance(_id, str)
+        assert len(_id) > 0
+        assert TITLE in thing
+        assert TEXT in thing
+
+def test_create_text():
+   text_data ={ 
+        KEY: "CreatePage",
+        TITLE: "Create-Test Page",
+        TEXT: "This is to test text creation."
+    }
+
+   resp = TEST_CLIENT.put(ep.TEXT_EP, json=text_data)
+   resp_json = resp.get_json()
+   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
+
+   assert "return" in resp_json, "Expected 'return' in response"
+   assert resp_json["return"] == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {resp_json['return']}"
+
+
+def test_update_text():
+   resp = TEST_CLIENT.get(ep.TEXT_EP)
+   resp_json = resp.get_json()
+   for key, thing in resp_json.items():
+       assert isinstance(key, str)
+       assert len(key) > 0
+       assert TITLE in thing
+       assert TEXT in thing
+
+
 def test_delete_text():
    # creating a text to make sure the text we are trying to delete, exists
    text_data ={ 
@@ -146,18 +145,22 @@ def test_delete_text():
         TITLE: "Another Page",
         TEXT: "This is another journal to test deleting text."
     }
+   delete_data ={ 
+        KEY: "AnotherPage",
+    }
     
-   create_resp = TEST_CLIENT.put(f'{ep.TEXT_EP}/create', json=text_data)
+   create_resp = TEST_CLIENT.put(ep.TEXT_EP, json=text_data)
    create_resp_json = create_resp.get_json()
    created_key = create_resp_json.get("return")
  
    assert created_key == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {create_resp_json['return']}"
 
-   del_resp = TEST_CLIENT.delete(f'{ep.TEXT_EP}/{created_key}')
+   del_resp = TEST_CLIENT.delete(ep.TEXT_EP, json = delete_data)
    del_resp_json = del_resp.get_json()
+   print(del_resp_json)
 
-   assert "Deleted" in del_resp_json, "Expected 'Deleted' in response"
-   assert del_resp_json["Deleted"] == created_key, f"Expected deleted key to be {created_key} but got {del_resp_json['Deleted']}"
+   assert "Deleted!" in del_resp_json.get("Message"), "Expected 'Deleted' in response"
+   assert created_key in del_resp_json["return"], f"Expected deleted key to be {created_key} but got {del_resp_json['return']}"
 
    # verifying if deleted
    read_resp = TEST_CLIENT.get(ep.TEXT_EP)
