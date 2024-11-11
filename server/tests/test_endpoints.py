@@ -8,7 +8,6 @@ from http.client import (
 )
 
 from unittest.mock import patch
-
 import pytest
 
 from data.people import NAME, AFFILIATION, EMAIL, ROLES
@@ -113,6 +112,7 @@ def test_text_read():
         assert TITLE in thing
         assert TEXT in thing
 
+
 def test_create_text():
    text_data ={ 
         KEY: "CreatePage",
@@ -167,3 +167,14 @@ def test_delete_text():
    read_resp_json = read_resp.get_json()
    
    assert created_key not in read_resp_json, "Text still found after delete"
+
+@patch('data.text.read', autospec=True,
+       return_value={'name': {TITLE: 'This title', TEXT: 'This text'}})
+def test_get_text(mock_read):
+    resp = TEST_CLIENT.get(ep.TEXT_EP)
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    for key, thing in resp_json.items():
+        assert isinstance(key, str)
+        assert TITLE in thing
+        assert TEXT in thing
