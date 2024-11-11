@@ -10,6 +10,7 @@ NO_DOMAIN = 'bademail@'
 NO_SUB_DOMAIN = 'bademail@com'
 DOMAIN_TOO_SHORT = 'bademail@nyu.e'
 DOMAIN_TOO_LONG = 'bademail@nyu.eedduu'
+TEMP_EMAIL2 = 'not_real@temp.org'
 
 @pytest.fixture(scope='function')
 def temp_person():
@@ -130,3 +131,7 @@ def test_doesnt_have_role(temp_person):
 def test_create_bad_email():
     with pytest.raises(ValueError):
         ppl.create("Bad email", "Name doesn't matter", "Affiliation doesn't matter", rls.TEST_CODE)
+
+def test_update_invalid_ppl():
+    with pytest.raises(ValueError):
+        ppl.update("Invalid email", "Unknown name", "Unknown affiliation", "Unknown role" )
