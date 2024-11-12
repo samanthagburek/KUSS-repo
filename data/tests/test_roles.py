@@ -33,6 +33,16 @@ def test_update_roles(temp_role):
     roles = rls.get_roles()
     assert roles[temp_role] == "TestUpdate"
 
+def test_double_makemasthead(temp_role):
+    rls.make_masthead_role(temp_role)
+    with pytest.raises(ValueError):
+        rls.make_masthead_role(temp_role)
+
+def test_double_makenormal(temp_role):
+    rls.make_normal_role(temp_role)
+    with pytest.raises(ValueError):
+        rls.make_normal_role(temp_role)
+
 def test_get_masthead_roles():
     mh_roles = rls.get_masthead_roles()
     assert isinstance(mh_roles, dict)
