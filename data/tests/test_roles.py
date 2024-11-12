@@ -51,6 +51,11 @@ def test_makemasthead(temp_role):
     rls.make_masthead_role(temp_role)
     mh_roles = rls.get_masthead_roles()
     assert temp_role in mh_roles
+
+@pytest.mark.skip('Skipping b/c test is incomplete')
+def test_makenormal(temp_role):
+    rls.make_normal_role(temp_role)
+
     
 def test_is_valid():
     assert rls.is_valid(rls.TEST_CODE)
