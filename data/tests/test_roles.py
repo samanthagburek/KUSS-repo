@@ -46,6 +46,11 @@ def test_double_makenormal(temp_role):
 def test_get_masthead_roles():
     mh_roles = rls.get_masthead_roles()
     assert isinstance(mh_roles, dict)
+
+def test_makemasthead(temp_role):
+    rls.make_masthead_role(temp_role)
+    mh_roles = rls.get_masthead_roles()
+    assert temp_role in mh_roles
     
 def test_is_valid():
     assert rls.is_valid(rls.TEST_CODE)
