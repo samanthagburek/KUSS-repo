@@ -2,8 +2,8 @@
 This module interfaces to our user data.
 """
 import re
-
 import data.roles as rls
+
 
 MIN_USER_NAME_LEN = 2
 # fields
