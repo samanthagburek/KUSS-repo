@@ -3,6 +3,9 @@ This module interfaces to our user data.
 """
 import re
 import data.roles as rls
+import data.db_connect as dbc
+
+PEOPLE_COLLECT = 'people'
 
 
 MIN_USER_NAME_LEN = 2
@@ -33,6 +36,9 @@ PERSON_DICT = {
 CHAR_OR_DIGIT = '[A-Za-z0-9]'
 VALID_CHARS = '[A-Za-z0-9_.]'
 
+client = dbc.connect_db()
+print(f'{client=}')
+
 
 def is_valid_email(email: str) -> bool:
     return re.fullmatch(f"{VALID_CHARS}+@{CHAR_OR_DIGIT}+"
@@ -48,22 +54,30 @@ def read() -> dict:
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    print("read() has been called")
-    return PERSON_DICT
+    #print("read() has been called")
+    #return PERSON_DICT
+    people = dbc.read_dict(PEOPLE_COLLECT, EMAIL)
+    print(f'{people=}')
+    return people
 
 
 # Get single person by id, or return None if id doesn't exist
 def read_one(email: str) -> dict:
-    return PERSON_DICT.get(email, None)
+    #return PERSON_DICT.get(email, None)
+    person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL:email})
+    print(f'{person=}')
+    return person
 
 
 def delete(_id):
-    people = read()
+    """ people = read()
     if _id in people:
         del people[_id]
         return _id
     else:
-        return None
+        return None """
+    print(f'{EMAIL=}, {_id=}')
+    return dbc.delete(PEOPLE_COLLECT, {EMAIL:_id})
 
 
 def is_valid_person(email: str, name: str, affiliation: str,
