@@ -132,9 +132,11 @@ def update(_id: str, name: str, aff: str, roles: list):
         raise ValueError(f'User not found {_id=}')
     if len(name) < MIN_USER_NAME_LEN:
         raise ValueError('Name is too short.')
-    PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
-                        EMAIL: _id, ROLES: roles}
-    return _id
+    # PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
+    #                     EMAIL: _id, ROLES: roles}
+    return dbc.update_doc(PEOPLE_COLLECT, {EMAIL: _id},
+                          {NAME: name, AFFILIATION: aff, ROLES: roles})
+    # return _id
 
 
 def update_role(_id: str, role: str):
