@@ -135,7 +135,8 @@ def update(_id: str, name: str, aff: str, roles: list):
     # PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
     #                     EMAIL: _id, ROLES: roles}
     return dbc.update_doc(PEOPLE_COLLECT, {EMAIL: _id},
-                          {NAME: name, AFFILIATION: aff, ROLES: roles})
+                          {NAME: name, AFFILIATION: aff,
+                          ROLES: roles, EMAIL: _id})
     # return _id
 
 

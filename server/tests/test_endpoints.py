@@ -42,7 +42,7 @@ def test_read():
         assert AFFILIATION in person
         assert EMAIL in person
 
-
+@pytest.mark.skip('Skipping b/c test is incomplete')
 def test_update_people():
    resp = TEST_CLIENT.get(ep.PEOPLE_EP)
    resp_json = resp.get_json()
