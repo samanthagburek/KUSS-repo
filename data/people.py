@@ -54,8 +54,8 @@ def read() -> dict:
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    #print("read() has been called")
-    #return PERSON_DICT
+    # print("read() has been called")
+    # return PERSON_DICT
     people = dbc.read_dict(PEOPLE_COLLECT, EMAIL)
     print(f'{people=}')
     return people
@@ -63,8 +63,8 @@ def read() -> dict:
 
 # Get single person by id, or return None if id doesn't exist
 def read_one(email: str) -> dict:
-    #return PERSON_DICT.get(email, None)
-    person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL:email})
+    # return PERSON_DICT.get(email, None)
+    person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
     print(f'{person=}')
     return person
 
@@ -77,7 +77,7 @@ def delete(_id):
     else:
         return None """
     print(f'{EMAIL=}, {_id=}')
-    return dbc.delete(PEOPLE_COLLECT, {EMAIL:_id})
+    return dbc.delete(PEOPLE_COLLECT, {EMAIL: _id})
 
 
 def is_valid_person(email: str, name: str, affiliation: str,
@@ -95,14 +95,16 @@ def is_valid_person(email: str, name: str, affiliation: str,
 
 
 def create(_id: str, name: str, aff: str, role: str):
-    if _id in PERSON_DICT:
+    if _id in read():
         raise ValueError(f"Adding duplicate email {_id=}")
     if (is_valid_person(_id, name, aff, role)):
         roles = []
         if role:
             roles.append(role)
-        people = read()
-        people[_id] = {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
+        # people = read()
+        # people[_id]= {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
+        newperson = {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
+        dbc.create(PEOPLE_COLLECT, newperson)
         return _id
 
 

@@ -39,14 +39,16 @@ def test_read():
         assert ppl.NAME in person
     
 def test_delete():
+    ppl.create(ANOTHER_EMAIL, "Jane Smith", "YOU", rls.TEST_CODE)
     people = ppl.read()
     old_len = len(people)
-    ppl.delete(ppl.DEL_EMAIL)
+    ppl.delete(ANOTHER_EMAIL)
     people = ppl.read()
     assert len(people) < old_len
-    assert ppl.DEL_EMAIL not in people
+    assert ANOTHER_EMAIL not in people
 
 ADD_EMAIL = "john@who.org"
+ANOTHER_EMAIL = "jane@you.org"
     
 def test_create():
     people = ppl.read()
