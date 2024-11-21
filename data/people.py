@@ -112,7 +112,7 @@ def get_masthead() -> dict:
     masthead = {}
     mh_roles = rls.get_masthead_roles()
     for mh_role, text in mh_roles.items():
-        people_w_role = {}
+        people_w_role = []
         people = read()
         for _id, person in people.items():
             if has_role(person, mh_role):
@@ -144,9 +144,8 @@ def update_role(_id: str, role: str):
     person = read_one(_id)
     if person is None:
         raise ValueError(f'User not found {_id=}')
-    people = read()
     if rls.is_valid(role):
-        people[_id][ROLES].append(role)
+        return dbc.update_array(PEOPLE_COLLECT, {EMAIL: _id}, ROLES, role)
 
 
 def has_role(person: dict, role: str) -> bool:

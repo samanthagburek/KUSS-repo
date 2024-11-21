@@ -75,6 +75,11 @@ def update_doc(collection, filters, update_dict, db=SE_DB):
     return client[db][collection].update_one(filters, {'$set': update_dict})
 
 
+def update_array(collection, filters, arr_field, arr_val, db=SE_DB):
+    return client[db][collection].update_one(filters, {'$push':
+                                                       {arr_field: arr_val}})
+
+
 def read(collection, db=SE_DB, no_id=True) -> list:
     """
     Returns a list from the db.

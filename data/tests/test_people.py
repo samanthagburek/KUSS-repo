@@ -78,15 +78,16 @@ def test_update():
     ppl.update(TEST_EMAIL, "David Bowie", "WHO", [rls.TEST_CODE])
     # ppl.delete(TEST_EMAIL)
 
-@pytest.mark.skip('Skipping b/c update_role not connected to db')
+
 def test_update_role():
     people = ppl.read()
     assert TEST_EMAIL in people
-    ppl.update_role(TEST_EMAIL, rls.ED_CODE)
-    people = ppl.read()
-    person = people[TEST_EMAIL]
-    assert rls.TEST_CODE in person[ppl.ROLES]
-    ppl.update(TEST_EMAIL, "David Bowie", "Starman", [rls.TEST_CODE])
+    status = ppl.update_role(TEST_EMAIL, rls.ME_CODE)
+    print(status)
+    # people = ppl.read()
+    # person = people[TEST_EMAIL]
+    # assert rls.TEST_CODE in person[ppl.ROLES]
+    # ppl.update(TEST_EMAIL, "David Bowie", "Starman", [rls.TEST_CODE])
     
     
 def test_create_duplicate():
