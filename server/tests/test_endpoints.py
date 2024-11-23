@@ -125,7 +125,7 @@ def test_create_text():
    resp = TEST_CLIENT.put(ep.TEXT_EP, json=text_data)
    resp_json = resp.get_json()
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
-
+   print(resp_json)
    assert "return" in resp_json, "Expected 'return' in response"
    assert resp_json["return"] == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {resp_json['return']}"
 
@@ -142,33 +142,23 @@ def test_update_text():
 
 def test_delete_text():
    # creating a text to make sure the text we are trying to delete, exists
-   text_data ={ 
-        KEY: "AnotherPage",
-        TITLE: "Another Page",
-        TEXT: "This is another journal to test deleting text."
-    }
    delete_data ={ 
-        KEY: "AnotherPage",
+        KEY: "CreatePage",
     }
-    
-   create_resp = TEST_CLIENT.put(ep.TEXT_EP, json=text_data)
-   create_resp_json = create_resp.get_json()
-   created_key = create_resp_json.get("return")
- 
-   assert created_key == text_data[KEY], f"Expected return to be {text_data[KEY]}, but got {create_resp_json['return']}"
 
    del_resp = TEST_CLIENT.delete(ep.TEXT_EP, json = delete_data)
    del_resp_json = del_resp.get_json()
    print(del_resp_json)
 
    assert "Deleted!" in del_resp_json.get("Message"), "Expected 'Deleted' in response"
-   assert created_key in del_resp_json["return"], f"Expected deleted key to be {created_key} but got {del_resp_json['return']}"
+   assert del_resp_json["return"] > 0, f"Expected deleted count > 0, but got {del_resp_json['return']}"
 
    # verifying if deleted
    read_resp = TEST_CLIENT.get(ep.TEXT_EP)
    read_resp_json = read_resp.get_json()
-   
-   assert created_key not in read_resp_json, "Text still found after delete"
+   print("AAAAAAAAAHHHHHHHHHHH")
+   print(read_resp_json)
+   assert delete_data[KEY] not in read_resp_json, "Text still found after delete"
 
 @patch('data.text.read', autospec=True,
        return_value={'name': {TITLE: 'This title', TEXT: 'This text'}})

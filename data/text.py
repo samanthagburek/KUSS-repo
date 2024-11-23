@@ -1,11 +1,16 @@
 """
 This module interfaces to our journal text data.
 """
+import data.db_connect as dbc
+
+TEXT_COLLECT = 'text'
+
 
 # fields
 KEY = 'key'
 TITLE = 'title'
 TEXT = 'text'
+
 EMAIL = 'email'
 
 TEST_KEY = 'HomePage'
@@ -23,30 +28,28 @@ text_dict = {
 }
 
 
+client = dbc.connect_db()
+print(f'{client=}')
+
+
 def create(key: str, title: str, text: str):
-    if key in text_dict:
+    if key in read():
         raise ValueError(f'Page already exists {key=}')
-    text_dict[key] = {
-        TITLE: title,
-        TEXT: text
-    }
+    newtext = {KEY: key, TITLE: title, TEXT: text}
+    dbc.create(TEXT_COLLECT, newtext)
     return key
 
 
 def delete(key):
-    text = read()
-    if key in text:
-        del text[key]
-        return key
-    else:
-        return None
+    return dbc.delete(TEXT_COLLECT, {KEY: key})
 
 
 def update(key: str, title: str, text: str):
-    if key in text_dict:
+    if key in read():
         text_dict[key][TITLE] = title
         text_dict[key][TEXT] = text
-        return key
+        return dbc.update_doc(TEXT_COLLECT, {KEY: key},
+                                            {TITLE: title, TEXT: text})
     else:
         raise ValueError(f'Text not found {key=}')
 
@@ -58,15 +61,14 @@ def read():
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    text = text_dict
+    text = dbc.read_dict(TEXT_COLLECT, KEY)
     return text
 
 
 def read_one(key: str) -> dict:
-    result = {}
-    if key in text_dict:
-        result = text_dict[key]
-    return result
+    text = dbc.fetch_one(TEXT_COLLECT, {KEY: key})
+    print(f'{key=}')
+    return text
 
 
 def main():
