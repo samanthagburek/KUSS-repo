@@ -13,3 +13,11 @@ def gen_random_not_valid_str() -> str:
 def test_is_valid_state():
     for state in mqry.get_states():
         assert mqry.is_valid_state(state)
+
+def test_is_valid_action():
+    for action in mqry.get_actions():
+        assert mqry.is_valid_action(action)
+def test_is_not_valid_action():
+    # run this test "a few" times
+    for i in range(10):
+        assert not mqry.is_valid_action(gen_random_not_valid_str())
