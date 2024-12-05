@@ -1,3 +1,4 @@
+import data.manuscripts.fields as flds
 # states:
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
@@ -10,10 +11,21 @@ VALID_STATES = [
     REJECTED,
     SUBMITTED,
 ]
+
+SAMPLE_MANU = {
+    flds.TITLE: 'Short module import names in Python',
+    flds.AUTHOR: 'Kuss Endname',
+    flds.REFEREES: [],
+}
+
+
 def get_states() -> list:
     return VALID_STATES
+
+
 def is_valid_state(state: str) -> bool:
     return state in VALID_STATES
+
 
 # actions:
 ACCEPT = 'ACC'
@@ -28,25 +40,41 @@ VALID_ACTIONS = [
     DONE,
     REJECT,
 ]
+FUNC = 'f'
+
+
 def get_actions() -> list:
     return VALID_ACTIONS
+
+
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-def handle_action(current_state: str, action: str) -> str:
-    if not is_valid_state(current_state):
-        raise ValueError(f'Invalid state: {current_state}')
-    if not is_valid_action(action):
-        raise ValueError(f'Invalid action: {action}')
-    new_state = current_state
-    if current_state == SUBMITTED:
-        if action == ASSIGN_REF:
-            new_state = IN_REF_REV
-        elif action == REJECT:
-            new_state = REJECTED
-    elif current_state == IN_REF_REV:
-        if action == ACCEPT:
-            new_state = COPY_EDIT
-        elif action == REJECT:
-            new_state = REJECTED
-    return new_state
+
+STATE_TABLE = {
+    SUBMITTED: {
+        ASSIGN_REF: {
+            FUNC: lambda m: IN_REF_REV,
+        },
+        REJECT: {
+            FUNC: lambda m: REJECTED,
+        },
+    },
+    COPY_EDIT: {
+        DONE: {
+
+        },
+    },
+}
+
+
+def get_valid_actions_by_state(state: str) -> list:
+    return STATE_TABLE[state].keys()
+
+
+def handle_action(current_state: str, action: str, manuscript: str) -> str:
+    if current_state not in STATE_TABLE:
+        raise ValueError(f'Bad state: {current_state}')
+    if action not in STATE_TABLE[current_state]:
+        raise ValueError(f'{action} not available in {current_state}')
+    return STATE_TABLE[current_state][action][FUNC](manuscript)
