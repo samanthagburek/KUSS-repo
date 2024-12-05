@@ -33,18 +33,20 @@ PERSON_DICT = {
     }
 }
 
-CHAR_OR_DIGIT = '[A-Za-z0-9]'
-VALID_CHARS = '[A-Za-z0-9_.]'
+VALID_CHARS = '[A-Za-z0-9._%+-]'
+DOMAIN_CHARS = '[A-Za-z0-9-]'
+TLD_CHARS = '[A-Za-z]{2,}'
 
 client = dbc.connect_db()
 print(f'{client=}')
 
 
 def is_valid_email(email: str) -> bool:
-    return re.fullmatch(f"{VALID_CHARS}+@{CHAR_OR_DIGIT}+"
+    return re.fullmatch(f"{VALID_CHARS}+@{DOMAIN_CHARS}+"
                         + "\\."
-                        + f"{CHAR_OR_DIGIT}"
-                        + "{2,3}", email)
+                        + f"({DOMAIN_CHARS}+)*"
+                        + "\\."
+                        + f"{TLD_CHARS}", email)
 
 
 def read() -> dict:
