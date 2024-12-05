@@ -49,4 +49,3 @@ def test_handle_action_valid_return():
             new_state = mqry.handle_action(state, action,
                                            mqry.SAMPLE_MANU)
             assert mqry.is_valid_state(new_state)
-

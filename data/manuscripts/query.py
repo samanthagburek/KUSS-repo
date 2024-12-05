@@ -56,6 +56,9 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
+def sub_assign_ref(manuscript: dict) -> str:
+    return IN_REF_REV
+
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
@@ -96,3 +99,7 @@ def handle_action(current_state: str, action: str, manuscript: str) -> str:
     if action not in STATE_TABLE[current_state]:
         raise ValueError(f'{action} not available in {current_state}')
     return STATE_TABLE[current_state][action][FUNC](manuscript)
+
+def main():
+    print(handle_action(SUBMITTED, ASSIGN_REF, SAMPLE_MANU))
+    print(handle_action(SUBMITTED, REJECT, SAMPLE_MANU))
