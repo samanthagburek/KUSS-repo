@@ -1,6 +1,6 @@
 import data.manuscripts.fields as flds
 # states:
-AUTHOR_REV = 'AUR' # author review
+AUTHOR_REV = 'AUR'  # author review
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
@@ -55,6 +55,9 @@ def get_actions() -> list:
 
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
+
+def sub_assign_ref(manu: dict) -> str:
+    return IN_REF_REV
 
 STATE_TABLE = {
     SUBMITTED: {
