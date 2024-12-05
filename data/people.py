@@ -42,11 +42,9 @@ print(f'{client=}')
 
 
 def is_valid_email(email: str) -> bool:
-    return re.fullmatch(f"{VALID_CHARS}+@{DOMAIN_CHARS}+"
-                        + "\\."
-                        + f"({DOMAIN_CHARS}+)*"
-                        + "\\."
-                        + f"{TLD_CHARS}", email)
+    return re.fullmatch(f"{DOMAIN_CHARS}+(\\.{DOMAIN_CHARS}+)*"
+                        + f"{DOMAIN_CHARS}+(\\.{DOMAIN_CHARS}+)*"
+                        + f"\\.{TLD_CHARS}", email)
 
 
 def read() -> dict:
