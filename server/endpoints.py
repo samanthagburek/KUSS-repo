@@ -164,12 +164,13 @@ class People(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(PEOPLE_UPDATE_FLDS)
-    def patch(self, _id):
+    def patch(self):
         """
         Update a person.
         """
         pass
         try:
+            _id = request.json.get(ppl.EMAIL)
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
             ret = ppl.update(_id, name, affiliation)
