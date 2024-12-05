@@ -1,15 +1,21 @@
 import data.manuscripts.fields as flds
 # states:
+AUTHOR_REV = 'AUR' # author review
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
 SUBMITTED = 'SUB'
+FORMATTING = 'FOR'
+PUBLISHED = 'PUB'
+
 TEST_STATE = SUBMITTED
 VALID_STATES = [
+    AUTHOR_REV,
     COPY_EDIT,
     IN_REF_REV,
     REJECTED,
     SUBMITTED,
+    FORMATTING,
 ]
 
 SAMPLE_MANU = {
@@ -50,7 +56,6 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
@@ -62,9 +67,22 @@ STATE_TABLE = {
     },
     COPY_EDIT: {
         DONE: {
-
+            FUNC: lambda m: AUTHOR_REV,
         },
     },
+    AUTHOR_REV: {
+        DONE: {
+            FUNC: lambda m: FORMATTING,
+        },
+    },
+    FORMATTING: {
+        DONE: {
+            FUNC: lambda m: PUBLISHED,
+        },
+    },
+    PUBLISHED: {},
+    REJECTED: {},
+
 }
 
 
