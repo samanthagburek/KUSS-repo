@@ -75,7 +75,8 @@ def test_update_people():
    person_data ={
        EMAIL: "john@who.org",
        NAME: "Jane Smith",
-       AFFILIATION: "WHO"
+       AFFILIATION: "WHO",
+       ROLES: TEST_CODE
    }
    resp = TEST_CLIENT.patch(ep.PEOPLE_EP, json=person_data)
    resp_json = resp.get_json()
