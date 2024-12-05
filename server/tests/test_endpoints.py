@@ -76,13 +76,14 @@ def test_update_people():
        EMAIL: "john@who.org",
        NAME: "Jane Smith",
        AFFILIATION: "WHO",
-       ROLES: TEST_CODE
+       ROLES: [TEST_CODE]
    }
    resp = TEST_CLIENT.patch(ep.PEOPLE_EP, json=person_data)
    resp_json = resp.get_json()
+   print(resp_json)
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
-   assert "modifiedCount" in resp_json, "Expected 'modifiedCount' in response"
-   assert resp_json["modifiedCount"] > 0
+   assert "Person updated!" in resp_json['Message'], "Expected 'Person updated!' in response"
+   assert resp_json['return']['nModified'] > 0
 
 
 def test_delete_people():

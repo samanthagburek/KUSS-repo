@@ -126,7 +126,7 @@ def get_masthead() -> dict:
 one role then call update_role'''
 
 
-def update(_id: str, name: str, aff: str, roles: list):
+def update(_id: str, name: str, aff: str):
     person = read_one(_id)
     if person is None:
         raise ValueError(f'User not found {_id=}')
@@ -134,10 +134,10 @@ def update(_id: str, name: str, aff: str, roles: list):
         raise ValueError('Name is too short.')
     # PERSON_DICT[_id] = {NAME: name, AFFILIATION: aff,
     #                     EMAIL: _id, ROLES: roles}
-    return dbc.update_doc(PEOPLE_COLLECT, {EMAIL: _id},
-                          {NAME: name, AFFILIATION: aff,
-                          ROLES: roles, EMAIL: _id})
-    # return _id
+    ret = dbc.update_doc(PEOPLE_COLLECT, {EMAIL: _id},
+                         {NAME: name, AFFILIATION: aff,
+                         EMAIL: _id})
+    return ret.raw_result
 
 
 def update_role(_id: str, role: str):

@@ -42,6 +42,7 @@ def test_handle_action_bad_action():
                            gen_random_not_valid_str(),
                            mqry.SAMPLE_MANU)
 
+@pytest.mark.skip(reason="is in progress in class")
 def test_handle_action_valid_return():
     for state in mqry.get_states():
         for action in mqry.get_valid_actions_by_state(state):

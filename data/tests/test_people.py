@@ -67,15 +67,15 @@ TEST_EMAIL = "dbw1947@nyu.edu"
 def test_update():
     people = ppl.read()
     assert TEST_EMAIL in people
-    update_status = ppl.update(TEST_EMAIL, "Kid Rock", "WHO", [rls.TEST_CODE])
+    update_status = ppl.update(TEST_EMAIL, "Kid Rock", "WHO")
     print(update_status)
     # people = ppl.read()
     # person = people[TEST_EMAIL]
     # person = ppl.read_one(TEST_EMAIL)
     # assert person[ppl.NAME] is "Kid Rock"
     # assert person[ppl.AFFILIATION] is "WHO"
-    assert update_status.modified_count > 0
-    ppl.update(TEST_EMAIL, "David Bowie", "WHO", [rls.TEST_CODE])
+    assert update_status['nModified'] > 0
+    ppl.update(TEST_EMAIL, "David Bowie", "WHO")
     # ppl.delete(TEST_EMAIL)
 
 
@@ -143,4 +143,4 @@ def test_create_bad_email():
 
 def test_update_invalid_ppl():
     with pytest.raises(ValueError):
-        ppl.update("Invalid email", "Unknown name", "Unknown affiliation", "Unknown role" )
+        ppl.update("Invalid email", "Unknown name", "Unknown affiliation")
