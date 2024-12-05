@@ -12,7 +12,7 @@ import pytest
 
 from data.people import NAME, AFFILIATION, EMAIL, ROLES
 from data.text import KEY, TITLE, TEXT
-from data.roles import TEST_CODE
+from data.roles import TEST_CODE, MH_ROLES
 
 import server.endpoints as ep
 
@@ -76,7 +76,7 @@ def test_update_people():
        EMAIL: "john@who.org",
        NAME: "Jane Smith",
        AFFILIATION: "WHO",
-       ROLES: TEST_CODE
+       ROLES: MH_ROLES
    }
    resp = TEST_CLIENT.patch(ep.PEOPLE_EP, json=person_data)
    resp_json = resp.get_json()
