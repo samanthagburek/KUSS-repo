@@ -47,12 +47,6 @@ def is_valid_email(email: str) -> bool:
                         + f"\\.{TLD_CHARS}", email)
 
 
-def is_valid_email(email: str) -> bool:
-    return re.fullmatch(f"{VALID_CHARS}+@{CHAR_OR_DIGIT}+"
-                        + "\\."
-                        + f"{CHAR_OR_DIGIT}"
-                        + "{2,3}", email)
-
 def read() -> dict:
     """
     Our contract:
