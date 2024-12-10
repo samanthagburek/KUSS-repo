@@ -7,6 +7,7 @@ REJECTED = 'REJ'
 SUBMITTED = 'SUB'
 FORMATTING = 'FOR'
 PUBLISHED = 'PUB'
+WITHDRAWN = 'WIT'
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -15,6 +16,7 @@ VALID_STATES = [
     IN_REF_REV,
     REJECTED,
     SUBMITTED,
+    WITHDRAWN,
     FORMATTING,
 ]
 
@@ -36,15 +38,19 @@ def is_valid_state(state: str) -> bool:
 # actions:
 ACCEPT = 'ACC'
 ASSIGN_REF = 'ARF'
+DELETE_REF = 'DRF'
 DONE = 'DON'
 REJECT = 'REJ'
+WITHDRAW = 'WIT'
 # for testing:
 TEST_ACTION = ACCEPT
 VALID_ACTIONS = [
     ACCEPT,
     ASSIGN_REF,
+    DELETE_REF,
     DONE,
     REJECT,
+    WITHDRAWN,
 ]
 FUNC = 'f'
 
@@ -56,8 +62,17 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-def sub_assign_ref(manuscript: dict) -> str:
+def assign_ref(manu: dict, ref: str, extra=None) -> str:
+    manu[flds.REFEREES].append(ref)
     return IN_REF_REV
+    
+def delete_ref(manu: dict, ref: str) -> str:
+    if len(manu[flds.REFEREES]) > 0:
+        manu[flds.REFEREES].remove(ref)
+    if len(manu[flds.REFEREES]) > 0:
+        return IN_REF_REV
+    else:
+        return SUBMITTED
 
 STATE_TABLE = {
     SUBMITTED: {
