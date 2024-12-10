@@ -34,13 +34,13 @@ def test_handle_action_bad_state():
     with pytest.raises(ValueError):
         mqry.handle_action(gen_random_not_valid_str(),
                            mqry.TEST_ACTION, 
-                           mqry.SAMPLE_MANU)
+                           manu=mqry.SAMPLE_MANU)
 
 def test_handle_action_bad_action():
     with pytest.raises(ValueError):
         mqry.handle_action(mqry.TEST_STATE,
                            gen_random_not_valid_str(),
-                           mqry.SAMPLE_MANU)
+                           manu=mqry.SAMPLE_MANU)
 
 @pytest.mark.skip(reason="is in progress in class")
 def test_handle_action_valid_return():

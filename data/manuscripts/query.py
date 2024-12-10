@@ -54,6 +54,11 @@ VALID_ACTIONS = [
 ]
 FUNC = 'f'
 
+COMMON_ACTIONS = {
+    WITHDRAW: {
+        FUNC: lambda **kwargs: WITHDRAWN,
+    },
+}
 
 def get_actions() -> list:
     return VALID_ACTIONS
@@ -108,12 +113,12 @@ def get_valid_actions_by_state(state: str) -> list:
     return STATE_TABLE[state].keys()
 
 
-def handle_action(current_state: str, action: str, manuscript: str) -> str:
+def handle_action(current_state: str, action: str, **kwargs) -> str:
     if current_state not in STATE_TABLE:
         raise ValueError(f'Bad state: {current_state}')
     if action not in STATE_TABLE[current_state]:
         raise ValueError(f'{action} not available in {current_state}')
-    return STATE_TABLE[current_state][action][FUNC](manuscript)
+    return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
 def main():
     print(handle_action(SUBMITTED, ASSIGN_REF, SAMPLE_MANU))
