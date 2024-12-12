@@ -42,10 +42,13 @@ def test_handle_action_bad_action():
                            gen_random_not_valid_str(),
                            manu=mqry.SAMPLE_MANU)
 
-@pytest.mark.skip(reason="is in progress in class")
+
 def test_handle_action_valid_return():
     for state in mqry.get_states():
         for action in mqry.get_valid_actions_by_state(state):
+            print(f'{action=}')
             new_state = mqry.handle_action(state, action,
-                                           mqry.SAMPLE_MANU)
+                                           manu=mqry.SAMPLE_MANU,
+                                           ref='Some ref')
+            print(f'{new_state=}')
             assert mqry.is_valid_state(new_state)
