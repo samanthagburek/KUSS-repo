@@ -12,6 +12,18 @@ def gen_random_not_valid_str() -> str:
     big_int += BIG_NUM
     bad_str = str(big_int)
 
+def test_get_states():
+    sts = mqry.get_states()
+    assert len(sts) > 0
+    for state in sts:
+        assert isinstance(state, str)
+
+def test_get_actions():
+    sts = mqry.get_actions()
+    assert len(sts) > 0
+    for state in sts:
+        assert isinstance(state, str)
+
 def test_is_valid_state():
     for state in mqry.get_states():
         assert mqry.is_valid_state(state)
@@ -42,7 +54,6 @@ def test_handle_action_bad_action():
                            gen_random_not_valid_str(),
                            manu=mqry.SAMPLE_MANU)
 
-
 def test_handle_action_valid_return():
     for state in mqry.get_states():
         for action in mqry.get_valid_actions_by_state(state):
@@ -52,3 +63,4 @@ def test_handle_action_valid_return():
                                            ref='Some ref')
             print(f'{new_state=}')
             assert mqry.is_valid_state(new_state)
+

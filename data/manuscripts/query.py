@@ -64,10 +64,12 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
+
 def assign_ref(manu: dict, ref: str, extra=None) -> str:
     manu[flds.REFEREES].append(ref)
     return IN_REF_REV
-    
+
+
 def delete_ref(manu: dict, ref: str) -> str:
     if len(manu[flds.REFEREES]) > 0:
         manu[flds.REFEREES].remove(ref)
@@ -75,7 +77,7 @@ def delete_ref(manu: dict, ref: str) -> str:
         return IN_REF_REV
     else:
         return SUBMITTED
-    
+
 
 COMMON_ACTIONS = {
     WITHDRAW: {
