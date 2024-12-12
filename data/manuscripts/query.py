@@ -78,40 +78,25 @@ def delete_ref(manu: dict, ref: str) -> str:
         return IN_REF_REV
     else:
         return SUBMITTED
-    
-COMMON_ACTIONS = {
-    WITHDRAW: {
-        FUNC: lambda **kwargs: WITHDRAWN,
-    },
-}
 
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
-            FUNC: assign_ref,
+            FUNC: lambda m: IN_REF_REV,
         },
         REJECT: {
-            FUNC: lambda **kwargs: REJECTED,
+            FUNC: lambda m: REJECTED,
         },
-        **COMMON_ACTIONS,
-    },
-    IN_REF_REV: {
-        ASSIGN_REF: {
-            FUNC: assign_ref,
-        },
-        DELETE_REF: {
-            FUNC: delete_ref,
-        },
-        **COMMON_ACTIONS,
     },
     COPY_EDIT: {
         DONE: {
-            FUNC: lambda **kwargs: AUTHOR_REV,
+            FUNC: lambda m: AUTHOR_REV,
         },
-        **COMMON_ACTIONS,
     },
     AUTHOR_REV: {
-       **COMMON_ACTIONS,
+        DONE: {
+            FUNC: lambda m: FORMATTING,
+        },
     },
     FORMATTING: {
         DONE: {
@@ -119,12 +104,8 @@ STATE_TABLE = {
         },
     },
     PUBLISHED: {},
-    REJECTED: {
-        **COMMON_ACTIONS,
-    },
-    WITHDRAWN: {
-        **COMMON_ACTIONS,
-    },
+    REJECTED: {},
+
 }
 
 
@@ -137,7 +118,7 @@ def handle_action(current_state: str, action: str, **kwargs) -> str:
         raise ValueError(f'Bad state: {current_state}')
     if action not in STATE_TABLE[current_state]:
         raise ValueError(f'{action} not available in {current_state}')
-    return STATE_TABLE[current_state][action][FUNC](**kwargs)
+    return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
 def main():
     print(handle_action(SUBMITTED, ASSIGN_REF, SAMPLE_MANU))
