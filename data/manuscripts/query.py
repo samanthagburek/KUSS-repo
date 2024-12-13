@@ -5,13 +5,9 @@ COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
 SUBMITTED = 'SUB'
-<<<<<<< Updated upstream
-WITHDRAWN = 'WIT'
-=======
 FORMATTING = 'FOR'
 PUBLISHED = 'PUB'
 WITHDRAW = 'WIT'
->>>>>>> Stashed changes
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -20,12 +16,8 @@ VALID_STATES = [
     IN_REF_REV,
     REJECTED,
     SUBMITTED,
-<<<<<<< Updated upstream
-    WITHDRAWN,
-=======
     FORMATTING,
     WITHDRAW,
->>>>>>> Stashed changes
 ]
 
 SAMPLE_MANU = {
