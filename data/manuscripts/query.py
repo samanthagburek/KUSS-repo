@@ -5,7 +5,13 @@ COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
 SUBMITTED = 'SUB'
+<<<<<<< Updated upstream
 WITHDRAWN = 'WIT'
+=======
+FORMATTING = 'FOR'
+PUBLISHED = 'PUB'
+WITHDRAW = 'WIT'
+>>>>>>> Stashed changes
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -14,7 +20,12 @@ VALID_STATES = [
     IN_REF_REV,
     REJECTED,
     SUBMITTED,
+<<<<<<< Updated upstream
     WITHDRAWN,
+=======
+    FORMATTING,
+    WITHDRAW,
+>>>>>>> Stashed changes
 ]
 
 SAMPLE_MANU = {
@@ -60,7 +71,6 @@ COMMON_ACTIONS = {
 def get_actions() -> list:
     return VALID_ACTIONS
 
-
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
@@ -69,22 +79,23 @@ def assign_ref(manu: dict, ref: str, extra=None) -> str:
     manu[flds.REFEREES].append(ref)
     return IN_REF_REV
 
+def assign_ref(manuscript: dict, ref: str, extra = None) -> str:
+    manuscript[flds.REFEREES].append(ref)
+    return IN_REF_REV
 
-def delete_ref(manu: dict, ref: str) -> str:
-    if len(manu[flds.REFEREES]) > 0:
-        manu[flds.REFEREES].remove(ref)
-    if len(manu[flds.REFEREES]) > 0:
+def delete_ref(manuscript: dict, ref: str) -> str:
+    if len(manuscript[flds.REFEREES]) > 0:
+        manuscript[flds.REFEREES].remove(ref)
+    if len(manuscript[flds.REFEREES]) > 0:
         return IN_REF_REV
     else:
         return SUBMITTED
 
-
 COMMON_ACTIONS = {
     WITHDRAW: {
-        FUNC: lambda **kwargs: WITHDRAWN,
-    },
+        FUNC: lambda **kwargs: WITHDRAW,
+    }
 }
-
 
 STATE_TABLE = {
     SUBMITTED: {
@@ -120,6 +131,17 @@ STATE_TABLE = {
     WITHDRAWN:{
         **COMMON_ACTIONS,
     },
+    IN_REF_REV: {
+        ASSIGN_REF: {
+            FUNC: assign_ref,
+        },
+        DELETE_REF: {
+            FUNC: delete_ref,
+        },
+        **COMMON_ACTIONS,
+    },
+    PUBLISHED: {},
+    REJECTED: {},
 
 }
 
