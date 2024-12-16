@@ -25,14 +25,12 @@ SAMPLE_MANU = {
     flds.REFEREES: [],
 }
 
-
 def get_states() -> list:
     return VALID_STATES
 
 
 def is_valid_state(state: str) -> bool:
     return state in VALID_STATES
-
 
 # actions:
 ACCEPT = 'ACC'
@@ -51,13 +49,6 @@ VALID_ACTIONS = [
     REJECT,
     WITHDRAW,
 ]
-FUNC = 'f'
-
-COMMON_ACTIONS = {
-    WITHDRAW: {
-        FUNC: lambda **kwargs: WITHDRAWN,
-    },
-}
 
 def get_actions() -> list:
     return VALID_ACTIONS
@@ -65,12 +56,7 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-
 def assign_ref(manuscript: dict, ref: str, extra=None) -> str:
-    manuscript[flds.REFEREES].append(ref)
-    return IN_REF_REV
-
-def assign_ref(manuscript: dict, ref: str, extra = None) -> str:
     manuscript[flds.REFEREES].append(ref)
     return IN_REF_REV
 
@@ -81,6 +67,8 @@ def delete_ref(manuscript: dict, ref: str) -> str:
         return IN_REF_REV
     else:
         return SUBMITTED
+
+FUNC = 'f'
 
 COMMON_ACTIONS = {
     WITHDRAW: {
@@ -122,25 +110,12 @@ STATE_TABLE = {
     WITHDRAWN:{
         **COMMON_ACTIONS,
     },
-    IN_REF_REV: {
-        ASSIGN_REF: {
-            FUNC: assign_ref,
-        },
-        DELETE_REF: {
-            FUNC: delete_ref,
-        },
-        **COMMON_ACTIONS,
-    },
     PUBLISHED: {},
     FORMATTING: {},
-    REJECTED: {},
-
 }
-
 
 def get_valid_actions_by_state(state: str) -> list:
     return STATE_TABLE[state].keys()
-
 
 def handle_action(current_state: str, action: str, **kwargs) -> str:
     if current_state not in STATE_TABLE:
@@ -150,5 +125,17 @@ def handle_action(current_state: str, action: str, **kwargs) -> str:
     return STATE_TABLE[current_state][action][FUNC](**kwargs)
 
 def main():
-    print(handle_action(SUBMITTED, ASSIGN_REF, SAMPLE_MANU))
-    print(handle_action(SUBMITTED, REJECT, SAMPLE_MANU))
+    print(handle_action(SUBMITTED, ASSIGN_REF,
+                        manu=SAMPLE_MANU, ref='Jack'))
+    print(handle_action(IN_REF_REV, ASSIGN_REF, manu=SAMPLE_MANU,
+                        ref='Jill', extra='Extra!'))
+    print(handle_action(IN_REF_REV, DELETE_REF, manu=SAMPLE_MANU,
+                        ref='Jill'))
+    print(handle_action(IN_REF_REV, DELETE_REF, manu=SAMPLE_MANU,
+                        ref='Jack'))
+    print(handle_action(SUBMITTED, WITHDRAW, manu=SAMPLE_MANU))
+    print(handle_action(SUBMITTED, REJECT, manu=SAMPLE_MANU))
+
+
+if __name__ == '__main__':
+    main()
