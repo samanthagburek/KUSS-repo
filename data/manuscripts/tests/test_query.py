@@ -19,10 +19,10 @@ def test_get_states():
         assert isinstance(state, str)
 
 def test_get_actions():
-    sts = mqry.get_actions()
-    assert len(sts) > 0
-    for state in sts:
-        assert isinstance(state, str)
+    acts = mqry.get_actions()
+    assert len(acts) > 0
+    for action in acts:
+        assert isinstance(action, str)
 
 def test_is_valid_state():
     for state in mqry.get_states():
