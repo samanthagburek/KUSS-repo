@@ -3,7 +3,7 @@
 
 PROJ_DIR=KUSS-repo
 VENV=kuss-repo
-PA_DOMAIN="https://kuss.pythonanywhere.com/"
+PA_DOMAIN="kuss.pythonanywhere.com"
 PA_USER='kuss'
 echo "Project dir = $PROJ_DIR"
 echo "PA domain = $PA_DOMAIN"
