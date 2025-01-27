@@ -17,12 +17,19 @@
 ## People
 
 - Submitting a manuscript creates an account with the role of author.
+	- Prepare database with account information and create endpoints for submitting manuscript
 - Users can edit and delete their own accounts.
+	- Create endpoints for updating account info and deleting, making sure to verify authenticity
 - Assigning a referee to a manuscript adds the referee role to that person.
+	- Prepare sections in database for referees, create referee endpoints and permissions.
 - Only the editor and managing editor(s) have create / update / delete permissions for the accounts of others.
-- Advanced: record a history of each user's interacitons with the system.
+	- Add signing in, account authentication, and ensure only certain roles have permissions.
+- Advanced: record a history of each user's interactions with the system.
+	- Create a table with columns for user, action, and timestamp
 - A listing of all people is available, but only to the editor and managing editor(s).
+	- Endpoint to fetch people, only available upon successful authentication
 - A journal masthead can be generated from the database and displayed by the frontend.
+	- We use REACT to prepare a frontend and ensure proper integration between frontend and backend.
 
 ## Text
 
