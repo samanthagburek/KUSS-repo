@@ -35,12 +35,18 @@
 
 - All large runs of text in the system, such as "About this Journal" or "Submission Guidelines,"
     are stored in the database.
+  	- Designated entries in Text database for large texts, with editor/managing editor(s) having WRITE permission
 - Also the journal title can be edited.
+	- Endpoint to edit journal title, permission to view/use endpoint given only to journal admin, i.e. editor
 - These texts can be edited from the client application, but only by the editor and managing editor(s).
+	- Frontend feature to access and edit texts, integrated with backend and database, while authenticating users. Ideally, frontend feature is only visible after authentication.
 
 ## Manuscripts
 
 - Manuscripts can flow through the system according to [this chart](https://github.com/AthenaKouKou/journal/blob/main/docs/Manuscript_FSM.jpg).
+	- Follow manuscript flow chart using functions, checking user status for certain actions.
 - A dashboard will present the manuscripts in visual form.
+	- Frontend dashboard that displays manuscripts along with their metadata and status, using REACT and connecting with manuscript database
 - Only the editor and managing editor(s) see all manuscripts; everyone else only sees "their own." That means
     manuscripts for which they are the author or referee.
+	- After user authentication, filter manuscripts from database by author / referee
