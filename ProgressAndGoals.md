@@ -2,8 +2,10 @@
 
 ## Already Completed
 
-- Working endpoints for people, roles, text, journal titles
+- Working endpoints for people, roles, text, journal titles using CRUD functionality
 - Working referee review flow through the manuscripts
+- Set up database both locally, and in the cloud
+- Deployed in Python Anywhere
 - Start of a GUI the basic skeleton
 
 ## General
@@ -13,11 +15,13 @@
     - A masthead page
     - An about page
     - A submissions guidelines page
+		- Submission guideline providing authors w/ submission instructions including plagiarism policies
 
 ## People
 
 - Submitting a manuscript creates an account with the role of author.
 	- Prepare database with account information and create endpoints for submitting manuscript
+	- Will implement to assign the role of author when creating account.
 - Users can edit and delete their own accounts.
 	- Create endpoints for updating account info and deleting, making sure to verify authenticity
 - Assigning a referee to a manuscript adds the referee role to that person.
@@ -50,3 +54,9 @@
 - Only the editor and managing editor(s) see all manuscripts; everyone else only sees "their own." That means
     manuscripts for which they are the author or referee.
 	- After user authentication, filter manuscripts from database by author / referee
+
+
+## More Goals
+
+- Encryption for sensitive data
+- Automated email for changes in review (acceptance/rejection) 
