@@ -7,6 +7,7 @@
 - Set up database both locally, and in the cloud
 - Deployed in Python Anywhere
 - Start of a GUI the basic skeleton
+- Partially working FSM 
 
 ## General
 
@@ -15,13 +16,12 @@
     - A masthead page
     - An about page
     - A submissions guidelines page
-		- Submission guideline providing authors w/ submission instructions including plagiarism policies
+
 
 ## People
 
 - Submitting a manuscript creates an account with the role of author.
 	- Prepare database with account information and create endpoints for submitting manuscript
-	- Will implement to assign the role of author when creating account.
 - Users can edit and delete their own accounts.
 	- Create endpoints for updating account info and deleting, making sure to verify authenticity
 - Assigning a referee to a manuscript adds the referee role to that person.
@@ -56,7 +56,20 @@
 	- After user authentication, filter manuscripts from database by author / referee
 
 
-## More Goals
+## Overall Goals
 
+- Finish implementing FSM 
+- Implement endpoints for texts and manuscripts
 - Encryption for sensitive data
 - Automated email for changes in review (acceptance/rejection) 
+- Assign the role of author upon submitting the manuscript
+- Assign persmission based on roles
+- Keep log of interation w/ the system
+- Create webpages for:
+	- ABOUT: General info about our company, mission statement, what we do
+	- MASTHEAD: 
+	- PROFILE: Allow authors to change their general info, including deleting their account
+	- SUBMISSION GUIDELINES: Submission guidelines providing authors w/ submission instructions including plagiarism policies
+	- LOG IN: To log in
+	- ISSUES: Current and upcoming issues
+
