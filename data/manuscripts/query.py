@@ -10,7 +10,6 @@ FORMATTING = 'FOR'
 PUBLISHED = 'PUB'
 WITHDRAWN = 'WIT'
 IN_AUTH_REVISION = 'IAR' # author revisions
-IN_EDIT_REV ='IER' # editor review
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -22,7 +21,8 @@ VALID_STATES = [
     WITHDRAWN,
     EDITOR_REV,
     IN_AUTH_REVISION,
-    IN_EDIT_REV
+    FORMATTING,
+    PUBLISHED
 ]
 
 SAMPLE_MANU = {
@@ -125,11 +125,11 @@ STATE_TABLE = {
     },
     IN_AUTH_REVISION: {
         DONE: {
-            FUNC: lambda **kwargs: IN_EDIT_REV,
+            FUNC: lambda **kwargs: EDITOR_REV,
         },
          **COMMON_ACTIONS,
     },
-    IN_EDIT_REV:{
+    EDITOR_REV:{
         ACCEPT: {
             FUNC: lambda **kwargs: COPY_EDIT,
         },
