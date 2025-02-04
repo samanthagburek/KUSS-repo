@@ -1,6 +1,7 @@
 import data.manuscripts.fields as flds
 # states:
 AUTHOR_REV = 'AUR'  # author review
+EDITOR_REV = 'EDR'
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
@@ -8,6 +9,8 @@ SUBMITTED = 'SUB'
 FORMATTING = 'FOR'
 PUBLISHED = 'PUB'
 WITHDRAWN = 'WIT'
+IN_AUTH_REVISION = 'IAR'
+IN_EDIT_REV ='IER'
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -17,6 +20,9 @@ VALID_STATES = [
     REJECTED,
     SUBMITTED,
     WITHDRAWN,
+    EDITOR_REV,
+    IN_AUTH_REVISION,
+    IN_EDIT_REV
 ]
 
 SAMPLE_MANU = {
@@ -39,6 +45,8 @@ DELETE_REF = 'DRF'
 DONE = 'DON'
 REJECT = 'REJ'
 WITHDRAW = 'WIT'
+ACCEPT_REV = 'AWR'
+SUBMIT_REV = 'SRE'
 # for testing:
 TEST_ACTION = ACCEPT
 VALID_ACTIONS = [
@@ -48,6 +56,8 @@ VALID_ACTIONS = [
     DONE,
     REJECT,
     WITHDRAW,
+    ACCEPT_REV,
+    SUBMIT_REV
 ]
 
 def get_actions() -> list:
@@ -90,8 +100,20 @@ STATE_TABLE = {
         ASSIGN_REF: {
             FUNC: assign_ref,
         },
+        ACCEPT_REV: {
+            FUNC: lambda **kwargs: IN_AUTH_REVISION,
+        },
         DELETE_REF: {
             FUNC: delete_ref,
+        },
+        REJECT: {
+            FUNC: lambda **kwargs: REJECTED,
+        },
+        ACCEPT: {
+            FUNC: lambda **kwargs: COPY_EDIT,
+        },
+        SUBMIT_REV: {
+            FUNC: lambda **kwargs: IN_REF_REV,
         },
         **COMMON_ACTIONS,
     },
@@ -100,6 +122,18 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: AUTHOR_REV,
         },
         **COMMON_ACTIONS,
+    },
+    IN_AUTH_REVISION: {
+        DONE: {
+            FUNC: lambda **kwargs: IN_EDIT_REV,
+        },
+         **COMMON_ACTIONS,
+    },
+    IN_EDIT_REV:{
+        ACCEPT: {
+            FUNC: lambda **kwargs: COPY_EDIT,
+        },
+         **COMMON_ACTIONS,
     },
     AUTHOR_REV: {
         **COMMON_ACTIONS,
@@ -110,8 +144,15 @@ STATE_TABLE = {
     WITHDRAWN:{
         **COMMON_ACTIONS,
     },
-    PUBLISHED: {},
-    FORMATTING: {},
+    PUBLISHED: {
+        DONE: {
+            FUNC: lambda **kwargs: FORMATTING,
+        },
+         **COMMON_ACTIONS,
+    },
+    FORMATTING: {
+        **COMMON_ACTIONS,
+    },
 }
 
 def get_valid_actions_by_state(state: str) -> list:
