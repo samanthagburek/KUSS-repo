@@ -9,8 +9,8 @@ SUBMITTED = 'SUB'
 FORMATTING = 'FOR'
 PUBLISHED = 'PUB'
 WITHDRAWN = 'WIT'
-IN_AUTH_REVISION = 'IAR'
-IN_EDIT_REV ='IER'
+IN_AUTH_REVISION = 'IAR' # author revisions
+IN_EDIT_REV ='IER' # editor review
 
 TEST_STATE = SUBMITTED
 VALID_STATES = [
@@ -66,14 +66,14 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-def assign_ref(manuscript: dict, ref: str, extra=None) -> str:
-    manuscript[flds.REFEREES].append(ref)
+def assign_ref(manu: dict, ref: str, extra=None) -> str:
+    manu[flds.REFEREES].append(ref)
     return IN_REF_REV
 
-def delete_ref(manuscript: dict, ref: str) -> str:
-    if len(manuscript[flds.REFEREES]) > 0:
-        manuscript[flds.REFEREES].remove(ref)
-    if len(manuscript[flds.REFEREES]) > 0:
+def delete_ref(manu: dict, ref: str) -> str:
+    if len(manu[flds.REFEREES]) > 0:
+        manu[flds.REFEREES].remove(ref)
+    if len(manu[flds.REFEREES]) > 0:
         return IN_REF_REV
     else:
         return SUBMITTED
@@ -136,6 +136,9 @@ STATE_TABLE = {
          **COMMON_ACTIONS,
     },
     AUTHOR_REV: {
+        DONE: {
+            FUNC: lambda **kwargs: FORMATTING,
+        },
         **COMMON_ACTIONS,
     },
     REJECTED: {
@@ -145,12 +148,12 @@ STATE_TABLE = {
         **COMMON_ACTIONS,
     },
     PUBLISHED: {
-        DONE: {
-            FUNC: lambda **kwargs: FORMATTING,
-        },
-         **COMMON_ACTIONS,
+        **COMMON_ACTIONS,
     },
     FORMATTING: {
+        DONE: {
+            FUNC: lambda **kwargs: PUBLISHED,
+        },
         **COMMON_ACTIONS,
     },
 }
@@ -172,11 +175,17 @@ def main():
                         ref='Jill', extra='Extra!'))
     print(handle_action(IN_REF_REV, DELETE_REF, manu=SAMPLE_MANU,
                         ref='Jill'))
-    print(handle_action(IN_REF_REV, DELETE_REF, manu=SAMPLE_MANU,
-                        ref='Jack'))
-    print(handle_action(SUBMITTED, WITHDRAW, manu=SAMPLE_MANU))
-    print(handle_action(SUBMITTED, REJECT, manu=SAMPLE_MANU))
-
+    # put this back in to handle no ref -> submitted state
+    # print(handle_action(IN_REF_REV, DELETE_REF, manu=SAMPLE_MANU,
+    #                     ref='Jack'))
+    #print(handle_action(SUBMITTED, WITHDRAW, manu=SAMPLE_MANU))
+    #print(handle_action(SUBMITTED, REJECT, manu=SAMPLE_MANU))
+    print(handle_action(IN_REF_REV, ACCEPT_REV, manu=SAMPLE_MANU))
+    print(handle_action(IN_AUTH_REVISION, DONE, manu=SAMPLE_MANU))
+    print(handle_action(IN_EDIT_REV, ACCEPT, manu=SAMPLE_MANU))
+    print(handle_action(COPY_EDIT, DONE, manu=SAMPLE_MANU))
+    print(handle_action(AUTHOR_REV, DONE, manu=SAMPLE_MANU))
+    print(handle_action(FORMATTING, DONE, manu=SAMPLE_MANU))
 
 if __name__ == '__main__':
     main()
