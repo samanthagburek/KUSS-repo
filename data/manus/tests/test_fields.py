@@ -1,5 +1,6 @@
 TEMP_NAME = 'temp'
-import data.manuscripts.fields as fld
+import data.manus.fields as fld
+#from data.manuscripts import FIELDS as fld
 
 
 def test_get_fields():

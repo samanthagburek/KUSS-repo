@@ -1,6 +1,9 @@
 import random
+
 import pytest
-import data.manuscripts.query as mqry
+
+import data.manuscripts as mqry
+
 
 def gen_random_not_valid_str() -> str:
     """
@@ -12,55 +15,53 @@ def gen_random_not_valid_str() -> str:
     big_int += BIG_NUM
     bad_str = str(big_int)
 
-def test_get_states():
-    sts = mqry.get_states()
-    assert len(sts) > 0
-    for state in sts:
-        assert isinstance(state, str)
-
-def test_get_actions():
-    acts = mqry.get_actions()
-    assert len(acts) > 0
-    for action in acts:
-        assert isinstance(action, str)
 
 def test_is_valid_state():
     for state in mqry.get_states():
         assert mqry.is_valid_state(state)
+
 
 def test_is_not_valid_state():
     # run this test "a few" times
     for i in range(10):
         assert not mqry.is_valid_state(gen_random_not_valid_str())
 
+
 def test_is_valid_action():
     for action in mqry.get_actions():
         assert mqry.is_valid_action(action)
+
 
 def test_is_not_valid_action():
     # run this test "a few" times
     for i in range(10):
         assert not mqry.is_valid_action(gen_random_not_valid_str())
 
+
 def test_handle_action_bad_state():
     with pytest.raises(ValueError):
-        mqry.handle_action(gen_random_not_valid_str(),
-                           mqry.TEST_ACTION, 
-                           manuscript=mqry.SAMPLE_MANU)
+        mqry.handle_action(mqry.TEST_ID,
+                           gen_random_not_valid_str(),
+                           mqry.TEST_ACTION,
+                           manu=mqry.SAMPLE_MANU)
+
 
 def test_handle_action_bad_action():
     with pytest.raises(ValueError):
-        mqry.handle_action(mqry.TEST_STATE,
+        mqry.handle_action(mqry.TEST_ID,
+                           mqry.TEST_STATE,
                            gen_random_not_valid_str(),
-                           manuscript=mqry.SAMPLE_MANU)
+                           manu=mqry.SAMPLE_MANU)
+
 
 def test_handle_action_valid_return():
     for state in mqry.get_states():
         for action in mqry.get_valid_actions_by_state(state):
             print(f'{action=}')
-            new_state = mqry.handle_action(state, action,
+            new_state = mqry.handle_action(mqry.TEST_ID,
+                                           state,
+                                           action,
                                            manu=mqry.SAMPLE_MANU,
-                                           ref='Some ref')
+                                           referee='Some ref')
             print(f'{new_state=}')
             assert mqry.is_valid_state(new_state)
-

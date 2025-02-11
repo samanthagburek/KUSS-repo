@@ -13,6 +13,7 @@ import pytest
 from data.people import NAME, AFFILIATION, EMAIL, ROLES
 from data.text import KEY, TITLE, TEXT
 from data.roles import TEST_CODE, MH_ROLES
+import data.manuscripts as manu
 
 import server.endpoints as ep
 
@@ -186,3 +187,14 @@ def test_get_text(mock_read):
         assert isinstance(key, str)
         assert TITLE in thing
         assert TEXT in thing
+
+@patch('data.manuscripts.handle_action', autospec=True,
+       return_value='SOME STRING')
+def test_handle_action(mock_read):
+    resp = TEST_CLIENT.put(f'{ep.MANU_EP}/receive_action',
+                           json={
+                               manu.MANU_ID: 'some id',
+                               manu.CURR_STATE: 'some state',
+                               manu.ACTION: 'some action',
+                           })
+    assert resp.status_code == OK

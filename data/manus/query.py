@@ -1,4 +1,4 @@
-import data.manuscripts.fields as flds
+import data.manus.fields as flds
 # states:
 AUTHOR_REV = 'AUR'  # author review
 EDITOR_REV = 'EDR'
