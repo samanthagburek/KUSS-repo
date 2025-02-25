@@ -188,6 +188,44 @@ class People(Resource):
         }
 
 
+PEOPLE_ROLE_UPD_FLDS = api.model('UpdatePeopleRoleEntry', {
+    rls.CODE: fields.String,
+})
+
+
+@api.route(f'{PEOPLE_EP}/<email>')
+class Person(Resource):
+    """
+    This class handles creating, reading, updating
+    and deleting journal people.
+    """
+    def get(self, email):
+        """
+        Retrieve a journal person.
+        """
+        person = ppl.read_one(email)
+        if person:
+            return person
+        else:
+            raise wz.NotFound(f'No such record: {email}')
+
+    @api.expect(PEOPLE_ROLE_UPD_FLDS)
+    def patch(self, email):
+        """
+        Update role for person.
+        """
+        try:
+            role = request.json.get(rls.CODE)
+            print(role)
+            ret = ppl.update_role(email, role)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not update person role: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Person role updated!',
+            RETURN: ret,
+        }
+
 # @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
 # class PersonPut(Resource):
 #     def put(self, _id, name, aff):
@@ -196,6 +234,7 @@ class People(Resource):
 #         """
 #         ret = ppl.create_person(_id, name, aff)
 #         return {'Message': ret}
+
 
 TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
     txt.KEY: fields.String,

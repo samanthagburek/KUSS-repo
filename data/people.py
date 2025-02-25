@@ -145,7 +145,11 @@ def update_role(_id: str, role: str):
     if person is None:
         raise ValueError(f'User not found {_id=}')
     if rls.is_valid(role):
-        return dbc.update_array(PEOPLE_COLLECT, {EMAIL: _id}, ROLES, role)
+        if has_role(person, role):
+            raise ValueError(f'User {_id=} already has {role=}')
+        ret = dbc.update_array(PEOPLE_COLLECT, {EMAIL: _id}, ROLES, role)
+        print(ret.raw_result)
+        return ret.raw_result
 
 
 def has_role(person: dict, role: str) -> bool:

@@ -3,6 +3,9 @@ This modules manages person roles for a journal.
 """
 from copy import deepcopy
 
+# fields
+CODE = 'code'
+NAME = 'name'
 
 AUTHOR_CODE = 'AU'
 TEST_CODE = AUTHOR_CODE

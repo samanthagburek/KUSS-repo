@@ -10,12 +10,13 @@ from http.client import (
 from unittest.mock import patch
 import pytest
 
-from data.people import NAME, AFFILIATION, EMAIL, ROLES
+from data.people import NAME, AFFILIATION, EMAIL, ROLES, TEST_EMAIL
 from data.text import KEY, TITLE, TEXT
-from data.roles import TEST_CODE, MH_ROLES
+from data.roles import TEST_CODE, MH_ROLES, CODE
 import data.manuscripts as manu
 
 import server.endpoints as ep
+PEOPLE_LOC = 'data.people.'
 
 TEST_CLIENT = ep.app.test_client()
 
@@ -168,6 +169,7 @@ def test_delete_text():
    print(del_resp_json)
 
    assert "Deleted!" in del_resp_json.get("Message"), "Expected 'Deleted' in response"
+
    assert del_resp_json["return"] > 0, f"Expected deleted count > 0, but got {del_resp_json['return']}"
 
    # verifying if deleted
@@ -206,3 +208,22 @@ def test_get_roles():
     for code, thing in resp_json.items():
         assert isinstance(code, str)
         assert isinstance(thing, str)
+
+@patch(PEOPLE_LOC + 'read_one', autospec=True,
+       return_value={NAME: 'Joe Schmoe'})
+def test_read_one(mock_read):
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
+    assert resp.status_code == OK
+
+
+def test_update_role():
+   role_data ={ 
+        CODE: 'CE',
+    }
+
+   resp = TEST_CLIENT.patch(f'{ep.PEOPLE_EP}/{TEST_EMAIL}', json = role_data)
+   resp_json = resp.get_json()
+   print(resp_json)
+   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
+   assert "Person role updated!" in resp_json['Message'], f"Expected 'Person role updated!' in response"
+   assert resp_json['return']['nModified'] > 0

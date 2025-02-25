@@ -86,8 +86,7 @@ def test_update_role():
     print(status)
     # people = ppl.read()
     # person = people[TEST_EMAIL]
-    # assert rls.TEST_CODE in person[ppl.ROLES]
-    # ppl.update(TEST_EMAIL, "David Bowie", "Starman", [rls.TEST_CODE])
+    assert status['nModified'] > 0
     
     
 def test_create_duplicate():
