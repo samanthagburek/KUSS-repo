@@ -198,3 +198,11 @@ def test_handle_action(mock_read):
                                manu.ACTION: 'some action',
                            })
     assert resp.status_code == OK
+
+def test_get_roles():
+    resp = TEST_CLIENT.get(ep.ROLES_EP)
+    assert resp.status_code == OK
+    resp_json = resp.get_json()
+    for code, thing in resp_json.items():
+        assert isinstance(code, str)
+        assert isinstance(thing, str)

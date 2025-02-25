@@ -13,6 +13,7 @@ import werkzeug.exceptions as wz
 import data.people as ppl
 import data.text as txt
 import data.manuscripts as manu
+import data.roles as rls
 
 app = Flask(__name__)
 CORS(app)
@@ -36,6 +37,7 @@ DATE = '2024-09-24'
 PEOPLE_EP = '/people'
 TEXT_EP = '/text'
 MANU_EP = '/manuscripts'
+ROLES_EP = '/roles'
 
 
 @api.route(HELLO_EP)
@@ -328,3 +330,16 @@ class ReceiveAction(Resource):
             MESSAGE: 'Action received!',
             RETURN: ret,
         }
+
+
+@api.route(ROLES_EP)
+class Roles(Resource):
+    """
+    This class handles creating, reading, updating
+    and deleting roles.
+    """
+    def get(self):
+        """
+        Retrieves role types.
+        """
+        return rls.get_roles()
