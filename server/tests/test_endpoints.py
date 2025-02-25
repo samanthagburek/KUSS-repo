@@ -10,7 +10,7 @@ from http.client import (
 from unittest.mock import patch
 import pytest
 
-from data.people import NAME, AFFILIATION, EMAIL, ROLES, TEST_EMAIL
+from data.people import NAME, AFFILIATION, EMAIL, ROLES, TEST_ROLE_EMAIL
 from data.text import KEY, TITLE, TEXT
 from data.roles import TEST_CODE, MH_ROLES, CODE
 import data.manuscripts as manu
@@ -85,6 +85,18 @@ def test_update_people():
    print(resp_json)
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
    assert "Person updated!" in resp_json['Message'], "Expected 'Person updated!' in response"
+   assert resp_json['return']['nModified'] > 0
+
+
+def test_update_role():
+   role_data ={ 
+        CODE: 'CE',
+    }
+   resp = TEST_CLIENT.patch(f'{ep.PEOPLE_EP}/john@who.org', json = role_data)
+   resp_json = resp.get_json()
+   print(resp_json)
+   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
+   assert "Person role updated!" in resp_json['Message'], f"Expected 'Person role updated!' in response"
    assert resp_json['return']['nModified'] > 0
 
 
@@ -214,16 +226,3 @@ def test_get_roles():
 def test_read_one(mock_read):
     resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
     assert resp.status_code == OK
-
-
-def test_update_role():
-   role_data ={ 
-        CODE: 'CE',
-    }
-
-   resp = TEST_CLIENT.patch(f'{ep.PEOPLE_EP}/{TEST_EMAIL}', json = role_data)
-   resp_json = resp.get_json()
-   print(resp_json)
-   assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
-   assert "Person role updated!" in resp_json['Message'], f"Expected 'Person role updated!' in response"
-   assert resp_json['return']['nModified'] > 0

@@ -17,6 +17,7 @@ EMAIL = 'email'
 
 TEST_EMAIL = 'dbw1947@nyu.edu'
 DEL_EMAIL = 'del@nyu.edu'
+TEST_ROLE_EMAIL = 'rol@gmail.com'
 
 PERSON_DICT = {
     TEST_EMAIL: {
@@ -30,6 +31,12 @@ PERSON_DICT = {
         ROLES: [rls.CE_CODE],
         AFFILIATION: 'NYU',
         EMAIL: DEL_EMAIL,
+    },
+    TEST_ROLE_EMAIL: {
+        NAME: 'Someone',
+        ROLES: [rls.AUTHOR_CODE],
+        AFFILIATION: 'INC',
+        EMAIL: TEST_ROLE_EMAIL,
     }
 }
 
