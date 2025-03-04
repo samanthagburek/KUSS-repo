@@ -1,6 +1,8 @@
 """
 This module interfaces to our journal text data.
 """
+
+
 import data.db_connect as dbc
 
 TEXT_COLLECT = 'text'

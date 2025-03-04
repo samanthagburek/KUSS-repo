@@ -1,11 +1,29 @@
-ACTION = 'action'
+import data.db_connect as dbc
+
+MANU_COLLECT = 'manu'
+
+# fields
+TITLE = 'title'
 AUTHOR = 'author'
+AUTHOR_EMAIL = 'author_email'
 CURR_STATE = 'curr_state'
+TEXT = 'text'
+ABSTRACT = 'abstract'
+EDITOR_EMAIL = 'editor_email'
+REFEREES = 'referees'
+REFEREE = 'referee'
+
+
+REF_ID = 'referee@sample.com'
+REF_EMAIL = 'referee_email'
+REF_REPORT = 'referee_report'
+REF_VERDICT = 'referee_verdict'
+
+
 DISP_NAME = 'disp_name'
 MANU_ID = '_id'
-REFEREE = 'referee'
-REFEREES = 'referees'
-TITLE = 'title'
+
+ACTION = 'action'
 
 TEST_ID = 'fake_id'
 TEST_FLD_NM = TITLE
@@ -53,6 +71,39 @@ SAMPLE_MANU = {
     REFEREES: [],
 }
 
+client = dbc.connect_db()
+print(f'{client=}')
+
+def create(title: str, author: str, author_email: str, text: str, abstract: str, editor_email: str, referees: dict):
+    if title in read():
+        raise ValueError(f'Page already exists {title=}')
+    newmanu = {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees}
+    dbc.create(MANU_COLLECT, newmanu)
+    return title
+
+
+def delete(title: str):
+    return dbc.delete(MANU_COLLECT, {TITLE: title})
+
+
+def update(key: str, title: str, text: str):
+    pass
+    #if key in read():
+    #     return dbc.update_doc(TEXT_COLLECT, {KEY: key},
+    #                                        {TITLE: title, TEXT: text})
+    #else:
+    #    raise ValueError(f'Text not found {key=}')
+
+
+def read():
+    """
+    Our contract:
+        - No arguments.
+        - Returns a dictionary of users keyed on user email.
+        - Each user email must be the key for another dictionary.
+    """
+    text = dbc.read_dict(MANU_COLLECT, TITLE)
+    return text
 
 def get_states() -> list:
     return VALID_STATES

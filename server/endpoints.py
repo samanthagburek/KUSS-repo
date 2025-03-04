@@ -342,6 +342,116 @@ MANU_ACTION_FLDS = api.model('ManuscriptAction', {
     manu.REFEREE: fields.String,
 })
 
+MANU_DELETE_FLDS = api.model('DeleteManu', {
+    manu.TITLE: fields.String,
+})
+
+REFEREE_FLDS = api.model('Referee', {
+    manu.REF_REPORT: fields.String,
+    manu.REF_VERDICT: fields.String,
+})
+REFEREES_FLDS = api.model('Referees', {
+    manu.REF_ID: fields.Nested(REFEREE_FLDS)
+})
+
+MANU_CREATE_FLDS = api.model('CreateManu', {
+    manu.TITLE: fields.String,
+    manu.AUTHOR: fields.String,
+    manu.AUTHOR_EMAIL: fields.String,
+    manu.CURR_STATE: fields.String,
+    manu.TEXT: fields.String,
+    manu.ABSTRACT: fields.String,
+    manu.EDITOR_EMAIL: fields.String,
+    manu.REFEREES: fields.Nested(REFEREES_FLDS)
+})
+MANU_UPDATE_FLDS = api.model('UpdateManu', {
+    ppl.EMAIL: fields.String,
+    ppl.NAME: fields.String,
+    ppl.AFFILIATION: fields.String,
+})
+
+
+# @api.route(f'{PEOPLE_EP}/<_id>')
+@api.route(MANU_EP)
+class Manuscript(Resource):
+    """
+    This class handles creating, reading, updating
+    and deleting journal people.
+    """
+    def get(self):
+        """
+        Retrieves the journal people.
+        """
+        return manu.read()
+
+    @api.response(HTTPStatus.OK, 'Success.')
+    @api.response(HTTPStatus.NOT_FOUND, 'No such manuscript.')
+    @api.expect(MANU_DELETE_FLDS)
+    def delete(self):
+        """
+        Endpoint to delete a person
+        """
+        try:
+            email = request.json.get(ppl.EMAIL)
+            ret = ppl.delete(email)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not delete person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Deleted!',
+            RETURN: ret,
+        }
+
+    """
+    Add a person to the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(MANU_CREATE_FLDS)
+    def put(self):
+        """
+        Add a person.
+        """
+        try:
+            title = request.json.get(manu.TITLE)
+            author = request.json.get(manu.AUTHOR)
+            author_email = request.json.get(manu.AUTHOR_EMAIL)
+            text = request.json.get(manu.TEXT)
+            abstract = request.json.get(manu.ABSTRACT)
+            editor_email = request.json.get(manu.EDITOR_EMAIL)
+            referees = request.json.get(manu.REFEREES)
+
+            ret = manu.create(title, author, author_email, text, abstract, editor_email, referees)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not add manuscript: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Manuscript added!',
+            RETURN: ret,
+        }
+    """
+    Update a person to the journal db.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(MANU_UPDATE_FLDS)
+    def patch(self):
+        """
+        Update a person.
+        """
+        pass
+        try:
+            _id = request.json.get(ppl.EMAIL)
+            name = request.json.get(ppl.NAME)
+            affiliation = request.json.get(ppl.AFFILIATION)
+            ret = ppl.update(_id, name, affiliation)
+        except Exception as err:
+            raise wz.NotAcceptable(f'Could not update person: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Person updated!',
+            RETURN: ret,
+        }
 
 @api.route(f'{MANU_EP}/receive_action')
 class ReceiveAction(Resource):
