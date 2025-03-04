@@ -76,7 +76,7 @@ print(f'{client=}')
 
 def create(title: str, author: str, author_email: str, text: str, abstract: str, editor_email: str, referees: dict):
     if title in read():
-        raise ValueError(f'Page already exists {title=}')
+        raise ValueError(f'Manuscript already exists {title=}')
     newmanu = {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees}
     dbc.create(MANU_COLLECT, newmanu)
     return title
@@ -86,13 +86,12 @@ def delete(title: str):
     return dbc.delete(MANU_COLLECT, {TITLE: title})
 
 
-def update(key: str, title: str, text: str):
-    pass
-    #if key in read():
-    #     return dbc.update_doc(TEXT_COLLECT, {KEY: key},
-    #                                        {TITLE: title, TEXT: text})
-    #else:
-    #    raise ValueError(f'Text not found {key=}')
+def update(title: str, author: str, author_email: str, text: str, abstract: str, editor_email: str, referees: dict):
+    if title in read():
+         return dbc.update_doc(MANU_COLLECT, {TITLE: title},
+                                            {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees})
+    else:
+        raise ValueError(f'Manuscript not found {title=}')
 
 
 def read():

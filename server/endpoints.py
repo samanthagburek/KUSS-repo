@@ -365,9 +365,14 @@ MANU_CREATE_FLDS = api.model('CreateManu', {
     manu.REFEREES: fields.Nested(REFEREES_FLDS)
 })
 MANU_UPDATE_FLDS = api.model('UpdateManu', {
-    ppl.EMAIL: fields.String,
-    ppl.NAME: fields.String,
-    ppl.AFFILIATION: fields.String,
+    manu.TITLE: fields.String,
+    manu.AUTHOR: fields.String,
+    manu.AUTHOR_EMAIL: fields.String,
+    manu.CURR_STATE: fields.String,
+    manu.TEXT: fields.String,
+    manu.ABSTRACT: fields.String,
+    manu.EDITOR_EMAIL: fields.String,
+    manu.REFEREES: fields.Nested(REFEREES_FLDS)
 })
 
 
@@ -376,11 +381,11 @@ MANU_UPDATE_FLDS = api.model('UpdateManu', {
 class Manuscript(Resource):
     """
     This class handles creating, reading, updating
-    and deleting journal people.
+    and deleting manuscripts.
     """
     def get(self):
         """
-        Retrieves the journal people.
+        Retrieves the manuscript.
         """
         return manu.read()
 
@@ -389,13 +394,13 @@ class Manuscript(Resource):
     @api.expect(MANU_DELETE_FLDS)
     def delete(self):
         """
-        Endpoint to delete a person
+        Endpoint to delete a manuscript
         """
         try:
-            email = request.json.get(ppl.EMAIL)
-            ret = ppl.delete(email)
+            title = request.json.get(manu.TITLE)
+            ret = manu.delete(title)
         except Exception as err:
-            raise wz.NotAcceptable(f'Could not delete person: '
+            raise wz.NotAcceptable(f'Could not delete manuscript: '
                                    f'{err=}')
         return {
             MESSAGE: 'Deleted!',
@@ -403,14 +408,14 @@ class Manuscript(Resource):
         }
 
     """
-    Add a person to the journal db.
+    Add a manuscript to the db.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(MANU_CREATE_FLDS)
     def put(self):
         """
-        Add a person.
+        Add a manuscript.
         """
         try:
             title = request.json.get(manu.TITLE)
@@ -430,26 +435,31 @@ class Manuscript(Resource):
             RETURN: ret,
         }
     """
-    Update a person to the journal db.
+    Update a manuscript.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(MANU_UPDATE_FLDS)
     def patch(self):
         """
-        Update a person.
+        Update a manuscript.
         """
         pass
         try:
-            _id = request.json.get(ppl.EMAIL)
-            name = request.json.get(ppl.NAME)
-            affiliation = request.json.get(ppl.AFFILIATION)
-            ret = ppl.update(_id, name, affiliation)
+            title = request.json.get(manu.TITLE)
+            author = request.json.get(manu.AUTHOR)
+            author_email = request.json.get(manu.AUTHOR_EMAIL)
+            text = request.json.get(manu.TEXT)
+            abstract = request.json.get(manu.ABSTRACT)
+            editor_email = request.json.get(manu.EDITOR_EMAIL)
+            referees = request.json.get(manu.REFEREES)
+            
+            ret = manu.update(title, author, author_email, text, abstract, editor_email, referees)
         except Exception as err:
-            raise wz.NotAcceptable(f'Could not update person: '
+            raise wz.NotAcceptable(f'Could not update manuscript: '
                                    f'{err=}')
         return {
-            MESSAGE: 'Person updated!',
+            MESSAGE: 'manuscript updated!',
             RETURN: ret,
         }
 
