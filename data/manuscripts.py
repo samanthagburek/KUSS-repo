@@ -111,6 +111,12 @@ def delete_ref(manu: dict, referee: str) -> str:
         return SUBMITTED
 
 
+def editor_move(manu: dict, new_state: str, **kwargs) -> str:
+    if new_state not in VALID_STATES:
+        raise ValueError(f'Invalid state: {new_state}')
+    return new_state
+
+
 FUNC = 'f'
 
 COMMON_ACTIONS = {
@@ -126,6 +132,9 @@ STATE_TABLE = {
         },
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
+        },
+        EDITOR_MOV: {
+             FUNC: editor_move
         },
         **COMMON_ACTIONS,
     },
@@ -148,11 +157,17 @@ STATE_TABLE = {
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
         },
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     COPY_EDIT: {
         DONE: {
             FUNC: lambda **kwargs: AUTHOR_REVIEW,
+        },
+        EDITOR_MOV: {
+             FUNC: editor_move
         },
         **COMMON_ACTIONS,
     },
@@ -160,11 +175,17 @@ STATE_TABLE = {
         DONE: {
             FUNC: lambda **kwargs: FORMATTING,
         },
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     AUTHOR_REVISIONS: {
         DONE: {
             FUNC: lambda **kwargs: EDITOR_REVIEW,
+        },
+        EDITOR_MOV: {
+             FUNC: editor_move
         },
         **COMMON_ACTIONS,
     },
@@ -172,24 +193,38 @@ STATE_TABLE = {
         ACCEPT: {
             FUNC: lambda **kwargs: COPY_EDIT,
         },
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     FORMATTING: {
         DONE: {
             FUNC: lambda **kwargs: PUBLISHED,
         },
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     REJECTED: {
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     WITHDRAWN: {
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
     PUBLISHED: {
+        EDITOR_MOV: {
+             FUNC: editor_move
+        },
         **COMMON_ACTIONS,
     },
-
 }
 
 
