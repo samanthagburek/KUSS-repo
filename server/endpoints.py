@@ -365,14 +365,9 @@ MANU_CREATE_FLDS = api.model('CreateManu', {
     manu.REFEREES: fields.Nested(REFEREES_FLDS)
 })
 MANU_UPDATE_FLDS = api.model('UpdateManu', {
-    manu.TITLE: fields.String,
-    manu.AUTHOR: fields.String,
-    manu.AUTHOR_EMAIL: fields.String,
-    manu.CURR_STATE: fields.String,
-    manu.TEXT: fields.String,
-    manu.ABSTRACT: fields.String,
-    manu.EDITOR_EMAIL: fields.String,
-    manu.REFEREES: fields.Nested(REFEREES_FLDS)
+    ppl.EMAIL: fields.String,
+    ppl.NAME: fields.String,
+    ppl.AFFILIATION: fields.String,
 })
 
 
@@ -381,11 +376,11 @@ MANU_UPDATE_FLDS = api.model('UpdateManu', {
 class Manuscript(Resource):
     """
     This class handles creating, reading, updating
-    and deleting manuscripts.
+    and deleting journal manuscripts.
     """
     def get(self):
         """
-        Retrieves the manuscript.
+        Retrieves the journal manuscripts.
         """
         return manu.read()
 
@@ -408,7 +403,7 @@ class Manuscript(Resource):
         }
 
     """
-    Add a manuscript to the db.
+    Add a manuscript to the journal db.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
@@ -425,8 +420,8 @@ class Manuscript(Resource):
             abstract = request.json.get(manu.ABSTRACT)
             editor_email = request.json.get(manu.EDITOR_EMAIL)
             referees = request.json.get(manu.REFEREES)
-            ret = manu.create(title, author, author_email,
-                              text, abstract, editor_email, referees)
+            ret = manu.create(title, author, author_email, text, abstract,
+                              editor_email, referees)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not add manuscript: '
                                    f'{err=}')
@@ -435,7 +430,7 @@ class Manuscript(Resource):
             RETURN: ret,
         }
     """
-    Update a manuscript.
+    Update a manuscript to the journal db.
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
@@ -459,7 +454,7 @@ class Manuscript(Resource):
             raise wz.NotAcceptable(f'Could not update manuscript: '
                                    f'{err=}')
         return {
-            MESSAGE: 'manuscript updated!',
+            MESSAGE: 'Manuscript updated!',
             RETURN: ret,
         }
 
