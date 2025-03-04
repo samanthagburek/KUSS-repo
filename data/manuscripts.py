@@ -74,10 +74,14 @@ SAMPLE_MANU = {
 client = dbc.connect_db()
 print(f'{client=}')
 
-def create(title: str, author: str, author_email: str, text: str, abstract: str, editor_email: str, referees: dict):
+
+def create(title: str, author: str, author_email: str, text: str, 
+           abstract: str, editor_email: str, referees: dict):
     if title in read():
         raise ValueError(f'Manuscript already exists {title=}')
-    newmanu = {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees}
+    newmanu = {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email,
+               TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email,
+               REFEREES: referees}
     dbc.create(MANU_COLLECT, newmanu)
     return title
 
@@ -86,10 +90,11 @@ def delete(title: str):
     return dbc.delete(MANU_COLLECT, {TITLE: title})
 
 
-def update(title: str, author: str, author_email: str, text: str, abstract: str, editor_email: str, referees: dict):
+def update(title: str, author: str, author_email: str, text: str,
+           abstract: str, editor_email: str, referees: dict):
     if title in read():
          return dbc.update_doc(MANU_COLLECT, {TITLE: title},
-                                            {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees})
+                               {TITLE: title, AUTHOR: author, AUTHOR_EMAIL: author_email, TEXT: text, ABSTRACT: abstract, EDITOR_EMAIL: editor_email, REFEREES: referees})
     else:
         raise ValueError(f'Manuscript not found {title=}')
 
@@ -103,6 +108,7 @@ def read():
     """
     text = dbc.read_dict(MANU_COLLECT, TITLE)
     return text
+
 
 def get_states() -> list:
     return VALID_STATES
