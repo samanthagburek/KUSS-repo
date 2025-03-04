@@ -421,7 +421,8 @@ class Manuscript(Resource):
             editor_email = request.json.get(manu.EDITOR_EMAIL)
             referees = request.json.get(manu.REFEREES)
 
-            ret = manu.create(title, author, author_email, text, abstract, editor_email, referees)
+            ret = manu.create(title, author, author_email, text, abstract,
+                              editor_email, referees)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not add manuscript: '
                                    f'{err=}')
@@ -452,6 +453,7 @@ class Manuscript(Resource):
             MESSAGE: 'Manuscript updated!',
             RETURN: ret,
         }
+
 
 @api.route(f'{MANU_EP}/receive_action')
 class ReceiveAction(Resource):
