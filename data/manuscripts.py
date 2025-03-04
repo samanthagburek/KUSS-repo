@@ -19,21 +19,31 @@ FIELDS = {
 }
 
 # states:
-AUTHOR_REV = 'AUR'
+AUTHOR_REVIEW = 'AUREVIEW'
 COPY_EDIT = 'CED'
 IN_REF_REV = 'REV'
 REJECTED = 'REJ'
 SUBMITTED = 'SUB'
 WITHDRAWN = 'WIT'
+AUTHOR_REVISIONS = 'AUREVISION'
+EDITOR_REVIEW = 'EDREV'
+FORMATTING = 'FOR'
+PUBLISHED = 'PUB'
+
 TEST_STATE = SUBMITTED
 
+
 VALID_STATES = [
-    AUTHOR_REV,
+    AUTHOR_REVIEW,
     COPY_EDIT,
     IN_REF_REV,
     REJECTED,
     SUBMITTED,
     WITHDRAWN,
+    AUTHOR_REVISIONS,
+    EDITOR_REVIEW,
+    FORMATTING,
+    PUBLISHED,
 ]
 
 
@@ -59,6 +69,10 @@ DELETE_REF = 'DRF'
 DONE = 'DON'
 REJECT = 'REJ'
 WITHDRAW = 'WIT'
+SUBMIT_REVIEW = 'SUBREV'
+ACCEPT_W_REVISIONS = 'ACCWREV'
+EDITOR_MOV = 'EDMOV'
+
 # for testing:
 TEST_ACTION = ACCEPT
 
@@ -69,6 +83,9 @@ VALID_ACTIONS = [
     DONE,
     REJECT,
     WITHDRAW,
+    SUBMIT_REVIEW,
+    ACCEPT_W_REVISIONS,
+    EDITOR_MOV
 ]
 
 
@@ -119,15 +136,48 @@ STATE_TABLE = {
         DELETE_REF: {
             FUNC: delete_ref,
         },
+        SUBMIT_REVIEW: {
+            FUNC: lambda **kwargs: IN_REF_REV,
+        },
+        ACCEPT: {
+            FUNC: lambda **kwargs: COPY_EDIT,
+        },
+        ACCEPT_W_REVISIONS: {
+            FUNC: lambda **kwargs: AUTHOR_REVISIONS,
+        },
+        REJECT: {
+            FUNC: lambda **kwargs: REJECTED,
+        },
         **COMMON_ACTIONS,
     },
     COPY_EDIT: {
         DONE: {
-            FUNC: lambda **kwargs: AUTHOR_REV,
+            FUNC: lambda **kwargs: AUTHOR_REVIEW,
         },
         **COMMON_ACTIONS,
     },
-    AUTHOR_REV: {
+    AUTHOR_REVIEW: {
+        DONE: {
+            FUNC: lambda **kwargs: FORMATTING,
+        },
+        **COMMON_ACTIONS,
+    },
+    AUTHOR_REVISIONS: {
+        DONE: {
+            FUNC: lambda **kwargs: EDITOR_REVIEW,
+        },
+        **COMMON_ACTIONS,
+    },
+    EDITOR_REVIEW: {
+        ACCEPT: {
+            FUNC: lambda **kwargs: COPY_EDIT,
+        },
+        **COMMON_ACTIONS,
+    },
+    FORMATTING: {
+        DONE: {
+            FUNC: lambda **kwargs: PUBLISHED,
+        },
         **COMMON_ACTIONS,
     },
     REJECTED: {
@@ -136,6 +186,10 @@ STATE_TABLE = {
     WITHDRAWN: {
         **COMMON_ACTIONS,
     },
+    PUBLISHED: {
+        **COMMON_ACTIONS,
+    },
+
 }
 
 
