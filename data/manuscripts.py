@@ -292,18 +292,20 @@ def handle_action(manu_id, curr_state, action, **kwargs) -> str:
         raise ValueError(f'{action} not available in {curr_state}')
     return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
-
 def main():
-    print(handle_action(TEST_ID, SUBMITTED, ASSIGN_REF, ref='Jack'))
-    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
-                        ref='Jill', extra='Extra!'))
-    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
-                        ref='Jill'))
-    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
-                        ref='Jack'))
-    print(handle_action(TEST_ID, SUBMITTED, WITHDRAW))
-    print(handle_action(TEST_ID, SUBMITTED, REJECT))
+    print(read())
 
 
 if __name__ == '__main__':
     main()
+
+#def main():
+#    print(handle_action(TEST_ID, SUBMITTED, ASSIGN_REF, ref='Jack'))
+#    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
+#                        ref='Jill', extra='Extra!'))
+#    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
+#                        ref='Jill'))
+#    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
+#                        ref='Jack'))
+#    print(handle_action(TEST_ID, SUBMITTED, WITHDRAW))
+#    print(handle_action(TEST_ID, SUBMITTED, REJECT))
