@@ -1,4 +1,6 @@
 import data.db_connect as dbc
+#testing purposes
+#import db_connect as dbc 
 
 MANU_COLLECT = 'manu'
 
@@ -12,6 +14,7 @@ ABSTRACT = 'abstract'
 EDITOR_EMAIL = 'editor_email'
 REFEREES = 'referees'
 REFEREE = 'referee'
+STATE = 'state'
 
 
 REF_ID = 'referee@sample.com'
@@ -82,7 +85,7 @@ def create(title: str, author: str, author_email: str,
     newmanu = {TITLE: title, AUTHOR: author,
                AUTHOR_EMAIL: author_email, TEXT: text,
                ABSTRACT: abstract, EDITOR_EMAIL: editor_email,
-               REFEREES: referees}
+               REFEREES: referees, STATE: SUBMITTED}
     dbc.create(MANU_COLLECT, newmanu)
     return title
 
@@ -114,6 +117,13 @@ def read():
     """
     text = dbc.read_dict(MANU_COLLECT, TITLE)
     return text
+
+
+def read_one(title: str) -> dict:
+    # return PERSON_DICT.get(email, None)
+    manu = dbc.fetch_one(MANU_COLLECT, {TITLE: title})
+    print(f'{manu=}')
+    return manu
 
 
 def get_states() -> list:
@@ -158,15 +168,24 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
-
-def assign_ref(manu: dict, referee: str, extra=None) -> str:
-    manu[REFEREES].append(referee)
+# need to acc set the ref report and ref verdict
+# in submit review and accept with revisions
+def assign_ref(manu, referee: str, extra=None) -> str:
+    dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string",}}
+    result = dbc.update_doc(MANU_COLLECT, {TITLE: manu[TITLE]},
+                                    {f'referees.{referee}':dic})
+    print(manu)
     return IN_REF_REV
+
+# def assign_ref(manu: dict, referee: str, extra=None) -> str:
+#     dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string",}}
+#     manu[REFEREES][referee] = dic
+#     return IN_REF_REV
 
 
 def delete_ref(manu: dict, referee: str) -> str:
     if len(manu[REFEREES]) > 0:
-        manu[REFEREES].remove(referee)
+        del manu[REFEREES][referee]
     if len(manu[REFEREES]) > 0:
         return IN_REF_REV
     else:
@@ -190,7 +209,7 @@ COMMON_ACTIONS = {
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
-            FUNC: assign_ref,
+            FUNC: lambda **kwargs: assign_ref(kwargs['manu'], kwargs['referee']),
         },
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
@@ -202,10 +221,10 @@ STATE_TABLE = {
     },
     IN_REF_REV: {
         ASSIGN_REF: {
-            FUNC: assign_ref,
+            FUNC: lambda **kwargs: assign_ref(kwargs['manu'], kwargs['referee']),
         },
         DELETE_REF: {
-            FUNC: delete_ref,
+            FUNC: lambda **kwargs: delete_ref(kwargs['manu'], kwargs['referee']),
         },
         SUBMIT_REVIEW: {
             FUNC: lambda **kwargs: IN_REF_REV,
@@ -296,24 +315,20 @@ def get_valid_actions_by_state(state: str):
     return valid_actions
 
 
-def handle_action(manu_id, curr_state, action, **kwargs) -> str:
-    kwargs['manu'] = SAMPLE_MANU
+def handle_action(title, curr_state, action, **kwargs) -> str:
+    # kwargs['manu'] = SAMPLE_MANU
     if curr_state not in STATE_TABLE:
         raise ValueError(f'Bad state: {curr_state}')
     if action not in STATE_TABLE[curr_state]:
         raise ValueError(f'{action} not available in {curr_state}')
-    return STATE_TABLE[curr_state][action][FUNC](**kwargs)
-
+    if title in read():
+        kwargs['manu']=read_one(title)
+        state = str(STATE_TABLE[curr_state][action][FUNC](**kwargs))
+        result = dbc.update_doc(MANU_COLLECT, {TITLE: title},
+                                                {STATE: state})
 
 def main():
-    print(read())
-
-
-if __name__ == '__main__':
-    main()
-
-# def main():
-#    print(handle_action(TEST_ID, SUBMITTED, ASSIGN_REF, ref='Jack'))
+     print(handle_action('name', SUBMITTED, ASSIGN_REF, referee='new_referee@example.com'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
 #                        ref='Jill', extra='Extra!'))
 #    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
@@ -322,3 +337,6 @@ if __name__ == '__main__':
 #                        ref='Jack'))
 #    print(handle_action(TEST_ID, SUBMITTED, WITHDRAW))
 #    print(handle_action(TEST_ID, SUBMITTED, REJECT))
+
+if __name__ == '__main__':
+     main()
