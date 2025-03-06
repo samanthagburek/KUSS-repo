@@ -101,6 +101,7 @@ PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
     ppl.NAME: fields.String,
     ppl.AFFILIATION: fields.String,
     ppl.EMAIL: fields.String,
+    ppl.ROLES: fields.String,
 })
 PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
     ppl.EMAIL: fields.String,
