@@ -1,6 +1,6 @@
 import data.db_connect as dbc
-#testing purposes
-#import db_connect as dbc 
+# testing purposes
+# import db_connect as dbc
 
 MANU_COLLECT = 'manu'
 
@@ -168,13 +168,14 @@ def get_actions() -> list:
 def is_valid_action(action: str) -> bool:
     return action in VALID_ACTIONS
 
+
 # need to acc set the ref report and ref verdict
 # in submit review and accept with revisions
 def assign_ref(manu, referee: str, extra=None) -> str:
-    dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string",}}
+    dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string", }}
     result = dbc.update_doc(MANU_COLLECT, {TITLE: manu[TITLE]},
-                                    {f'referees.{referee}':dic})
-    print(manu)
+                            {f'referees.{referee}': dic})
+    print(result)
     return IN_REF_REV
 
 # def assign_ref(manu: dict, referee: str, extra=None) -> str:
@@ -209,7 +210,8 @@ COMMON_ACTIONS = {
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
-            FUNC: lambda **kwargs: assign_ref(kwargs['manu'], kwargs['referee']),
+            FUNC: lambda **kwargs: assign_ref(kwargs['manu'],
+                                              kwargs['referee']),
         },
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
@@ -221,10 +223,12 @@ STATE_TABLE = {
     },
     IN_REF_REV: {
         ASSIGN_REF: {
-            FUNC: lambda **kwargs: assign_ref(kwargs['manu'], kwargs['referee']),
+            FUNC: lambda **kwargs: assign_ref(kwargs['manu'],
+                                              kwargs['referee']),
         },
         DELETE_REF: {
-            FUNC: lambda **kwargs: delete_ref(kwargs['manu'], kwargs['referee']),
+            FUNC: lambda **kwargs: delete_ref(kwargs['manu'],
+                                              kwargs['referee']),
         },
         SUBMIT_REVIEW: {
             FUNC: lambda **kwargs: IN_REF_REV,
@@ -322,13 +326,15 @@ def handle_action(title, curr_state, action, **kwargs) -> str:
     if action not in STATE_TABLE[curr_state]:
         raise ValueError(f'{action} not available in {curr_state}')
     if title in read():
-        kwargs['manu']=read_one(title)
+        kwargs['manu'] = read_one(title)
         state = str(STATE_TABLE[curr_state][action][FUNC](**kwargs))
         result = dbc.update_doc(MANU_COLLECT, {TITLE: title},
-                                                {STATE: state})
+                                {STATE: state})
+        print(result)
+        return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
-def main():
-     print(handle_action('name', SUBMITTED, ASSIGN_REF, referee='new_referee@example.com'))
+# def main():
+#    print(handle_action('name', SUBMITTED, ASSIGN_REF, referee='m'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
 #                        ref='Jill', extra='Extra!'))
 #    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
@@ -338,5 +344,5 @@ def main():
 #    print(handle_action(TEST_ID, SUBMITTED, WITHDRAW))
 #    print(handle_action(TEST_ID, SUBMITTED, REJECT))
 
-if __name__ == '__main__':
-     main()
+# if __name__ == '__main__':
+#      main()
