@@ -17,7 +17,6 @@ EMAIL = 'email'
 
 TEST_KEY = 'HomePage'
 DEL_KEY = 'HomePage'
-
 text_dict = {
     TEST_KEY: {
         TITLE: 'Home Page',
@@ -47,11 +46,9 @@ def delete(key):
 
 
 def update(key: str, title: str, text: str):
-    if key in read():
-        return dbc.update_doc(TEXT_COLLECT, {KEY: key},
-                                            {TITLE: title, TEXT: text})
-    else:
-        raise ValueError(f'Text not found {key=}')
+    if key not in read():
+        raise ValueError(f'Text or key not found {key=}')
+    dbc.update_doc(TEXT_COLLECT, {KEY: key}, {TITLE: title, TEXT: text})
 
 
 def read():
@@ -62,6 +59,12 @@ def read():
         - Each user email must be the key for another dictionary.
     """
     text = dbc.read_dict(TEXT_COLLECT, KEY)
+    if "about_us" not in text:
+        ABOUT_US = {
+            KEY: "about_us",
+            TITLE: "About Us",
+            TEXT: "Welcome to The KUSS Journal!"}
+        dbc.create(TEXT_COLLECT, ABOUT_US)
     return text
 
 
