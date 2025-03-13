@@ -174,18 +174,18 @@ class People(Resource):
         """
         Update a person.
         """
-        pass
         try:
             _id = request.json.get(ppl.EMAIL)
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
-            ret = ppl.update(_id, name, affiliation)
+            ppl.update(_id, name, affiliation)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not update person: '
                                    f'{err=}')
         return {
             MESSAGE: 'Person updated!',
-            RETURN: ret,
+            # commented cause getting error from the frontend if it returns ret
+            # RETURN: ret,
         }
 
 
@@ -291,7 +291,6 @@ class Text(Resource):
         """
         Update a text.
         """
-        pass
         try:
             key = request.json.get(txt.KEY)
             title = request.json.get(txt.TITLE)
@@ -439,7 +438,6 @@ class Manuscript(Resource):
         """
         Update a manuscript.
         """
-        pass
         try:
             title = request.json.get(manu.TITLE)
             author = request.json.get(manu.AUTHOR)
@@ -448,14 +446,14 @@ class Manuscript(Resource):
             abstract = request.json.get(manu.ABSTRACT)
             editor_email = request.json.get(manu.EDITOR_EMAIL)
             referees = request.json.get(manu.REFEREES)
-            ret = manu.update(title, author, author_email,
-                              text, abstract, editor_email, referees)
+            manu.update(title, author, author_email,
+                        text, abstract, editor_email, referees)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not update manuscript: '
                                    f'{err=}')
         return {
             MESSAGE: 'Manuscript updated!',
-            RETURN: ret,
+            # RETURN: ret,
         }
 
 
