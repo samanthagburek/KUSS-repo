@@ -40,12 +40,14 @@ PERSON_DICT = {
     }
 }
 
-VALID_CHARS = '[A-Za-z0-9._%+-]'
-DOMAIN_CHARS = '[A-Za-z0-9-]'
-TLD_CHARS = '[A-Za-z]{2,3}'
 
 client = dbc.connect_db()
 print(f'{client=}')
+
+
+VALID_CHARS = '[A-Za-z0-9._%+-]'
+DOMAIN_CHARS = '[A-Za-z0-9-]'
+TLD_CHARS = '[A-Za-z]{2,3}'
 
 
 def is_valid_email(email: str) -> bool:

@@ -1,4 +1,5 @@
 import data.db_connect as dbc
+import re
 # testing purposes
 # import db_connect as dbc
 
@@ -77,11 +78,26 @@ SAMPLE_MANU = {
 client = dbc.connect_db()
 print(f'{client=}')
 
+VALID_CHARS = '[A-Za-z0-9._%+-]'
+DOMAIN_CHARS = '[A-Za-z0-9-]'
+TLD_CHARS = '[A-Za-z]{2,3}'
+
+
+def is_valid_email(email: str) -> bool:
+    return re.fullmatch(f"{VALID_CHARS}+@"
+                        + f"{DOMAIN_CHARS}+(\\.{DOMAIN_CHARS}+)*"
+                        + f"\\.{TLD_CHARS}", email)
+
 
 def create(title: str, author: str, author_email: str,
            text: str, abstract: str, editor_email: str, referees: dict):
     if title in read():
         raise ValueError(f'Manuscript already exists {title=}')
+    if not is_valid_email(author_email):
+        raise ValueError(f'Invalid email: {author_email}')
+    if not is_valid_email(editor_email):
+        raise ValueError(f'Invalid email: {editor_email}')
+
     newmanu = {TITLE: title, AUTHOR: author,
                AUTHOR_EMAIL: author_email, TEXT: text,
                ABSTRACT: abstract, EDITOR_EMAIL: editor_email,
