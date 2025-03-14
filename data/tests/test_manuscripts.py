@@ -108,3 +108,37 @@ def test_done_transitions():
     for curr, expected in transitions:
         new_state = mqry.handle_action(mqry.TEST_ID, curr, mqry.DONE, manu=mqry.SAMPLE_MANU)
         assert new_state == expected
+
+TEMP_EMAIL = 'temp_person@temp.org'
+NO_AT = 'bademail'
+NO_NAME = '@bademail'
+NO_DOMAIN = 'bademail@'
+NO_SUB_DOMAIN = 'bademail@com'
+DOMAIN_TOO_SHORT = 'bademail@nyu.e'
+DOMAIN_TOO_LONG = 'bademail@nyu.eedduu'
+TEMP_EMAIL2 = 'not_real@temp.org'
+
+def test_is_valid_email_no_at():
+    assert not mqry.is_valid_email(NO_AT)
+
+
+def test_is_valid_no_name():
+    assert not mqry.is_valid_email(NO_NAME)
+
+
+def test_is_valid_no_domain():
+    assert not mqry.is_valid_email(NO_DOMAIN)
+
+def test_is_valid_no_sub_domain():
+    assert not mqry.is_valid_email(NO_SUB_DOMAIN)
+
+
+def test_is_valid_email_domain_too_short():
+    assert not mqry.is_valid_email(DOMAIN_TOO_SHORT)
+
+
+def test_is_valid_email_domain_too_long():
+    assert not mqry.is_valid_email(DOMAIN_TOO_LONG)
+
+def test_is_valid_email():
+    assert mqry.is_valid_email('un2021@nyu.edu')
