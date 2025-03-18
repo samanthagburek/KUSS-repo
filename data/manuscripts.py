@@ -201,11 +201,10 @@ def assign_ref(manu, referee: str, extra=None) -> str:
 
 
 def delete_ref(manu: dict, referee: str) -> str:
-    print(manu[REFEREES])
-    print(len(manu[REFEREES]))
     if len(manu[REFEREES]) > 0:
         result = dbc.remove_nested(MANU_COLLECT, {TITLE: manu[TITLE]},
-                                    REFEREES, referee)
+                                   REFEREES, referee)
+        print(result)
     if len(manu[REFEREES]) > 0:
         return IN_REF_REV
     else:
@@ -353,7 +352,6 @@ def handle_action(title, curr_state, action, **kwargs) -> str:
         return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
 # def main():
-#    print(handle_action('name', IN_REF_REV, EDITOR_MOV, new_state=AUTHOR_REVIEW))
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
 #                        ref='Jill', extra='Extra!'))

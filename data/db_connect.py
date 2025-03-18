@@ -86,13 +86,14 @@ def update_array(collection, filters, arr_field, arr_val, db=SE_DB):
     return client[db][collection].update_one(filters, {'$push':
                                                        {arr_field: arr_val}})
 
+
 def remove_nested(collection, filters, arr_field, arr_val, db=SE_DB):
     """
     Remove a nested field from the collection.
     """
-    return client[db][collection].update_one(filters,
-    { '$unset': { f"{arr_field}.{arr_val}": "" } }
-)
+    return client[db][collection].update_one(filters, {'$unset':
+                                             {f"{arr_field}.{arr_val}":
+                                              ""}})
 
 
 def read(collection, db=SE_DB, no_id=True) -> list:
