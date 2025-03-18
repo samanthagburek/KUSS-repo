@@ -212,7 +212,7 @@ def delete_ref(manu: dict, referee: str) -> str:
         return SUBMITTED
 
 
-def editor_move(manu: dict, new_state: str, **kwargs) -> str:
+def editor_move(new_state: str) -> str:
     if new_state not in VALID_STATES:
         raise ValueError(f'Invalid state: {new_state}')
     return new_state
@@ -236,7 +236,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: REJECTED,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -262,7 +262,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: REJECTED,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -271,7 +271,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: AUTHOR_REVIEW,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -280,7 +280,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: FORMATTING,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -289,7 +289,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: EDITOR_REVIEW,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -298,7 +298,7 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: COPY_EDIT,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -307,25 +307,25 @@ STATE_TABLE = {
             FUNC: lambda **kwargs: PUBLISHED,
         },
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
     REJECTED: {
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
     WITHDRAWN: {
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
     PUBLISHED: {
         EDITOR_MOV: {
-             FUNC: editor_move
+             FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
         **COMMON_ACTIONS,
     },
@@ -353,6 +353,7 @@ def handle_action(title, curr_state, action, **kwargs) -> str:
         return STATE_TABLE[curr_state][action][FUNC](**kwargs)
 
 # def main():
+#    print(handle_action('name', IN_REF_REV, EDITOR_MOV, new_state=AUTHOR_REVIEW))
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
 #                        ref='Jill', extra='Extra!'))
@@ -361,7 +362,6 @@ def handle_action(title, curr_state, action, **kwargs) -> str:
 #    print(handle_action(TEST_ID, IN_REF_REV, DELETE_REF,
 #                        ref='Jack'))
 #    print(handle_action(TEST_ID, SUBMITTED, WITHDRAW))
-#    print(handle_action(TEST_ID, SUBMITTED, REJECT))
 
 # if __name__ == '__main__':
 #      main()
