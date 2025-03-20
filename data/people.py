@@ -129,7 +129,7 @@ def get_masthead() -> dict:
 one role then call update_role'''
 
 
-def update(_id: str, name: str, aff: str):
+def update(_id: str, name: str, aff: str, roles: list):
     person = read_one(_id)
     if person is None:
         raise ValueError(f'User not found {_id=}')
@@ -139,6 +139,7 @@ def update(_id: str, name: str, aff: str):
     #                     EMAIL: _id, ROLES: roles}
     ret = dbc.update_doc(PEOPLE_COLLECT, {EMAIL: _id},
                          {NAME: name, AFFILIATION: aff,
+                         ROLES: roles,
                          EMAIL: _id})
     return ret.raw_result
 
