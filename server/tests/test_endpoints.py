@@ -61,7 +61,7 @@ def test_create_people():
         EMAIL: "john@who.org",
         NAME: "John Smith",
         AFFILIATION: "WHO",
-        ROLES: TEST_CODE
+        ROLES: [TEST_CODE]
    }
 
    resp = TEST_CLIENT.put(ep.PEOPLE_EP, json=person_data)

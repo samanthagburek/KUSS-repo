@@ -90,12 +90,9 @@ def delete(_id):
 
 
 def is_valid_person(email: str, name: str, affiliation: str,
-                    role: str = None, roles: list = None) -> bool:
+                    roles: list = None) -> bool:
     if not is_valid_email(email):
         raise ValueError(f'Invalid email: {email}')
-    if role:
-        if not rls.is_valid(role):
-            raise ValueError(f'Invalid role: {role}')
     elif roles:
         for role in roles:
             if not rls.is_valid(role):
@@ -103,13 +100,10 @@ def is_valid_person(email: str, name: str, affiliation: str,
     return True
 
 
-def create(_id: str, name: str, aff: str, role: str):
+def create(_id: str, name: str, aff: str, roles: list):
     if _id in read():
         raise ValueError(f"Adding duplicate email {_id=}")
-    if (is_valid_person(_id, name, aff, role)):
-        roles = []
-        if role:
-            roles.append(role)
+    if (is_valid_person(_id, name, aff, roles)):
         # people = read()
         # people[_id]= {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
         newperson = {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}

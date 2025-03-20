@@ -101,7 +101,7 @@ PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
     ppl.NAME: fields.String,
     ppl.AFFILIATION: fields.String,
     ppl.EMAIL: fields.String,
-    ppl.ROLES: fields.String,
+    ppl.ROLES: fields.List(fields.String)
 })
 PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
     ppl.EMAIL: fields.String,
@@ -155,8 +155,8 @@ class People(Resource):
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
             email = request.json.get(ppl.EMAIL)
-            role = request.json.get(ppl.ROLES)
-            ret = ppl.create(email, name, affiliation, role)
+            roles = request.json.get(ppl.ROLES)
+            ret = ppl.create(email, name, affiliation, roles)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not add person: '
                                    f'{err=}')

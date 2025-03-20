@@ -14,7 +14,7 @@ TEMP_EMAIL2 = 'not_real@temp.org'
 
 @pytest.fixture(scope='function')
 def temp_person():
-    ret = ppl.create(TEMP_EMAIL, 'Joe Smith', 'NYU', rls.TEST_CODE)
+    ret = ppl.create(TEMP_EMAIL, 'Joe Smith', 'NYU', [rls.TEST_CODE])
     yield ret
     ppl.delete(ret)
 
@@ -39,7 +39,7 @@ def test_read():
         assert ppl.NAME in person
     
 def test_delete():
-    ppl.create(ANOTHER_EMAIL, "Jane Smith", "YOU", rls.TEST_CODE)
+    ppl.create(ANOTHER_EMAIL, "Jane Smith", "YOU", [rls.TEST_CODE])
     people = ppl.read()
     old_len = len(people)
     ppl.delete(ANOTHER_EMAIL)
@@ -54,11 +54,11 @@ ANOTHER_EMAIL = "jane@you.org"
 def test_create():
     people = ppl.read()
     assert ADD_EMAIL not in people
-    ppl.create(ADD_EMAIL, "John Smith", "WHO", rls.TEST_CODE)
+    ppl.create(ADD_EMAIL, "John Smith", "WHO", [rls.TEST_CODE])
     people = ppl.read()
     assert ADD_EMAIL in people
     ppl.delete(ADD_EMAIL)
-    ppl.create(TEST_EMAIL, 'David Bowie', 'Starman', rls.TEST_CODE)
+    ppl.create(TEST_EMAIL, 'David Bowie', 'Starman', [rls.TEST_CODE])
 
 
 TEST_EMAIL = "dbw1947@nyu.edu"
@@ -91,7 +91,7 @@ def test_update_role():
     
 def test_create_duplicate():
     with pytest.raises(ValueError):
-        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", rls.TEST_CODE)
+        ppl.create(ppl.TEST_EMAIL, "Name doesn't matter", "Affiliation doesn't matter", [rls.TEST_CODE])
 
 def test_is_valid_email_no_at():
     assert not ppl.is_valid_email(NO_AT)
@@ -138,7 +138,7 @@ def test_doesnt_have_role(temp_person):
 
 def test_create_bad_email():
     with pytest.raises(ValueError):
-        ppl.create("Bad email", "Name doesn't matter", "Affiliation doesn't matter", rls.TEST_CODE)
+        ppl.create("Bad email", "Name doesn't matter", "Affiliation doesn't matter", [rls.TEST_CODE])
 
 def test_update_invalid_ppl():
     with pytest.raises(ValueError):
