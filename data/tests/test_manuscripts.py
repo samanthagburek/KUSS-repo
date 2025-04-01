@@ -3,6 +3,7 @@ import random
 import pytest
 
 import data.manuscripts as mqry
+import data.people as ppl 
 
 
 def gen_random_not_valid_str() -> str:
@@ -56,13 +57,17 @@ def test_handle_action_bad_action():
 
 @pytest.mark.skip(reason="Need to fix for db")
 def test_handle_action_valid_return():
+
     for state in mqry.get_states():
         for action in mqry.get_valid_actions_by_state(state):
             print(f'{action=}')
+            if action == mqry.DONE:
+                continue
             if action == mqry.EDITOR_MOV:
                   new_state = mqry.handle_action(
                     mqry.TEST_ID, state, action, manu=mqry.SAMPLE_MANU, new_state=random.choice(mqry.get_states())
                 )
+                  print(new_state)
             else:
                 new_state = mqry.handle_action(mqry.TEST_ID,
                                                 state,
@@ -93,6 +98,8 @@ def test_editor_move():
 
 @pytest.mark.skip(reason="Need to fix for db")
 def test_withdraw_any_state():
+    print(mqry.create(mqry.TEST_ID, "David", ppl.TEST_EMAIL, "Test", "Test",
+                              ppl.TEST_EMAIL, ppl.TEST_EMAIL))
     for state in mqry.get_states():
         new_state = mqry.handle_action(mqry.TEST_ID, state, mqry.WITHDRAW, manu=mqry.SAMPLE_MANU)
         assert new_state == mqry.WITHDRAWN

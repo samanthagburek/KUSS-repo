@@ -498,3 +498,15 @@ class Roles(Resource):
         Retrieves role types.
         """
         return rls.get_roles()
+
+
+@api.route(f'{MANU_EP}/actions')
+class Manu(Resource):
+    """
+    This class handles getting form components for manuscript.
+    """
+    def get(self):
+        """
+        Retrieves role types.
+        """
+        return manu.get_actions()

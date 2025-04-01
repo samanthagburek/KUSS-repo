@@ -29,7 +29,7 @@ MANU_ID = '_id'
 
 ACTION = 'action'
 
-TEST_ID = 'fake_id'
+TEST_ID = 'fake_i'
 TEST_FLD_NM = TITLE
 TEST_FLD_DISP_NM = 'Title'
 
@@ -328,6 +328,9 @@ STATE_TABLE = {
         },
         **COMMON_ACTIONS,
     },
+    DONE: {
+        **COMMON_ACTIONS,
+    },
 }
 
 
@@ -348,8 +351,10 @@ def handle_action(title, curr_state, action, **kwargs) -> str:
         state = str(STATE_TABLE[curr_state][action][FUNC](**kwargs))
         result = dbc.update_doc(MANU_COLLECT, {TITLE: title},
                                 {STATE: state})
-        print(result)
+        print(f'result={result}')
         return STATE_TABLE[curr_state][action][FUNC](**kwargs)
+    else:
+        return f'Error {title} is not a valid manuscript'
 
 # def main():
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
