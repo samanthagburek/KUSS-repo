@@ -366,9 +366,12 @@ MANU_CREATE_FLDS = api.model('CreateManu', {
     manu.REFEREES: fields.Nested(REFEREES_FLDS)
 })
 MANU_UPDATE_FLDS = api.model('UpdateManu', {
-    ppl.EMAIL: fields.String,
-    ppl.NAME: fields.String,
-    ppl.AFFILIATION: fields.String,
+    manu.TITLE: fields.String,
+    manu.AUTHOR: fields.String,
+    manu.AUTHOR_EMAIL: fields.String,
+    manu.TEXT: fields.String,
+    manu.ABSTRACT: fields.String,
+    manu.EDITOR_EMAIL: fields.String,
 })
 
 
@@ -447,9 +450,8 @@ class Manuscript(Resource):
             text = request.json.get(manu.TEXT)
             abstract = request.json.get(manu.ABSTRACT)
             editor_email = request.json.get(manu.EDITOR_EMAIL)
-            referees = request.json.get(manu.REFEREES)
             manu.update(title, author, author_email,
-                        text, abstract, editor_email, referees)
+                        text, abstract, editor_email)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not update manuscript: '
                                    f'{err=}')

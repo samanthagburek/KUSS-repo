@@ -110,16 +110,15 @@ def delete(title: str):
     return dbc.delete(MANU_COLLECT, {TITLE: title})
 
 
-def update(title: str, author: str, author_email: str, text: str,
-           abstract: str, editor_email: str, referees: dict):
+def update(title, author: str, author_email: str, text: str,
+           abstract: str, editor_email: str):
     if title in read():
         return dbc.update_doc(MANU_COLLECT, {TITLE: title},
-                                            {TITLE: title, AUTHOR: author,
+                                            {AUTHOR: author,
                                              AUTHOR_EMAIL: author_email,
                                              TEXT: text,
                                              ABSTRACT: abstract,
-                                             EDITOR_EMAIL: editor_email,
-                                             REFEREES: referees})
+                                             EDITOR_EMAIL: editor_email})
     else:
         raise ValueError(f'Manuscript not found {title=}')
 
