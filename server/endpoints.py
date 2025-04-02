@@ -423,10 +423,10 @@ class Manuscript(Resource):
             author_email = request.json.get(manu.AUTHOR_EMAIL)
             text = request.json.get(manu.TEXT)
             abstract = request.json.get(manu.ABSTRACT)
-            editor_email = request.json.get(manu.EDITOR_EMAIL)
+            # editor_email = request.json.get(manu.EDITOR_EMAIL)
             referees = request.json.get(manu.REFEREES)
             ret = manu.create(title, author, author_email, text, abstract,
-                              editor_email, referees)
+                              referees)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not add manuscript: '
                                    f'{err=}')

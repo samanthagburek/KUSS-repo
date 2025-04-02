@@ -75,6 +75,7 @@ SAMPLE_MANU = {
     REFEREES: [],
 }
 
+DEFAULT_EDITOR_EMAIL = "editor@kuss.com"
 client = dbc.connect_db()
 print(f'{client=}')
 
@@ -90,19 +91,19 @@ def is_valid_email(email: str) -> bool:
 
 
 def create(title: str, author: str, author_email: str,
-           text: str, abstract: str, editor_email: str, referees: dict):
+           text: str, abstract: str, referees: dict):
 
     # two manuscripts can have the same title
     # if title in read():
     #     raise ValueError(f'Manuscript already exists {title=}')
     if not is_valid_email(author_email):
         raise ValueError(f'Invalid email: {author_email}')
-    if not is_valid_email(editor_email):
-        raise ValueError(f'Invalid email: {editor_email}')
+    if not is_valid_email(DEFAULT_EDITOR_EMAIL):
+        raise ValueError(f'Invalid email: {DEFAULT_EDITOR_EMAIL}')
 
     newmanu = {TITLE: title, AUTHOR: author,
                AUTHOR_EMAIL: author_email, TEXT: text,
-               ABSTRACT: abstract, EDITOR_EMAIL: editor_email,
+               ABSTRACT: abstract, EDITOR_EMAIL: DEFAULT_EDITOR_EMAIL,
                REFEREES: referees, STATE: SUBMITTED}
     result = dbc.create(MANU_COLLECT, newmanu)
     newmanu["_id"] = str(result.inserted_id)
