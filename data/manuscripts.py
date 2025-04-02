@@ -133,7 +133,7 @@ def read():
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    manuscripts = dbc.read_all(MANU_COLLECT)
+    manuscripts = dbc.read(MANU_COLLECT, no_id=False)
     for manu in manuscripts:
         manu["_id"] = str(manu["_id"])
     return manuscripts
