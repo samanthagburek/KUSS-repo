@@ -345,7 +345,7 @@ MANU_ACTION_FLDS = api.model('ManuscriptAction', {
 })
 
 MANU_DELETE_FLDS = api.model('DeleteManu', {
-    manu.TITLE: fields.String,
+    "_id": fields.String,
 })
 
 REFEREE_FLDS = api.model('Referee', {
@@ -396,14 +396,15 @@ class Manuscript(Resource):
         Endpoint to delete a manuscript
         """
         try:
-            title = request.json.get(manu.TITLE)
-            ret = manu.delete(title)
+            # title = request.json.get(manu.TITLE)
+            _id = request.json.get('_id')
+            ret = manu.delete(_id)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not delete manuscript: '
                                    f'{err=}')
         return {
             MESSAGE: 'Deleted!',
-            RETURN: ret,
+            RETURN: str(ret),
         }
 
     """
@@ -444,13 +445,14 @@ class Manuscript(Resource):
         Update a manuscript.
         """
         try:
+            _id = request.json.get('_id')
             title = request.json.get(manu.TITLE)
             author = request.json.get(manu.AUTHOR)
             author_email = request.json.get(manu.AUTHOR_EMAIL)
             text = request.json.get(manu.TEXT)
             abstract = request.json.get(manu.ABSTRACT)
             editor_email = request.json.get(manu.EDITOR_EMAIL)
-            manu.update(title, author, author_email,
+            manu.update(_id, title, author, author_email,
                         text, abstract, editor_email)
         except Exception as err:
             raise wz.NotAcceptable(f'Could not update manuscript: '

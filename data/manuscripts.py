@@ -2,7 +2,7 @@ import data.db_connect as dbc
 import re
 # testing purposes
 # import db_connect as dbc
-
+from bson.objectid import ObjectId
 MANU_COLLECT = 'manu'
 
 # fields
@@ -91,8 +91,10 @@ def is_valid_email(email: str) -> bool:
 
 def create(title: str, author: str, author_email: str,
            text: str, abstract: str, editor_email: str, referees: dict):
-    if title in read():
-        raise ValueError(f'Manuscript already exists {title=}')
+
+    # two manuscripts can have the same title
+    # if title in read():
+    #     raise ValueError(f'Manuscript already exists {title=}')
     if not is_valid_email(author_email):
         raise ValueError(f'Invalid email: {author_email}')
     if not is_valid_email(editor_email):
@@ -102,25 +104,26 @@ def create(title: str, author: str, author_email: str,
                AUTHOR_EMAIL: author_email, TEXT: text,
                ABSTRACT: abstract, EDITOR_EMAIL: editor_email,
                REFEREES: referees, STATE: SUBMITTED}
-    dbc.create(MANU_COLLECT, newmanu)
-    return title
+    result = dbc.create(MANU_COLLECT, newmanu)
+    newmanu["_id"] = str(result.inserted_id)
+    return newmanu
 
 
-def delete(title: str):
-    return dbc.delete(MANU_COLLECT, {TITLE: title})
+def delete(_id: str):
+    return dbc.delete(MANU_COLLECT, {'_id': ObjectId(_id)})
 
 
-def update(title, author: str, author_email: str, text: str,
+def update(_id: str, title: str, author: str, author_email: str, text: str,
            abstract: str, editor_email: str):
-    if title in read():
-        return dbc.update_doc(MANU_COLLECT, {TITLE: title},
-                                            {AUTHOR: author,
-                                             AUTHOR_EMAIL: author_email,
-                                             TEXT: text,
-                                             ABSTRACT: abstract,
-                                             EDITOR_EMAIL: editor_email})
-    else:
-        raise ValueError(f'Manuscript not found {title=}')
+    dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
+                                 {TITLE: title,
+                                  AUTHOR: author,
+                                  AUTHOR_EMAIL: author_email,
+                                  TEXT: text,
+                                  ABSTRACT: abstract,
+                                  EDITOR_EMAIL: editor_email})
+# else:
+    #     raise ValueError(f'Manuscript not found {title=}')
 
 
 def read():
@@ -130,15 +133,22 @@ def read():
         - Returns a dictionary of users keyed on user email.
         - Each user email must be the key for another dictionary.
     """
-    text = dbc.read_dict(MANU_COLLECT, TITLE)
-    return text
+    manuscripts = dbc.read_all(MANU_COLLECT)
+    for manu in manuscripts:
+        manu["_id"] = str(manu["_id"])
+    return manuscripts
 
 
-def read_one(title: str) -> dict:
+def read_one(_id: str) -> dict:
     # return PERSON_DICT.get(email, None)
-    manu = dbc.fetch_one(MANU_COLLECT, {TITLE: title})
-    print(f'{manu=}')
+    manu = dbc.fetch_one(MANU_COLLECT, {'_id': ObjectId(_id)})
+    if manu:
+        manu["_id"] = str(manu["_id"])
     return manu
+    # print(f'{manu=}')
+    # if manu:
+    #     manu['_id'] = str(manu['_id'])
+    # return manu
 
 
 def get_states() -> list:
@@ -339,21 +349,23 @@ def get_valid_actions_by_state(state: str):
     return valid_actions
 
 
-def handle_action(title, curr_state, action, **kwargs) -> str:
+def handle_action(_id, curr_state, action, **kwargs) -> str:
     # kwargs['manu'] = SAMPLE_MANU
     if curr_state not in STATE_TABLE:
         raise ValueError(f'Bad state: {curr_state}')
     if action not in STATE_TABLE[curr_state]:
         raise ValueError(f'{action} not available in {curr_state}')
-    if title in read():
-        kwargs['manu'] = read_one(title)
+
+    manu_doc = read_one(_id)
+    if manu_doc:
+        kwargs['manu'] = manu_doc
         state = str(STATE_TABLE[curr_state][action][FUNC](**kwargs))
-        result = dbc.update_doc(MANU_COLLECT, {TITLE: title},
+        result = dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
                                 {STATE: state})
         print(f'result={result}')
         return STATE_TABLE[curr_state][action][FUNC](**kwargs)
     else:
-        return f'Error {title} is not a valid manuscript'
+        return f'Error {_id} is not a valid manuscript'
 
 # def main():
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
