@@ -116,14 +116,14 @@ def delete(_id: str):
 
 def update(_id: str, title: str, author: str, author_email: str, text: str,
            abstract: str, editor_email: str):
-    dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
-                                 {TITLE: title,
-                                  AUTHOR: author,
-                                  AUTHOR_EMAIL: author_email,
-                                  TEXT: text,
-                                  ABSTRACT: abstract,
-                                  EDITOR_EMAIL: editor_email})
-# else:
+    return dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
+                                        {TITLE: title,
+                                         AUTHOR: author,
+                                         AUTHOR_EMAIL: author_email,
+                                         TEXT: text,
+                                         ABSTRACT: abstract,
+                                         EDITOR_EMAIL: editor_email})
+    # else:
     #     raise ValueError(f'Manuscript not found {title=}')
 
 
@@ -137,6 +137,7 @@ def read():
     manuscripts = dbc.read(MANU_COLLECT, no_id=False)
     for manu in manuscripts:
         manu["_id"] = str(manu["_id"])
+        manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
     return manuscripts
 
 
@@ -145,6 +146,7 @@ def read_one(_id: str) -> dict:
     manu = dbc.fetch_one(MANU_COLLECT, {'_id': ObjectId(_id)})
     if manu:
         manu["_id"] = str(manu["_id"])
+        manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
     return manu
     # print(f'{manu=}')
     # if manu:
@@ -199,7 +201,7 @@ def is_valid_action(action: str) -> bool:
 # in submit review and accept with revisions
 def assign_ref(manu, referee: str, extra=None) -> str:
     dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string", }}
-    result = dbc.update_doc(MANU_COLLECT, {TITLE: manu[TITLE]},
+    result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
                             {f'referees.{referee}': dic})
     print(result)
     return IN_REF_REV
@@ -212,8 +214,8 @@ def assign_ref(manu, referee: str, extra=None) -> str:
 
 def delete_ref(manu: dict, referee: str) -> str:
     if len(manu[REFEREES]) > 0:
-        result = dbc.remove_nested(MANU_COLLECT, {TITLE: manu[TITLE]},
-                                   REFEREES, referee)
+        result = dbc.remove_nested(MANU_COLLECT, {"_id":
+                                   ObjectId(manu['_id'])}, REFEREES, referee)
         print(result)
     if len(manu[REFEREES]) > 0:
         return IN_REF_REV
@@ -360,11 +362,11 @@ def handle_action(_id, curr_state, action, **kwargs) -> str:
     manu_doc = read_one(_id)
     if manu_doc:
         kwargs['manu'] = manu_doc
-        state = str(STATE_TABLE[curr_state][action][FUNC](**kwargs))
+        state = STATE_TABLE[curr_state][action][FUNC](**kwargs)
         result = dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
-                                {STATE: state})
+                                {STATE: str(state)})
         print(f'result={result}')
-        return STATE_TABLE[curr_state][action][FUNC](**kwargs)
+        return state
     else:
         return f'Error {_id} is not a valid manuscript'
 
