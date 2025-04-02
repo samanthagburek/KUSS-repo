@@ -55,18 +55,18 @@ PUBLISHED = 'PUB'
 TEST_STATE = SUBMITTED
 
 
-VALID_STATES = [
-    AUTHOR_REVIEW,
-    COPY_EDIT,
-    IN_REF_REV,
-    REJECTED,
-    SUBMITTED,
-    WITHDRAWN,
-    AUTHOR_REVISIONS,
-    EDITOR_REVIEW,
-    FORMATTING,
-    PUBLISHED,
-]
+VALID_STATES = {
+    AUTHOR_REVIEW: "In Author Review",
+    COPY_EDIT: "In Copy Edit",
+    IN_REF_REV: "In Referee Review",
+    REJECTED: "Rejected",
+    SUBMITTED: "Submitted",
+    WITHDRAWN: "Withdrawn",
+    AUTHOR_REVISIONS: "In Author Revisions",
+    EDITOR_REVIEW: "In Editor Review",
+    FORMATTING: "Formatting",
+    PUBLISHED: "Published",
+}
 
 
 SAMPLE_MANU = {
@@ -163,17 +163,17 @@ EDITOR_MOV = 'EDMOV'
 # for testing:
 TEST_ACTION = ACCEPT
 
-VALID_ACTIONS = [
-    ACCEPT,
-    ASSIGN_REF,
-    DELETE_REF,
-    DONE,
-    REJECT,
-    WITHDRAW,
-    SUBMIT_REVIEW,
-    ACCEPT_W_REVISIONS,
-    EDITOR_MOV
-]
+VALID_ACTIONS = {
+    ACCEPT: "Accept",
+    ASSIGN_REF: "Assign Referee",
+    DELETE_REF: "Delete Referee",
+    DONE: "Done",
+    REJECT: "Reject",
+    WITHDRAW: "Withdraw",
+    SUBMIT_REVIEW: "Submit Review",
+    ACCEPT_W_REVISIONS: "Accept With Revisions",
+    EDITOR_MOV: "Move Editor"
+}
 
 
 def get_actions() -> list:
