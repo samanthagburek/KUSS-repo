@@ -338,14 +338,14 @@ class Masthead(Resource):
 
 
 MANU_ACTION_FLDS = api.model('ManuscriptAction', {
-    manu.TITLE: fields.String,
+    manu.MANU_ID: fields.String,
     manu.CURR_STATE: fields.String,
     manu.ACTION: fields.String,
     manu.REFEREE: fields.String,
 })
 
 MANU_DELETE_FLDS = api.model('DeleteManu', {
-    "_id": fields.String,
+    manu.MANU_ID: fields.String,
 })
 
 REFEREE_FLDS = api.model('Referee', {
@@ -477,12 +477,12 @@ class ReceiveAction(Resource):
         """
         try:
             print(request.json)
-            title = request.json.get(manu.TITLE)
+            _id = request.json.get(manu.MANU_ID)
             curr_state = request.json.get(manu.CURR_STATE)
             action = request.json.get(manu.ACTION)
             kwargs = {}
             kwargs[manu.REFEREE] = request.json.get(manu.REFEREE)
-            ret = manu.handle_action(title, curr_state, action, **kwargs)
+            ret = manu.handle_action(_id, curr_state, action, **kwargs)
         except Exception as err:
             raise wz.NotAcceptable(f'Bad action: ' f'{err=}')
         return {

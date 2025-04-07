@@ -137,7 +137,7 @@ def read():
     manuscripts = dbc.read(MANU_COLLECT, no_id=False)
     for manu in manuscripts:
         manu["_id"] = str(manu["_id"])
-        manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
+        #manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
     return manuscripts
 
 
@@ -146,7 +146,7 @@ def read_one(_id: str) -> dict:
     manu = dbc.fetch_one(MANU_COLLECT, {'_id': ObjectId(_id)})
     if manu:
         manu["_id"] = str(manu["_id"])
-        manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
+        #manu[STATE] = VALID_STATES.get(manu[STATE], manu[STATE])
     return manu
     # print(f'{manu=}')
     # if manu:
