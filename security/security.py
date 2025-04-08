@@ -13,6 +13,7 @@ LOGIN_KEY = 'login_key'
 #Features
 PEOPLE = 'people'
 BAD_FEATURE = 'baaaad feature'
+PEOPLE_MISSING_ACTION = READ
 
 security_recs = None
 GOOD_USER_ID = 'kuss@nyu.edu'
