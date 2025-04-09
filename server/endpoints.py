@@ -516,19 +516,32 @@ class Manu(Resource):
         return manu.get_actions()
 
 
-
 VALID_ACTION_INPUT = api.model('ValidActionInput', {
     'state': fields.String(required=True)
 })
+
+
 @api.route(f'{MANU_EP}/valid_actions')
 class ValidActionsByState(Resource):
     @api.expect(VALID_ACTION_INPUT)
     def post(self):
         """
-        Actions based on state 
+        Actions based on state
         """
         state = request.json.get('state')
         if not manu.is_valid_state(state):
             raise wz.BadRequest(f"Invalid state: {state}")
         valid_actions = manu.get_valid_actions_by_state(state)
         return {"actions": valid_actions}
+
+
+@api.route(f'{MANU_EP}/states')
+class ManuStates(Resource):
+    """
+    This class handles getting form components for manuscript.
+    """
+    def get(self):
+        """
+        Retrieves states
+        """
+        return manu.get_states()
