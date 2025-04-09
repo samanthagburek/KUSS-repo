@@ -185,7 +185,7 @@ VALID_ACTIONS = {
     WITHDRAW: "Withdraw",
     SUBMIT_REVIEW: "Submit Review",
     ACCEPT_W_REVISIONS: "Accept With Revisions",
-    EDITOR_MOV: "Move Editor"
+    EDITOR_MOV: "Editor Move"
 }
 
 
@@ -349,7 +349,7 @@ STATE_TABLE = {
 def get_valid_actions_by_state(state: str):
     valid_actions = STATE_TABLE[state].keys()
     print(f'{valid_actions=}')
-    return valid_actions
+    return {code: VALID_ACTIONS.get(code, code) for code in valid_actions}
 
 
 def handle_action(_id, curr_state, action, **kwargs) -> str:
