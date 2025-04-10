@@ -334,7 +334,7 @@ class Masthead(Resource):
     Get a journal's masthead.
     """
     def get(self):
-        return {MASTHEAD: ppl.get_masthead()}
+        return ppl.get_masthead()
 
 
 MANU_ACTION_FLDS = api.model('ManuscriptAction', {
@@ -502,6 +502,15 @@ class Roles(Resource):
         Retrieves role types.
         """
         return rls.get_roles()
+
+
+@api.route(f'{ROLES_EP}/masthead')
+class MastheadRoles(Resource):
+    """
+    Get a journal's masthead roles.
+    """
+    def get(self):
+        return rls.get_masthead_roles()
 
 
 @api.route(f'{MANU_EP}/actions')

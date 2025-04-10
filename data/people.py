@@ -120,8 +120,10 @@ def get_masthead() -> dict:
         for _id, person in people.items():
             if has_role(person, mh_role):
                 rec = create_mh_rec(person)
+                rec['role'] = text
                 people_w_role.append(rec)
         masthead[text] = people_w_role
+    print(f'{masthead=}')
     return masthead
 
 
