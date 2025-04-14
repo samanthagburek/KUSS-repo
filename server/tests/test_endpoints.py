@@ -92,7 +92,7 @@ def test_update_role():
    role_data ={ 
         CODE: 'CE',
     }
-   resp = TEST_CLIENT.patch(f'{ep.PEOPLE_EP}/john@who.org', json = role_data)
+   resp = TEST_CLIENT.patch(f'{ep.PEOPLE_EP}/john@who.org/fake_user', json = role_data)
    resp_json = resp.get_json()
    print(resp_json)
    assert resp_json is not None, f'Expected JSON response, but got None. Response text: {resp.data.decode()}'
@@ -224,5 +224,11 @@ def test_get_roles():
 @patch(PEOPLE_LOC + 'read_one', autospec=True,
        return_value={NAME: 'Joe Schmoe'})
 def test_read_one(mock_read):
-    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id/fake_user')
     assert resp.status_code == OK
+
+@patch(PEOPLE_LOC + 'read_one', autospec=True, return_value=None)
+def test_read_one_not_found(mock_read):
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id')
+    resp = TEST_CLIENT.get(f'{ep.PEOPLE_EP}/mock_id/fake_user')
+    assert resp.status_code == NOT_FOUND

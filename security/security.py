@@ -9,23 +9,46 @@ USER_LIST = 'user_list'
 CHECKS = 'checks'
 LOGIN = 'login'
 LOGIN_KEY = 'login_key'
+IP_ADDR = 'ip_address'
+DUAL_FACTOR = 'dual_factor'
 
 #Features
 PEOPLE = 'people'
+TEXTS = 'texts'
 BAD_FEATURE = 'baaaad feature'
 PEOPLE_MISSING_ACTION = READ
 
 security_recs = None
 GOOD_USER_ID = 'kuss@nyu.edu'
 
+PEOPLE_CHANGE_PERMISSIONS = {
+     USER_LIST: [GOOD_USER_ID],
+     CHECKS: {
+         LOGIN: True,
+     },
+ }
+ 
 temp_recs = {
 	PEOPLE: {
+        CREATE: PEOPLE_CHANGE_PERMISSIONS,
+        DELETE: PEOPLE_CHANGE_PERMISSIONS,
+        UPDATE: PEOPLE_CHANGE_PERMISSIONS,
+     },
+    TEXTS: {
 		CREATE: {
 			USER_LIST: [GOOD_USER_ID],
 			CHECKS: {
 				LOGIN: True,
 			},
 		},
+        DELETE: {
+            USER_LIST: [GOOD_USER_ID],
+            CHECKS: {
+                LOGIN: True,
+                IP_ADDR: True,
+                DUAL_FACTOR: True,
+            },
+        },
 	},
 	BAD_FEATURE: {
         CREATE: {
@@ -49,10 +72,19 @@ def check_login(user_id: str, **kwargs):
         return False
     return is_valid_key(user_id, kwargs[LOGIN_KEY])
 
+def check_ip(user_id: str, **kwargs):
+    if IP_ADDR not in kwargs:
+        return False
+    # we would check user's IP address here
+    return True
+ 
+def dual_factor(user_id: str, **kwargs):
+    return True
 
 CHECK_FUNCS = {
     LOGIN: check_login,
-    # IP_ADDRESS: check_ip,
+    IP_ADDR: check_ip,
+    DUAL_FACTOR: dual_factor,
 }
 
 
@@ -71,6 +103,7 @@ def needs_recs(fn):
 		return fn(*args, **kwargs)
 	return wrapper
 
+ 
 @needs_recs
 def read_feature(feature_name: str) -> dict:
 	if feature_name in security_recs:
