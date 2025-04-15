@@ -206,7 +206,9 @@ def assign_ref(manu, referee: str, extra=None) -> str:
         }
     }
     result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
-                            {"referees": {**manu["referees"], referee: dic[f"referees.{referee}"]}})
+                            {"referees":
+                            {**manu["referees"],
+                             referee: dic[f"referees.{referee}"]}})
     print(result)
     return IN_REF_REV
 
