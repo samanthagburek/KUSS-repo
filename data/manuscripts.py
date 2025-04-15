@@ -204,7 +204,7 @@ def assign_ref(manu, referee: str, extra=None) -> str:
     print(referee)
     print(dic)
     result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
-                            {f'referees': dic})
+                            {'referees': dic})
     print(result)
     return IN_REF_REV
 
@@ -223,6 +223,8 @@ def assign_ref(manu, referee: str, extra=None) -> str:
         return IN_REF_REV
     else:
         return SUBMITTED """
+
+
 def delete_ref(manu: dict, referee: str) -> str:
     referees = manu.get(REFEREES, {})
 
