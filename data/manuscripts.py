@@ -200,11 +200,13 @@ def is_valid_action(action: str) -> bool:
 # need to acc set the ref report and ref verdict
 # in submit review and accept with revisions
 def assign_ref(manu, referee: str, extra=None) -> str:
-    dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string", }}
-    print(referee)
-    print(dic)
+    refs = manu.get(REFEREES, {})
+    refs[referee] = {
+        REF_REPORT: "string",
+        REF_VERDICT: "string",
+    }
     result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
-                            {'referees': dic})
+                            {'referees': refs})
     print(result)
     return IN_REF_REV
 
@@ -214,15 +216,15 @@ def assign_ref(manu, referee: str, extra=None) -> str:
 #     return IN_REF_REV
 
 
-""" def delete_ref(manu: dict, referee: str) -> str:
-    if len(manu[REFEREES]) > 0:
-        result = dbc.delete(MANU_COLLECT, {"_id":
-                                   ObjectId(manu['_id'])})
-        print(result)
-    if len(manu[REFEREES]) > 0:
-        return IN_REF_REV
-    else:
-        return SUBMITTED """
+# def delete_ref(manu: dict, referee: str) -> str:
+#     if len(manu[REFEREES]) > 0:
+#        result = dbc.delete(MANU_COLLECT, {"_id":
+#                                   ObjectId(manu['_id'])})
+#        print(result)
+#    if len(manu[REFEREES]) > 0:
+#        return IN_REF_REV
+#   else:
+#        return SUBMITTED
 
 
 def delete_ref(manu: dict, referee: str) -> str:
@@ -256,8 +258,8 @@ COMMON_ACTIONS = {
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
-            FUNC: lambda **kwargs: assign_ref(kwargs['manu'],
-                                              kwargs['referee']),
+            FUNC: lambda **kwargs: (kwargs['manu'],
+                                    kwargs['referee']),
         },
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
