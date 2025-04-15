@@ -87,13 +87,21 @@ def update_array(collection, filters, arr_field, arr_val, db=SE_DB):
                                                        {arr_field: arr_val}})
 
 
-def remove_nested(collection, filters, arr_field, arr_val, db=SE_DB):
-    """
-    Remove a nested field from the collection.
-    """
-    return client[db][collection].update_one(filters, {'$unset':
-                                             {f"{arr_field}.{arr_val}":
-                                              ""}})
+def remove_nested(collection, filters, nested_field, nested_key, db=SE_DB):
+    doc = client[db][collection].find_one(filters)
+    if not doc or nested_field not in doc:
+        return None
+
+    nested_dict = doc[nested_field]
+    if nested_key in nested_dict:
+        del nested_dict[nested_key]
+
+        return client[db][collection].update_one(
+            filters,
+            {'$set': {nested_field: nested_dict}}
+        )
+    return None
+
 
 
 def read(collection, db=SE_DB, no_id=True) -> list:

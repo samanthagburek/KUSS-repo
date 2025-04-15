@@ -200,11 +200,13 @@ def is_valid_action(action: str) -> bool:
 # need to acc set the ref report and ref verdict
 # in submit review and accept with revisions
 def assign_ref(manu, referee: str, extra=None) -> str:
-    dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string", }}
-    print(referee)
-    print(dic)
+    dic = {f"referees.{referee}": {
+            REF_REPORT: "string",
+            REF_VERDICT: "string",
+        }
+    }
     result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
-                            {'referees': dic})
+                            {"referees": {**manu["referees"], referee: dic[f"referees.{referee}"]}})
     print(result)
     return IN_REF_REV
 
