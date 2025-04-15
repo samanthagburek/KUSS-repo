@@ -201,8 +201,10 @@ def is_valid_action(action: str) -> bool:
 # in submit review and accept with revisions
 def assign_ref(manu, referee: str, extra=None) -> str:
     dic = {referee: {REF_REPORT: "string", REF_VERDICT: "string", }}
+    print(referee)
+    print(dic)
     result = dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
-                            {f'referees.{referee}': dic})
+                            {f'referees': dic})
     print(result)
     return IN_REF_REV
 
@@ -212,12 +214,24 @@ def assign_ref(manu, referee: str, extra=None) -> str:
 #     return IN_REF_REV
 
 
-def delete_ref(manu: dict, referee: str) -> str:
+""" def delete_ref(manu: dict, referee: str) -> str:
     if len(manu[REFEREES]) > 0:
-        result = dbc.remove_nested(MANU_COLLECT, {"_id":
-                                   ObjectId(manu['_id'])}, REFEREES, referee)
+        result = dbc.delete(MANU_COLLECT, {"_id":
+                                   ObjectId(manu['_id'])})
         print(result)
     if len(manu[REFEREES]) > 0:
+        return IN_REF_REV
+    else:
+        return SUBMITTED """
+def delete_ref(manu: dict, referee: str) -> str:
+    referees = manu.get(REFEREES, {})
+
+    if referee in referees:
+        referees.pop(referee)
+        dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(manu['_id'])},
+                       {REFEREES: referees})
+
+    if referees:
         return IN_REF_REV
     else:
         return SUBMITTED
