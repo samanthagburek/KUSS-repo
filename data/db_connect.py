@@ -103,7 +103,6 @@ def remove_nested(collection, filters, nested_field, nested_key, db=SE_DB):
     return None
 
 
-
 def read(collection, db=SE_DB, no_id=True) -> list:
     """
     Returns a list from the db.
