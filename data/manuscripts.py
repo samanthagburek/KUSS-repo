@@ -258,7 +258,7 @@ COMMON_ACTIONS = {
 STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
-            FUNC: lambda **kwargs: (kwargs['manu'],
+            FUNC: lambda **kwargs: assign_ref(kwargs['manu'],
                                     kwargs['referee']),
         },
         REJECT: {
@@ -383,11 +383,17 @@ def handle_action(_id, curr_state, action, **kwargs) -> str:
         state = STATE_TABLE[curr_state][action][FUNC](**kwargs)
         result = dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
                                 {STATE: str(state)})
-        print(f'result={result}')
+        print(f'result={result}, str_state={str(state)}')
         return state
     else:
         return f'Error {_id} is not a valid manuscript'
-
+# return dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
+#                                        {TITLE: title,
+#                                         AUTHOR: author,
+#                                         AUTHOR_EMAIL: author_email,
+#                                         TEXT: text,
+#                                         ABSTRACT: abstract,
+#                                         EDITOR_EMAIL: editor_email})
 # def main():
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
