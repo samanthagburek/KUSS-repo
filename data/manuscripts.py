@@ -259,7 +259,7 @@ STATE_TABLE = {
     SUBMITTED: {
         ASSIGN_REF: {
             FUNC: lambda **kwargs: assign_ref(kwargs['manu'],
-                                    kwargs['referee']),
+                                              kwargs['referee']),
         },
         REJECT: {
             FUNC: lambda **kwargs: REJECTED,
@@ -387,13 +387,7 @@ def handle_action(_id, curr_state, action, **kwargs) -> str:
         return state
     else:
         return f'Error {_id} is not a valid manuscript'
-# return dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
-#                                        {TITLE: title,
-#                                         AUTHOR: author,
-#                                         AUTHOR_EMAIL: author_email,
-#                                         TEXT: text,
-#                                         ABSTRACT: abstract,
-#                                         EDITOR_EMAIL: editor_email})
+
 # def main():
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
 #    print(handle_action(TEST_ID, IN_REF_REV, ASSIGN_REF,
