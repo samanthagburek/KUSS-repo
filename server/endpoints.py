@@ -16,6 +16,25 @@ import data.manuscripts as manu
 import data.roles as rls
 import security.security as sec
 
+import logging
+import os
+import re
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)  # Only log errors or worse
+
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
+file_handler = logging.FileHandler('logs/error.log')
+file_handler.setLevel(logging.ERROR)  # This ensures only errors go in the file
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s'
+)
+file_handler.setFormatter(formatter)
+# Add handler to your specific logger
+logger.addHandler(file_handler)
+
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
@@ -39,6 +58,7 @@ PEOPLE_EP = '/people'
 TEXT_EP = '/text'
 MANU_EP = '/manuscripts'
 ROLES_EP = '/roles'
+ERROR_LOG_EP = '/error_log'
 
 
 @api.route(HELLO_EP)
@@ -136,6 +156,7 @@ class People(Resource):
             email = request.json.get(ppl.EMAIL)
             ret = ppl.delete(email)
         except Exception as err:
+            logger.error(f'Error in DELETE people: {err}')
             raise wz.NotAcceptable(f'Could not delete person: '
                                    f'{err=}')
         return {
@@ -160,6 +181,7 @@ class People(Resource):
             roles = request.json.get(ppl.ROLES)
             ret = ppl.create(email, name, affiliation, roles)
         except Exception as err:
+            logger.error(f'Error in PUT people: {err}')
             raise wz.NotAcceptable(f'Could not add person: '
                                    f'{err=}')
         return {
@@ -183,6 +205,7 @@ class People(Resource):
             roles = request.json.get(ppl.ROLES)
             ppl.update(_id, name, affiliation, roles)
         except Exception as err:
+            logger.error(f'Error in UPDATE people: {err}')
             raise wz.NotAcceptable(f'Could not update person: '
                                    f'{err=}')
         return {
@@ -213,6 +236,7 @@ class Person(Resource):
         if person:
             return person
         else:
+            logger.error(f'Error in GET person - No such record: {email}')
             raise wz.NotFound(f'No such record: {email}')
 
     @api.expect(PEOPLE_ROLE_UPD_FLDS)
@@ -225,6 +249,7 @@ class Person(Resource):
             print(role)
             ret = ppl.update_role(email, role)
         except Exception as err:
+            logger.error(f'Error in UPDATE people/email/user_id: {err}')
             raise wz.NotAcceptable(f'Could not update person role: '
                                    f'{err=}')
         return {
@@ -244,6 +269,7 @@ class Person(Resource):
         if ret is not None:
             return {'Deleted': ret}
         else:
+            logger.error(f'Error in DELETE person - No such person: {email}')
             raise wz.NotFound(f'No such person: {email}')
 
 # @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
@@ -296,6 +322,7 @@ class Text(Resource):
             text = request.json.get(txt.TEXT)
             ret = txt.create(key, title, text)
         except Exception as err:
+            logger.error(f'Error in PUT text: {err}')
             raise wz.NotAcceptable(f'Could not add text: '
                                    f'{err=}')
         return {
@@ -316,6 +343,7 @@ class Text(Resource):
             text = request.json.get(txt.TEXT)
             ret = txt.update(key, title, text)
         except Exception as err:
+            logger.error(f'Error in UPDATE text: {err}')
             raise wz.NotAcceptable(f'Could not update text: '
                                    f'{err=}')
         return {
@@ -334,6 +362,7 @@ class Text(Resource):
             key = request.json.get(txt.KEY)
             ret = txt.delete(key)
         except Exception as err:
+            logger.error(f'Error in DELETE text: {err}')
             raise wz.NotAcceptable(f'Could not delete text: '
                                    f'{err=}')
         return {
@@ -417,6 +446,7 @@ class Manuscript(Resource):
             _id = request.json.get('_id')
             ret = manu.delete(_id)
         except Exception as err:
+            logger.error(f'Error in DELETE manuscript: {err}')
             raise wz.NotAcceptable(f'Could not delete manuscript: '
                                    f'{err=}')
         return {
@@ -445,6 +475,7 @@ class Manuscript(Resource):
             ret = manu.create(title, author, author_email, text, abstract,
                               referees)
         except Exception as err:
+            logger.error(f'Error in PUT manuscript: {err}')
             raise wz.NotAcceptable(f'Could not add manuscript: '
                                    f'{err=}')
         return {
@@ -472,6 +503,7 @@ class Manuscript(Resource):
             manu.update(_id, title, author, author_email,
                         text, abstract, editor_email)
         except Exception as err:
+            logger.error(f'Error in UPDATE manuscript: {err}')
             raise wz.NotAcceptable(f'Could not update manuscript: '
                                    f'{err=}')
         return {
@@ -501,6 +533,7 @@ class ReceiveAction(Resource):
             kwargs[manu.REFEREE] = request.json.get(manu.REFEREE)
             ret = manu.handle_action(_id, curr_state, action, **kwargs)
         except Exception as err:
+            logger.error(f'Error in receiving action: {err}')
             raise wz.NotAcceptable(f'Bad action: ' f'{err=}')
         return {
             MESSAGE: 'Action received!',
@@ -556,6 +589,7 @@ class ValidActionsByState(Resource):
         """
         state = request.json.get('state')
         if not manu.is_valid_state(state):
+            logger.error(f'Error in valid_actions- invalid state: {state}')
             raise wz.BadRequest(f"Invalid state: {state}")
         valid_actions = manu.get_valid_actions_by_state(state)
         return {"actions": valid_actions}
@@ -571,3 +605,38 @@ class ManuStates(Resource):
         Retrieves states
         """
         return manu.get_states()
+
+
+@api.route(ERROR_LOG_EP)
+class ErrorLog(Resource):
+    """
+    Returns the contents of the error log,
+    filtered to only show ERROR and CRITICAL entries,
+    formatted as a list of dictionaries.
+    """
+    def get(self):
+        log_path = 'logs/error.log'
+        try:
+            with open(log_path, 'r') as f:
+                lines = f.readlines()
+
+            error_entries = []
+            for line in lines:
+                if 'ERROR' in line or 'CRITICAL' in line:
+                    match = re.match(
+                        r'^(?P<timestamp>[\d\-:\s,]+)\s'
+                        r'(?P<level>[A-Z]+):\s+'
+                        r'(?P<message>.*)', line
+                    )
+                    if match:
+                        error_entries.append(match.groupdict())
+                    else:
+                        error_entries.append({'raw': line.strip()})
+
+            return {'errors': error_entries}, HTTPStatus.OK
+
+        except FileNotFoundError:
+            return {'message': 'Log file not found.'}, HTTPStatus.NOT_FOUND
+        except Exception as e:
+            logger.error(f'Failed to read log file: {e}')
+            raise wz.InternalServerError('Failed to read error log.')
