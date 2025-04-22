@@ -16,6 +16,7 @@ EDITOR_EMAIL = 'editor_email'
 REFEREES = 'referees'
 REFEREE = 'referee'
 STATE = 'state'
+NEW_STATE = 'new_state'
 
 
 REF_ID = 'referee@sample.com'
@@ -56,16 +57,16 @@ TEST_STATE = SUBMITTED
 
 
 VALID_STATES = {
-    AUTHOR_REVIEW: "In Author Review",
-    COPY_EDIT: "In Copy Edit",
-    IN_REF_REV: "In Referee Review",
-    REJECTED: "Rejected",
     SUBMITTED: "Submitted",
-    WITHDRAWN: "Withdrawn",
+    IN_REF_REV: "In Referee Review",
     AUTHOR_REVISIONS: "In Author Revisions",
     EDITOR_REVIEW: "In Editor Review",
+    COPY_EDIT: "In Copy Edit",
+    AUTHOR_REVIEW: "In Author Review",
     FORMATTING: "Formatting",
     PUBLISHED: "Published",
+    REJECTED: "Rejected",
+    WITHDRAWN: "Withdrawn",
 }
 
 

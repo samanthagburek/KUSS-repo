@@ -388,6 +388,7 @@ MANU_ACTION_FLDS = api.model('ManuscriptAction', {
     manu.CURR_STATE: fields.String,
     manu.ACTION: fields.String,
     manu.REFEREE: fields.String,
+    manu.NEW_STATE: fields.String,
 })
 
 MANU_DELETE_FLDS = api.model('DeleteManu', {
@@ -531,6 +532,7 @@ class ReceiveAction(Resource):
             action = request.json.get(manu.ACTION)
             kwargs = {}
             kwargs[manu.REFEREE] = request.json.get(manu.REFEREE)
+            kwargs[manu.NEW_STATE] = request.json.get(manu.NEW_STATE)
             ret = manu.handle_action(_id, curr_state, action, **kwargs)
         except Exception as err:
             logger.error(f'Error in receiving action: {err}')
