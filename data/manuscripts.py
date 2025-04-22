@@ -186,7 +186,7 @@ VALID_ACTIONS = {
     WITHDRAW: "Withdraw",
     SUBMIT_REVIEW: "Submit Review",
     ACCEPT_W_REVISIONS: "Accept With Revisions",
-    EDITOR_MOV: "Editor Move"
+    EDITOR_MOV: "Editor Move",
 }
 
 
