@@ -389,6 +389,8 @@ MANU_ACTION_FLDS = api.model('ManuscriptAction', {
     manu.ACTION: fields.String,
     manu.REFEREE: fields.String,
     manu.NEW_STATE: fields.String,
+    manu.REF_REPORT: fields.String,
+    manu.REF_VERDICT: fields.String,
 })
 
 MANU_DELETE_FLDS = api.model('DeleteManu', {
@@ -533,6 +535,8 @@ class ReceiveAction(Resource):
             kwargs = {}
             kwargs[manu.REFEREE] = request.json.get(manu.REFEREE)
             kwargs[manu.NEW_STATE] = request.json.get(manu.NEW_STATE)
+            kwargs[manu.REF_REPORT] = request.json.get(manu.REF_REPORT)
+            kwargs[manu.REF_VERDICT] = request.json.get(manu.REF_VERDICT)
             ret = manu.handle_action(_id, curr_state, action, **kwargs)
         except Exception as err:
             logger.error(f'Error in receiving action: {err}')
@@ -642,3 +646,9 @@ class ErrorLog(Resource):
         except Exception as e:
             logger.error(f'Failed to read log file: {e}')
             raise wz.InternalServerError('Failed to read error log.')
+
+
+@api.route(f'{MANU_EP}/verdicts')
+class ManuVerdicts(Resource):
+    def get(self):
+        return manu.get_verdicts()

@@ -189,6 +189,12 @@ VALID_ACTIONS = {
     EDITOR_MOV: "Editor Move",
 }
 
+VALID_VERDICTS = {
+    'ACCEPT': 'Accept',
+    'ACCWREV': 'Accept With Revisions',
+    'REJECT': 'Reject',
+}
+
 
 def get_actions() -> list:
     return VALID_ACTIONS
@@ -280,7 +286,10 @@ STATE_TABLE = {
                                               kwargs['referee']),
         },
         SUBMIT_REVIEW: {
-            FUNC: lambda **kwargs: IN_REF_REV,
+            FUNC: lambda **kwargs: submit_review(kwargs['manu'],
+                                                 kwargs['referee'],
+                                                 kwargs[REF_REPORT],
+                                                 kwargs[REF_VERDICT]),
         },
         ACCEPT: {
             FUNC: lambda **kwargs: COPY_EDIT,
@@ -388,6 +397,26 @@ def handle_action(_id, curr_state, action, **kwargs) -> str:
         return state
     else:
         return f'Error {_id} is not a valid manuscript'
+
+
+def submit_review(manu: dict, referee: str, report: str, verdict: str,
+                  **kwargs) -> str:
+    if referee not in manu[REFEREES]:
+        raise ValueError(f"Referee {referee} not assigned to manuscript")
+
+    manu[REFEREES][referee] = {
+        REF_REPORT: report,
+        REF_VERDICT: verdict,
+    }
+
+    dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},
+                   {REFEREES: manu[REFEREES]})
+
+    return IN_REF_REV
+
+
+def get_verdicts() -> dict:
+    return VALID_VERDICTS
 
 # def main():
 #    print(handle_action('name', IN_REF_REV, DELETE_REF, referee='string'))
