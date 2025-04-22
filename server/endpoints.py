@@ -153,6 +153,10 @@ class People(Resource):
         Endpoint to delete a person
         """
         try:
+            kwargs = {sec.LOGIN_KEY: "test key"}
+            if not sec.is_permitted(sec.PEOPLE, sec.DELETE, sec.GOOD_USER_ID,
+                                    **kwargs):
+                raise wz.Forbidden("User doesn't have authorization")
             email = request.json.get(ppl.EMAIL)
             ret = ppl.delete(email)
         except Exception as err:

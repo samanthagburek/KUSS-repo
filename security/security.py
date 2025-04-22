@@ -96,7 +96,7 @@ def read() -> dict:
 
 def needs_recs(fn):
 	@wraps(fn)
-	def wrapper(*args, **kwards):
+	def wrapper(*args, **kwargs):
 		global security_recs
 		if not security_recs:
 			security_recs = read()
