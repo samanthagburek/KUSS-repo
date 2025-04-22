@@ -12,7 +12,7 @@ LOGIN_KEY = 'login_key'
 IP_ADDR = 'ip_address'
 DUAL_FACTOR = 'dual_factor'
 
-#Features
+# Features
 PEOPLE = 'people'
 TEXTS = 'texts'
 BAD_FEATURE = 'baaaad feature'
@@ -27,20 +27,20 @@ PEOPLE_CHANGE_PERMISSIONS = {
          LOGIN: True,
      },
  }
- 
+
 temp_recs = {
-	PEOPLE: {
+    PEOPLE: {
         CREATE: PEOPLE_CHANGE_PERMISSIONS,
         DELETE: PEOPLE_CHANGE_PERMISSIONS,
         UPDATE: PEOPLE_CHANGE_PERMISSIONS,
-     },
+    },
     TEXTS: {
-		CREATE: {
-			USER_LIST: [GOOD_USER_ID],
-			CHECKS: {
-				LOGIN: True,
-			},
-		},
+        CREATE: {
+            USER_LIST: [GOOD_USER_ID],
+            CHECKS: {
+                LOGIN: True,
+            },
+        },
         DELETE: {
             USER_LIST: [GOOD_USER_ID],
             CHECKS: {
@@ -49,8 +49,8 @@ temp_recs = {
                 DUAL_FACTOR: True,
             },
         },
-	},
-	BAD_FEATURE: {
+    },
+    BAD_FEATURE: {
         CREATE: {
             USER_LIST: [GOOD_USER_ID],
             CHECKS: {
@@ -59,6 +59,7 @@ temp_recs = {
         },
     },
 }
+
 
 def is_valid_key(user_id: str, login_key: str):
     """
@@ -72,14 +73,17 @@ def check_login(user_id: str, **kwargs):
         return False
     return is_valid_key(user_id, kwargs[LOGIN_KEY])
 
+
 def check_ip(user_id: str, **kwargs):
     if IP_ADDR not in kwargs:
         return False
     # we would check user's IP address here
     return True
- 
+
+
 def dual_factor(user_id: str, **kwargs):
     return True
+
 
 CHECK_FUNCS = {
     LOGIN: check_login,
@@ -89,28 +93,29 @@ CHECK_FUNCS = {
 
 
 def read() -> dict:
-	global security_recs
-	security_recs = temp_recs
-	return security_recs
+    global security_recs
+    security_recs = temp_recs
+    return security_recs
 
 
 def needs_recs(fn):
-	@wraps(fn)
-	def wrapper(*args, **kwargs):
-		global security_recs
-		if not security_recs:
-			security_recs = read()
-		return fn(*args, **kwargs)
-	return wrapper
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        global security_recs
+        if not security_recs:
+            security_recs = read()
+        return fn(*args, **kwargs)
+    return wrapper
 
- 
+
 @needs_recs
 def read_feature(feature_name: str) -> dict:
-	if feature_name in security_recs:
-		return security_recs[feature_name]
-	else:
-		return None
-	
+    if feature_name in security_recs:
+        return security_recs[feature_name]
+    else:
+        return None
+
+
 @needs_recs
 def is_permitted(feature_name: str, action: str,
                  user_id: str, **kwargs) -> bool:
