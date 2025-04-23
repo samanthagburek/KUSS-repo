@@ -11,6 +11,7 @@ PEOPLE_COLLECT = 'people'
 MIN_USER_NAME_LEN = 2
 # fields
 NAME = 'name'
+PASSWORD = 'password'
 ROLES = 'roles'
 AFFILIATION = 'affiliation'
 EMAIL = 'email'
@@ -22,18 +23,21 @@ TEST_ROLE_EMAIL = 'rol@gmail.com'
 PERSON_DICT = {
     TEST_EMAIL: {
         NAME: 'David Bowie',
+        PASSWORD: '',
         ROLES: [rls.ED_CODE],
         AFFILIATION: 'Starman',
         EMAIL: TEST_EMAIL,
     },
     DEL_EMAIL: {
         NAME: 'Someone',
+        PASSWORD: '',
         ROLES: [rls.CE_CODE],
         AFFILIATION: 'NYU',
         EMAIL: DEL_EMAIL,
     },
     TEST_ROLE_EMAIL: {
         NAME: 'Someone',
+        PASSWORD: '',
         ROLES: [rls.AUTHOR_CODE],
         AFFILIATION: 'INC',
         EMAIL: TEST_ROLE_EMAIL,
@@ -100,13 +104,14 @@ def is_valid_person(email: str, name: str, affiliation: str,
     return True
 
 
-def create(_id: str, name: str, aff: str, roles: list):
+def create(_id: str, name: str, password: str, aff: str, roles: list):
     if _id in read():
         raise ValueError(f"Adding duplicate email {_id=}")
     if (is_valid_person(_id, name, aff, roles)):
         # people = read()
         # people[_id]= {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
-        newperson = {NAME: name, ROLES: roles, AFFILIATION: aff, EMAIL: _id}
+        newperson = {NAME: name, PASSWORD: password,
+                     ROLES: roles, AFFILIATION: aff, EMAIL: _id}
         dbc.create(PEOPLE_COLLECT, newperson)
         return _id
 

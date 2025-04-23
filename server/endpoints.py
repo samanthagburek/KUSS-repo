@@ -120,6 +120,7 @@ PEOPLE_DELETE_FLDS = api.model('DeletePeopleEntry', {
 })
 PEOPLE_CREATE_FLDS = api.model('AddNewPeopleEntry', {
     ppl.NAME: fields.String,
+    ppl.PASSWORD: fields.String,
     ppl.AFFILIATION: fields.String,
     ppl.EMAIL: fields.String,
     ppl.ROLES: fields.List(fields.String)
@@ -182,8 +183,9 @@ class People(Resource):
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
             email = request.json.get(ppl.EMAIL)
+            password = request.json.get(ppl.PASSWORD)
             roles = request.json.get(ppl.ROLES)
-            ret = ppl.create(email, name, affiliation, roles)
+            ret = ppl.create(email, name, password, affiliation, roles)
         except Exception as err:
             logger.error(f'Error in PUT people: {err}')
             raise wz.NotAcceptable(f'Could not add person: '
