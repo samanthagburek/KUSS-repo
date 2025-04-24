@@ -36,7 +36,12 @@ def connect_db():
             client = pm.MongoClient(f'mongodb+srv://kuss:{password}' +
                                     '@kuss-db.ez3jd.mongodb.net/' +
                                     '?retryWrites=true&w=majority' +
-                                    '&appName=KUSS-db')
+                                    '&appName=KUSS-db' +
+                                    '&connectTimeoutMS=30000' +
+                                    '&socketTimeoutMS=None' +
+                                    '&connect=False' + 
+                                    '&maxPoolsize=1'
+                                    )
         else:
             print("Connecting to Mongo locally.")
             client = pm.MongoClient()
