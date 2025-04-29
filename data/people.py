@@ -138,7 +138,7 @@ def get_ppl_in_role(role: str) -> dict:
     print(people)
     for _id, p in people.items():
         if has_role(p, role):
-            curr_ppl.append(p)
+            curr_ppl.append(p['email'])
     print(f'{curr_ppl=}')
     return curr_ppl
 
