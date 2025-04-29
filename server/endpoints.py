@@ -55,6 +55,7 @@ PUBLISHER_RESP = 'Publisher'
 RETURN = 'return'
 DATE = '2024-09-24'
 PEOPLE_EP = '/people'
+LOGIN_EP = '/login'
 TEXT_EP = '/text'
 MANU_EP = '/manuscripts'
 ROLES_EP = '/roles'
@@ -288,7 +289,7 @@ class Person(Resource):
 #         return {'Message': ret}
 
 
-@api.route(f'{PEOPLE_EP}/<email>/<password>')
+@api.route(f'{LOGIN_EP}/<email>/<password>')
 class PersonLogin(Resource):
     """
     This class handles logging people in
