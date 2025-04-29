@@ -272,7 +272,6 @@ class Person(Resource):
 
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
-    #@api.expect(PERSON_DELETE_FLDS)
     def delete(self, email, user_id):
         kwargs = {sec.LOGIN_KEY: 'any key for now'}
         if not sec.is_permitted(sec.PEOPLE, sec.DELETE, user_id,
