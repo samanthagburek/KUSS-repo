@@ -89,16 +89,16 @@ def read_one(email: str) -> dict:
     print(f'{person=}')
     return person
 
+
 def try_login(email: str, password: str) -> dict:
     # return PERSON_DICT.get(email, None)
     person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
-    if(person==None):
-        return PERSON_DICT[LOGIN_FAIL]
-    if(person[PASSWORD] == password ):
+    if person is None:
+        return None
+    if person[PASSWORD] == password:
         return person
     else:
-        return PERSON_DICT[LOGIN_FAIL]
-    
+        return None
 
 
 def delete(_id):

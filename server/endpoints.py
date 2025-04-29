@@ -131,10 +131,7 @@ PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
     ppl.AFFILIATION: fields.String,
     ppl.ROLES: fields.List(fields.String)
 })
-PEOPLE_LOGIN_FLDS = api.model('TryLoginEntry', {
-    ppl.EMAIL: fields.String,
-    ppl.PASSWORD: fields.String,
-})
+
 
 # @api.route(f'{PEOPLE_EP}/<_id>')
 @api.route(PEOPLE_EP)
@@ -222,29 +219,6 @@ class People(Resource):
             # commented cause getting error from the frontend if it returns ret
             # RETURN: ret,
         }
-    """
-    Try logging in
-    """
-    @api.response(HTTPStatus.OK, 'Success')
-    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
-    @api.expect(PEOPLE_LOGIN_FLDS)
-    def post(self):
-        """
-        Attempt a login
-        """
-        try:
-            email = request.json.get(ppl.EMAIL)
-            password = request.json.get(ppl.PASSWORD)
- 
-            ret = ppl.try_login(email, password)
-        except Exception as err:
-            logger.error(f'Error in POST people: {err}')
-            raise wz.NotAcceptable(f'Login error: '
-                                   f'{err=}')
-        return {
-            MESSAGE: 'Login Attempted!',
-            RETURN: ret,
-        }
 
 
 PEOPLE_ROLE_UPD_FLDS = api.model('UpdatePeopleRoleEntry', {
@@ -303,6 +277,33 @@ class Person(Resource):
         else:
             logger.error(f'Error in DELETE person - No such person: {email}')
             raise wz.NotFound(f'No such person: {email}')
+
+# @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
+# class PersonPut(Resource):
+#     def put(self, _id, name, aff):
+#         """
+#         Endpoint to create a person
+#         """
+#         ret = ppl.create_person(_id, name, aff)
+#         return {'Message': ret}
+
+
+@api.route(f'{PEOPLE_EP}/<email>/<password>')
+class PersonLogin(Resource):
+    """
+    This class handles logging people in
+    """
+    def get(self, email, password):
+        """
+        Attempt login
+        """
+        person = ppl.try_login(email, password)
+        if person:
+            return person
+        else:
+            logger.error(f'Error in GET person - No such record: {email}')
+            raise wz.NotFound(f'No such record: {email}')
+
 
 # @api.route(f'{PEOPLE_EP}/<_id>,<name>,<aff>')
 # class PersonPut(Resource):
