@@ -131,7 +131,10 @@ PEOPLE_UPDATE_FLDS = api.model('UpdatePeopleEntry', {
     ppl.AFFILIATION: fields.String,
     ppl.ROLES: fields.List(fields.String)
 })
-
+PEOPLE_LOGIN_FLDS = api.model('TryLoginEntry', {
+    ppl.EMAIL: fields.String,
+    ppl.PASSWORD: fields.String,
+})
 
 # @api.route(f'{PEOPLE_EP}/<_id>')
 @api.route(PEOPLE_EP)
@@ -218,6 +221,29 @@ class People(Resource):
             MESSAGE: 'Person updated!',
             # commented cause getting error from the frontend if it returns ret
             # RETURN: ret,
+        }
+    """
+    Try logging in
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(PEOPLE_LOGIN_FLDS)
+    def post(self):
+        """
+        Attempt a login
+        """
+        try:
+            email = request.json.get(ppl.EMAIL)
+            password = request.json.get(ppl.PASSWORD)
+ 
+            ret = ppl.try_login(email, password)
+        except Exception as err:
+            logger.error(f'Error in POST people: {err}')
+            raise wz.NotAcceptable(f'Login error: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Login Attempted!',
+            RETURN: ret,
         }
 
 

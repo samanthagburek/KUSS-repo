@@ -19,6 +19,7 @@ EMAIL = 'email'
 TEST_EMAIL = 'dbw1947@nyu.edu'
 DEL_EMAIL = 'del@nyu.edu'
 TEST_ROLE_EMAIL = 'rol@gmail.com'
+LOGIN_FAIL = ''
 
 PERSON_DICT = {
     TEST_EMAIL: {
@@ -41,6 +42,13 @@ PERSON_DICT = {
         ROLES: [rls.AUTHOR_CODE],
         AFFILIATION: 'INC',
         EMAIL: TEST_ROLE_EMAIL,
+    },
+    LOGIN_FAIL: {
+        NAME: '',
+        PASSWORD: '',
+        ROLES: [],
+        AFFILIATION: '',
+        EMAIL: LOGIN_FAIL,
     }
 }
 
@@ -80,6 +88,17 @@ def read_one(email: str) -> dict:
     person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
     print(f'{person=}')
     return person
+
+def try_login(email: str, password: str) -> dict:
+    # return PERSON_DICT.get(email, None)
+    person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
+    if(person==None):
+        return PERSON_DICT[LOGIN_FAIL]
+    if(person[PASSWORD] == password ):
+        return person
+    else:
+        return PERSON_DICT[LOGIN_FAIL]
+    
 
 
 def delete(_id):
