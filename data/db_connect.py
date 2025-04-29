@@ -39,7 +39,7 @@ def connect_db():
                                     '&appName=KUSS-db' +
                                     '&connectTimeoutMS=30000' +
                                     '&socketTimeoutMS=None' +
-                                    '&connect=False' + 
+                                    '&connect=False' +
                                     '&maxPoolsize=1'
                                     )
         else:

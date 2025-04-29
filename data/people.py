@@ -132,6 +132,17 @@ def get_masthead() -> dict:
     return masthead
 
 
+def get_ppl_in_role(role: str) -> dict:
+    curr_ppl = []
+    people = read()
+    print(people)
+    for _id, p in people.items():
+        if has_role(p, role):
+            curr_ppl.append(p)
+    print(f'{curr_ppl=}')
+    return curr_ppl
+
+
 '''update takes in a list for roles, but should it take in
 one role then call update_role'''
 

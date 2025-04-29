@@ -288,6 +288,15 @@ class Person(Resource):
 #         return {'Message': ret}
 
 
+@api.route(f'{PEOPLE_EP}/<role>')
+class CurrentPeople(Resource):
+    """
+    Retrieves people with a certain role.
+    """
+    def get(self, role):
+        return ppl.get_ppl_in_role(role)
+
+
 TEXT_CREATE_FLDS = api.model('AddNewTextEntry', {
     txt.KEY: fields.String,
     txt.TITLE: fields.String,
