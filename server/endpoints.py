@@ -229,6 +229,12 @@ PEOPLE_ROLE_UPD_FLDS = api.model('UpdatePeopleRoleEntry', {
 EDITOR = 'editor'
 
 
+PERSON_DELETE_FLDS = api.model('DeletePeopleEntry', {
+    ppl.EMAIL: fields.String,
+    ppl.USER_ID: fields.String,
+})
+
+
 @api.route(f'{PEOPLE_EP}/<email>/<user_id>')
 class Person(Resource):
     """
@@ -266,6 +272,7 @@ class Person(Resource):
 
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
+    #@api.expect(PERSON_DELETE_FLDS)
     def delete(self, email, user_id):
         kwargs = {sec.LOGIN_KEY: 'any key for now'}
         if not sec.is_permitted(sec.PEOPLE, sec.DELETE, user_id,

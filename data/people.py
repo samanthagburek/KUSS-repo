@@ -15,6 +15,7 @@ PASSWORD = 'password'
 ROLES = 'roles'
 AFFILIATION = 'affiliation'
 EMAIL = 'email'
+USER_ID = 'user_id'
 
 TEST_EMAIL = 'dbw1947@nyu.edu'
 DEL_EMAIL = 'del@nyu.edu'
