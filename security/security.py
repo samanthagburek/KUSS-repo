@@ -1,6 +1,5 @@
 from functools import wraps
 import data.people as ppl
-import data.roles as rls
 
 COLLECT_NAME = 'security'
 CREATE = 'create'
@@ -23,8 +22,21 @@ PEOPLE_MISSING_ACTION = READ
 
 security_recs = None
 GOOD_USER_ID = 'kuss@nyu.edu'
-EDITOR_IDS = ppl.get_ppl_in_role('ED') + ppl.get_ppl_in_role('ME') + ppl.get_ppl_in_role('CE')
-ALL_IDS = ppl.read()
+EDITOR_IDS = (
+    ppl.get_ppl_in_role('ED')
+    + ppl.get_ppl_in_role('ME')
+    + ppl.get_ppl_in_role('CE')
+    + [GOOD_USER_ID]
+)
+
+ALL_IDS = (
+    ppl.get_ppl_in_role('ED')
+    + ppl.get_ppl_in_role('ME')
+    + ppl.get_ppl_in_role('CE')
+    + ppl.get_ppl_in_role('AU')
+    + ppl.get_ppl_in_role('RE')
+    + [GOOD_USER_ID]
+)
 
 PEOPLE_CHANGE_PERMISSIONS = {
      USER_LIST: EDITOR_IDS,

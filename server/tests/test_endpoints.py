@@ -10,7 +10,7 @@ from http.client import (
 from unittest.mock import patch
 import pytest
 
-from data.people import NAME, AFFILIATION, EMAIL, ROLES, TEST_ROLE_EMAIL
+from data.people import NAME, AFFILIATION, EMAIL, ROLES, TEST_ROLE_EMAIL, USER_ID
 from data.text import KEY, TITLE, TEXT
 from data.roles import TEST_CODE, MH_ROLES, CODE
 import data.manuscripts as manu
