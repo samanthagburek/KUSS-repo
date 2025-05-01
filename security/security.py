@@ -15,7 +15,7 @@ DUAL_FACTOR = 'dual_factor'
 
 # Features
 PEOPLE = 'people'
-TEXTS = 'texts'
+TEXT = 'text'
 MANUSCRIPTS = 'manuscripts'
 BAD_FEATURE = 'baaaad feature'
 PEOPLE_MISSING_ACTION = READ
@@ -72,7 +72,7 @@ temp_recs = {
         DELETE: PEOPLE_CHANGE_PERMISSIONS,
         UPDATE: PEOPLE_CHANGE_PERMISSIONS,
     },
-    TEXTS: {
+    TEXT: {
         CREATE: TEXT_CHANGE_PERMISSIONS,
         DELETE: TEXT_CHANGE_PERMISSIONS,
         UPDATE: TEXT_CHANGE_PERMISSIONS,

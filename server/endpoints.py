@@ -256,6 +256,10 @@ class Person(Resource):
         try:
             role = request.json.get(rls.CODE)
             print(role)
+            if not sec.is_permitted(sec.PEOPLE, sec.UPDATE, user_id,
+                                **kwargs):
+                raise wz.Forbidden('This user does not have '
+                               + 'authorization for this action.')
             ret = ppl.update_role(email, role)
         except Exception as err:
             logger.error(f'Error in UPDATE people/email/user_id: {err}')
@@ -377,27 +381,6 @@ class Text(Resource):
 
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
-    @api.expect(TEXT_UPDATE_FLDS)
-    def patch(self):
-        """
-        Update a text.
-        """
-        try:
-            key = request.json.get(txt.KEY)
-            title = request.json.get(txt.TITLE)
-            text = request.json.get(txt.TEXT)
-            ret = txt.update(key, title, text)
-        except Exception as err:
-            logger.error(f'Error in UPDATE text: {err}')
-            raise wz.NotAcceptable(f'Could not update text: '
-                                   f'{err=}')
-        return {
-            MESSAGE: 'Text updated!',
-            RETURN: ret,
-        }
-
-    @api.response(HTTPStatus.OK, 'Success.')
-    @api.response(HTTPStatus.NOT_FOUND, 'No such text.')
     @api.expect(TEXT_DELETE_FLDS)
     def delete(self):
         """
@@ -412,6 +395,35 @@ class Text(Resource):
                                    f'{err=}')
         return {
             MESSAGE: 'Deleted!',
+            RETURN: ret,
+        }
+
+
+@api.route(f'{TEXT_EP}/<user_id>')
+class TextUpdate(Resource):
+    @api.response(HTTPStatus.OK, 'Success.')
+    @api.response(HTTPStatus.NOT_FOUND, 'No such text.')
+    @api.expect(TEXT_UPDATE_FLDS)
+    def patch(self, user_id):
+        """
+        Update a text.
+        """
+        kwargs = {sec.LOGIN_KEY: 'any key for now'}
+        try:
+            key = request.json.get(txt.KEY)
+            title = request.json.get(txt.TITLE)
+            text = request.json.get(txt.TEXT)
+            if not sec.is_permitted(sec.TEXT, sec.UPDATE, user_id,
+                                **kwargs):
+                raise wz.Forbidden('This user does not have '
+                               + 'authorization for this action.')
+            ret = txt.update(key, title, text)
+        except Exception as err:
+            logger.error(f'Error in UPDATE text: {err}')
+            raise wz.NotAcceptable(f'Could not update text: '
+                                   f'{err=}')
+        return {
+            MESSAGE: 'Text updated!',
             RETURN: ret,
         }
 
