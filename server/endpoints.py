@@ -253,13 +253,14 @@ class Person(Resource):
         """
         Update role for person.
         """
+        kwargs = {sec.LOGIN_KEY: 'any key for now'}
         try:
             role = request.json.get(rls.CODE)
             print(role)
             if not sec.is_permitted(sec.PEOPLE, sec.UPDATE, user_id,
-                                **kwargs):
+                                    **kwargs):
                 raise wz.Forbidden('This user does not have '
-                               + 'authorization for this action.')
+                                   + 'authorization for this action.')
             ret = ppl.update_role(email, role)
         except Exception as err:
             logger.error(f'Error in UPDATE people/email/user_id: {err}')
@@ -414,9 +415,9 @@ class TextUpdate(Resource):
             title = request.json.get(txt.TITLE)
             text = request.json.get(txt.TEXT)
             if not sec.is_permitted(sec.TEXT, sec.UPDATE, user_id,
-                                **kwargs):
+                                    **kwargs):
                 raise wz.Forbidden('This user does not have '
-                               + 'authorization for this action.')
+                                   + 'authorization for this action.')
             ret = txt.update(key, title, text)
         except Exception as err:
             logger.error(f'Error in UPDATE text: {err}')
