@@ -715,3 +715,14 @@ class Security(Resource):
                 + ppl.get_ppl_in_role('ME')
                 + ppl.get_ppl_in_role('CE')
                 + [sec.GOOD_USER_ID])
+
+
+@api.route(f'{SECURITY_EP}/ALLID')
+class SecurityID(Resource):
+    def get(self):
+        return (ppl.get_ppl_in_role('ED')
+                + ppl.get_ppl_in_role('ME')
+                + ppl.get_ppl_in_role('CE')
+                + ppl.get_ppl_in_role('AU')
+                + ppl.get_ppl_in_role('RE')
+                + [sec.GOOD_USER_ID])
