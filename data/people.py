@@ -99,7 +99,7 @@ def create_login_key(user_id: str) -> str:
     payload = {'user_id': user_id, 'random': os.urandom(16).hex()}
     json_str = json.dumps(payload)
     compressed = zlib.compress(json_str.encode('utf-8'))
-    return base64.urlsafe_b64encode(compressed).decode('urf-8')
+    return base64.urlsafe_b64encode(compressed).decode('utf-8')
 
 
 sessions = {}
