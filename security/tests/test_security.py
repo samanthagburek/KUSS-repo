@@ -3,7 +3,7 @@ import security.security as sec
 
 def test_check_login_good():
     assert sec.check_login(sec.GOOD_USER_ID,
-                        login_key='any key will do for now')
+                        login_key=sec.GOOD_USER_ID)
 
 
 def test_check_login_bad():
@@ -42,4 +42,4 @@ def test_is_permitted_bad_check():
  
 def test_is_permitted_all_good():
     assert sec.is_permitted(sec.PEOPLE, sec.CREATE, sec.GOOD_USER_ID,
-                            login_key='any key for now')
+                            login_key=sec.GOOD_USER_ID)

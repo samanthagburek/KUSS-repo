@@ -2,6 +2,10 @@
 This module interfaces to our user data.
 """
 import re
+import os
+import json
+import zlib
+import base64
 import data.roles as rls
 import data.db_connect as dbc
 
@@ -91,12 +95,30 @@ def read_one(email: str) -> dict:
     return person
 
 
+def create_login_key(user_id: str) -> str:
+    payload = {'user_id': user_id, 'random': os.urandom(16).hex()}
+    json_str = json.dumps(payload)
+    compressed = zlib.compress(json_str.encode('utf-8'))
+    return base64.urlsafe_b64encode(compressed).decode('urf-8')
+
+
+sessions = {}
+
+
+def create_session(user_id: str) -> str:
+    session_key = create_login_key(user_id)
+    sessions[user_id] = {'key': session_key}
+    return session_key
+
+
 def try_login(email: str, password: str) -> dict:
     # return PERSON_DICT.get(email, None)
     person = dbc.fetch_one(PEOPLE_COLLECT, {EMAIL: email})
     if person is None:
         return None
     if person[PASSWORD] == password:
+        s_key = create_session(email)
+        print(s_key)
         return person
     else:
         return None

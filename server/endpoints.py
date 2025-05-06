@@ -253,14 +253,9 @@ class Person(Resource):
         """
         Update role for person.
         """
-        kwargs = {sec.LOGIN_KEY: 'any key for now'}
         try:
             role = request.json.get(rls.CODE)
             print(role)
-            if not sec.is_permitted(sec.PEOPLE, sec.UPDATE, user_id,
-                                    **kwargs):
-                raise wz.Forbidden('This user does not have '
-                                   + 'authorization for this action.')
             ret = ppl.update_role(email, role)
         except Exception as err:
             logger.error(f'Error in UPDATE people/email/user_id: {err}')
@@ -274,7 +269,7 @@ class Person(Resource):
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such person.')
     def delete(self, email, user_id):
-        kwargs = {sec.LOGIN_KEY: 'any key for now'}
+        kwargs = {sec.LOGIN_KEY: user_id}
         if not sec.is_permitted(sec.PEOPLE, sec.DELETE, user_id,
                                 **kwargs):
             raise wz.Forbidden('This user does not have '
@@ -409,7 +404,7 @@ class TextUpdate(Resource):
         """
         Update a text.
         """
-        kwargs = {sec.LOGIN_KEY: 'any key for now'}
+        kwargs = {sec.LOGIN_KEY: user_id}
         try:
             key = request.json.get(txt.KEY)
             title = request.json.get(txt.TITLE)

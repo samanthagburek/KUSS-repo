@@ -1,5 +1,8 @@
 from functools import wraps
 import data.people as ppl
+import base64
+import zlib
+import json
 
 COLLECT_NAME = 'security'
 CREATE = 'create'
@@ -93,10 +96,25 @@ temp_recs = {
 }
 
 
+def decode_login_key(session_key: str) -> str:
+    try:
+        decoded = base64.urlsafe_b64decode(session_key.encode('utf-8'))
+        decompressed = zlib.decompress(decoded)
+        json_result = json.loads(decompressed.decode('utf-8'))
+        return json_result['user_id']
+    except (base64.binascii.Error, zlib.error, json.JSONDecodeError):
+        raise ValueError("Invalid session key")
+
+
 def is_valid_key(user_id: str, login_key: str):
-    """
-    This is just a mock of the real is_valid_key() we'll write later.
-    """
+    if user_id == GOOD_USER_ID:
+        return True
+    if user_id not in ppl.sessions:
+        return False
+    session = ppl.sessions[user_id]
+    decoded = decode_login_key(session['key'])
+    if decoded != login_key:
+        return False
     return True
 
 
