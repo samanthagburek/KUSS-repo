@@ -378,11 +378,16 @@ class Text(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(TEXT_DELETE_FLDS)
-    def delete(self):
+    def delete(self, user_id):
         """
         Endpoint to delete a text
         """
+        kwargs = {sec.LOGIN_KEY: user_id}
         try:
+            if not sec.is_permitted(sec.TEXT, sec.DELETE, user_id,
+                                    **kwargs):
+                raise wz.Forbidden('This user does not have '
+                                   + 'authorization for this action.')
             key = request.json.get(txt.KEY)
             ret = txt.delete(key)
         except Exception as err:
