@@ -378,7 +378,7 @@ class Text(Resource):
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
     @api.expect(TEXT_DELETE_FLDS)
-    def delete(self, user_id):
+    def delete(self):
         """
         Endpoint to delete a text
         """
@@ -493,7 +493,7 @@ class Manuscript(Resource):
     @api.response(HTTPStatus.OK, 'Success.')
     @api.response(HTTPStatus.NOT_FOUND, 'No such manuscript.')
     @api.expect(MANU_DELETE_FLDS)
-    def delete(self, user_id):
+    def delete(self):
         """
         Endpoint to delete a manuscript
         """
