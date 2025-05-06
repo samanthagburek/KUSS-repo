@@ -382,12 +382,7 @@ class Text(Resource):
         """
         Endpoint to delete a text
         """
-        kwargs = {sec.LOGIN_KEY: user_id}
         try:
-            if not sec.is_permitted(sec.TEXT, sec.DELETE, user_id,
-                                    **kwargs):
-                raise wz.Forbidden('This user does not have '
-                                   + 'authorization for this action.')
             key = request.json.get(txt.KEY)
             ret = txt.delete(key)
         except Exception as err:
@@ -504,11 +499,6 @@ class Manuscript(Resource):
         """
         try:
             # title = request.json.get(manu.TITLE)
-            kwargs = {sec.LOGIN_KEY: user_id}
-            if not sec.is_permitted(sec.PEOPLE, sec.DELETE, user_id,
-                                **kwargs):
-                raise wz.Forbidden('This user does not have '
-                               + 'authorization for this action.')
             _id = request.json.get('_id')
             ret = manu.delete(_id)
         except Exception as err:
