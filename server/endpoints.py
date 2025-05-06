@@ -59,6 +59,7 @@ LOGIN_EP = '/login'
 TEXT_EP = '/text'
 MANU_EP = '/manuscripts'
 ROLES_EP = '/roles'
+SECURITY_EP = '/security'
 ERROR_LOG_EP = '/error_log'
 
 
@@ -705,3 +706,12 @@ class ErrorLog(Resource):
 class ManuVerdicts(Resource):
     def get(self):
         return manu.get_verdicts()
+
+
+@api.route(f'{SECURITY_EP}/EDID')
+class Security(Resource):
+    def get(self):
+        return (ppl.get_ppl_in_role('ED')
+                + ppl.get_ppl_in_role('ME')
+                + ppl.get_ppl_in_role('CE')
+                + [sec.GOOD_USER_ID])
