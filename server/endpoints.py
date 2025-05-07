@@ -157,7 +157,7 @@ class People(Resource):
         """
         try:
             email = request.json.get(ppl.EMAIL)
-            ret = ppl.delete(email)
+            ret = ppl.delete(email.lower())
         except Exception as err:
             logger.error(f'Error in DELETE people: {err}')
             raise wz.NotAcceptable(f'Could not delete person: '
@@ -183,7 +183,7 @@ class People(Resource):
             email = request.json.get(ppl.EMAIL)
             password = request.json.get(ppl.PASSWORD)
             roles = request.json.get(ppl.ROLES)
-            ret = ppl.create(email, name, password, affiliation, roles)
+            ret = ppl.create(email.lower(), name, password, affiliation, roles)
         except Exception as err:
             logger.error(f'Error in PUT people: {err}')
             raise wz.NotAcceptable(f'Could not add person: '
@@ -207,7 +207,7 @@ class People(Resource):
             name = request.json.get(ppl.NAME)
             affiliation = request.json.get(ppl.AFFILIATION)
             roles = request.json.get(ppl.ROLES)
-            ppl.update(_id, name, affiliation, roles)
+            ppl.update(_id.lower(), name, affiliation, roles)
         except Exception as err:
             logger.error(f'Error in UPDATE people: {err}')
             raise wz.NotAcceptable(f'Could not update person: '
@@ -242,7 +242,7 @@ class Person(Resource):
         """
         Retrieve a journal person.
         """
-        person = ppl.read_one(email)
+        person = ppl.read_one(email.lower())
         if person:
             return person
         else:
@@ -257,7 +257,7 @@ class Person(Resource):
         try:
             role = request.json.get(rls.CODE)
             print(role)
-            ret = ppl.update_role(email, role)
+            ret = ppl.update_role(email.lower(), role)
         except Exception as err:
             logger.error(f'Error in UPDATE people/email/user_id: {err}')
             raise wz.NotAcceptable(f'Could not update person role: '
@@ -275,7 +275,7 @@ class Person(Resource):
                                 **kwargs):
             raise wz.Forbidden('This user does not have '
                                + 'authorization for this action.')
-        ret = ppl.delete(email)
+        ret = ppl.delete(email.lower())
         if ret is not None:
             return {'Deleted': ret}
         else:
@@ -301,7 +301,7 @@ class PersonLogin(Resource):
         """
         Attempt login
         """
-        person = ppl.try_login(email, password)
+        person = ppl.try_login(email.lower(), password)
         if person:
             return person
         else:
