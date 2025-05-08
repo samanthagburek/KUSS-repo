@@ -6,6 +6,7 @@ from bson.objectid import ObjectId
 MANU_COLLECT = 'manu'
 
 # fields
+ID = '_id'
 TITLE = 'title'
 AUTHOR = 'author'
 AUTHOR_EMAIL = 'author_email'

@@ -503,7 +503,7 @@ class Manuscript(Resource):
         """
         try:
             # title = request.json.get(manu.TITLE)
-            _id = request.json.get('_id')
+            _id = request.json.get(manu.ID)
             ret = manu.delete(_id)
         except Exception as err:
             logger.error(f'Error in DELETE manuscript: {err}')
@@ -618,7 +618,7 @@ class ReceiveWithdraw(Resource):
         """
         try:
             print(request.json)
-            _id = request.json.get('_id')
+            _id = request.json.get(manu.ID)
             kwargs = {}
             ret = manu.handle_withdraw(_id, **kwargs)
             print(ret)
@@ -666,7 +666,7 @@ class Manu(Resource):
 
 
 VALID_ACTION_INPUT = api.model('ValidActionInput', {
-    'state': fields.String(required=True)
+    manu.STATE: fields.String(required=True)
 })
 
 
@@ -677,7 +677,7 @@ class ValidActionsByState(Resource):
         """
         Actions based on state
         """
-        state = request.json.get('state')
+        state = request.json.get(manu.STATE)
         if not manu.is_valid_state(state):
             logger.error(f'Error in valid_actions- invalid state: {state}')
             raise wz.BadRequest(f"Invalid state: {state}")
