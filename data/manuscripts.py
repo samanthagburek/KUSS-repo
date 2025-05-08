@@ -408,7 +408,7 @@ def submit_review(manu: dict, referee: str, report: str, verdict: str,
 
     manu[REFEREES][referee] = {
         REF_REPORT: report,
-        REF_VERDICT: verdict,
+        REF_VERDICT: VALID_VERDICTS[verdict],
     }
 
     dbc.update_doc(MANU_COLLECT, {"_id": ObjectId(manu['_id'])},

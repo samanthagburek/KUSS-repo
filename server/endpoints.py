@@ -476,7 +476,7 @@ MANU_UPDATE_FLDS = api.model('UpdateManu', {
     manu.ABSTRACT: fields.String,
     manu.EDITOR_EMAIL: fields.String,
 })
-MANU_WITHDRAW_FLDS = api.model('ManuscriptAction', {
+MANU_WITHDRAW_FLDS = api.model('ManuscriptWithdraw', {
     manu.MANU_ID: fields.String,
 })
 
@@ -611,16 +611,17 @@ class ReceiveWithdraw(Resource):
     """
     @api.response(HTTPStatus.OK, 'Success')
     @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
-    @api.expect(MANU_ACTION_FLDS)
+    @api.expect(MANU_WITHDRAW_FLDS)
     def put(self):
         """
-        Receive an action for a manuscript.
+        Withdraws a manuscript
         """
         try:
             print(request.json)
-            _id = request.json.get(manu.MANU_ID)
+            _id = request.json.get('_id')
             kwargs = {}
             ret = manu.handle_withdraw(_id, **kwargs)
+            print(ret)
         except Exception as err:
             logger.error(f'Error in receiving action: {err}')
             raise wz.NotAcceptable(f'Bad action: ' f'{err=}')
