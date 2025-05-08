@@ -476,6 +476,9 @@ MANU_UPDATE_FLDS = api.model('UpdateManu', {
     manu.ABSTRACT: fields.String,
     manu.EDITOR_EMAIL: fields.String,
 })
+MANU_WITHDRAW_FLDS = api.model('ManuscriptAction', {
+    manu.MANU_ID: fields.String,
+})
 
 
 # @api.route(f'{PEOPLE_EP}/<_id>')
@@ -592,6 +595,32 @@ class ReceiveAction(Resource):
             kwargs[manu.REF_REPORT] = request.json.get(manu.REF_REPORT)
             kwargs[manu.REF_VERDICT] = request.json.get(manu.REF_VERDICT)
             ret = manu.handle_action(_id, curr_state, action, **kwargs)
+        except Exception as err:
+            logger.error(f'Error in receiving action: {err}')
+            raise wz.NotAcceptable(f'Bad action: ' f'{err=}')
+        return {
+            MESSAGE: 'Action received!',
+            RETURN: ret,
+        }
+
+
+@api.route(f'{MANU_EP}/receive_withdraw')
+class ReceiveWithdraw(Resource):
+    """
+    Receive an action for a manuscript.
+    """
+    @api.response(HTTPStatus.OK, 'Success')
+    @api.response(HTTPStatus.NOT_ACCEPTABLE, 'Not acceptable')
+    @api.expect(MANU_ACTION_FLDS)
+    def put(self):
+        """
+        Receive an action for a manuscript.
+        """
+        try:
+            print(request.json)
+            _id = request.json.get(manu.MANU_ID)
+            kwargs = {}
+            ret = manu.handle_withdraw(_id, **kwargs)
         except Exception as err:
             logger.error(f'Error in receiving action: {err}')
             raise wz.NotAcceptable(f'Bad action: ' f'{err=}')

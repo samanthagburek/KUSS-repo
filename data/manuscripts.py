@@ -274,7 +274,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     IN_REF_REV: {
         ASSIGN_REF: {
@@ -303,7 +302,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     COPY_EDIT: {
         DONE: {
@@ -312,7 +310,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     AUTHOR_REVIEW: {
         DONE: {
@@ -321,7 +318,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     AUTHOR_REVISIONS: {
         DONE: {
@@ -330,7 +326,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     EDITOR_REVIEW: {
         ACCEPT: {
@@ -339,7 +334,6 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     FORMATTING: {
         DONE: {
@@ -348,28 +342,23 @@ STATE_TABLE = {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     REJECTED: {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     WITHDRAWN: {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     PUBLISHED: {
         EDITOR_MOV: {
              FUNC: lambda **kwargs: editor_move(kwargs['new_state'])
         },
-        **COMMON_ACTIONS,
     },
     DONE: {
-        **COMMON_ACTIONS,
     },
 }
 
@@ -391,6 +380,19 @@ def handle_action(_id, curr_state, action, **kwargs) -> str:
     if manu_doc:
         kwargs['manu'] = manu_doc
         state = STATE_TABLE[curr_state][action][FUNC](**kwargs)
+        result = dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
+                                {STATE: str(state)})
+        print(f'result={result}, str_state={str(state)}')
+        return state
+    else:
+        return f'Error {_id} is not a valid manuscript'
+
+
+def handle_withdraw(_id, **kwargs) -> str:
+    manu_doc = read_one(_id)
+    if manu_doc:
+        kwargs['manu'] = manu_doc
+        state = COMMON_ACTIONS[WITHDRAW][FUNC](**kwargs)
         result = dbc.update_doc(MANU_COLLECT, {'_id': ObjectId(_id)},
                                 {STATE: str(state)})
         print(f'result={result}, str_state={str(state)}')
