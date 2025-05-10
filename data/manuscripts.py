@@ -77,7 +77,7 @@ SAMPLE_MANU = {
     REFEREES: [],
 }
 
-DEFAULT_EDITOR_EMAIL = "editor@kuss.com"
+DEFAULT_EDITOR_EMAIL = "admin@gmail.com"
 client = dbc.connect_db()
 print(f'{client=}')
 

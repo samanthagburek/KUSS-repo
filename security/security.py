@@ -41,6 +41,21 @@ ALL_IDS = (
     + [GOOD_USER_ID]
 )
 
+AUTHOR_IDS = (
+    ppl.get_ppl_in_role('AU')
+)
+
+REF_IDS = (
+    ppl.get_ppl_in_role('RE')
+)
+
+AU_EDIT_IDS = (
+    ppl.get_ppl_in_role('ME')
+    + ppl.get_ppl_in_role('ED')
+    + ppl.get_ppl_in_role('CE')
+    + ppl.get_ppl_in_role('AU')
+)
+
 PEOPLE_CHANGE_PERMISSIONS = {
      USER_LIST: EDITOR_IDS,
      CHECKS: {
@@ -62,8 +77,15 @@ MANUS_DELETE_PERMISSIONS = {
     }
 }
 
-CREATE_PERMISSIONS = {
+ALL_PERMISSIONS = {
     USER_LIST: ALL_IDS,
+    CHECKS: {
+        LOGIN: True,
+    }
+}
+
+MANUS_UPDATE_PERMISSIONS = {
+    USER_LIST: AU_EDIT_IDS,
     CHECKS: {
         LOGIN: True,
     }
@@ -71,9 +93,9 @@ CREATE_PERMISSIONS = {
 
 temp_recs = {
     PEOPLE: {
-        CREATE: CREATE_PERMISSIONS,
+        CREATE: ALL_PERMISSIONS,
         DELETE: PEOPLE_CHANGE_PERMISSIONS,
-        UPDATE: PEOPLE_CHANGE_PERMISSIONS,
+        UPDATE: ALL_PERMISSIONS,
     },
     TEXT: {
         CREATE: TEXT_CHANGE_PERMISSIONS,
@@ -81,9 +103,9 @@ temp_recs = {
         UPDATE: TEXT_CHANGE_PERMISSIONS,
     },
     MANUSCRIPTS: {
-        CREATE: CREATE_PERMISSIONS,
+        CREATE: ALL_PERMISSIONS,
         DELETE: MANUS_DELETE_PERMISSIONS,
-        UPDATE: CREATE_PERMISSIONS,
+        UPDATE: MANUS_UPDATE_PERMISSIONS,
     },
     BAD_FEATURE: {
         CREATE: {
